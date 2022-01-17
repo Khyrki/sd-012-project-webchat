@@ -1,0 +1,45 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+form {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.user-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.new-message-container {
+  display: flex;
+  flex-direction: row;
+  width: 800px;
+}
+
+.new-message-container form {
+  flex-grow: 1;
+}
+
+.user-list-container {
+  border: 1px solid black;
+  flex-grow: 1;
+  width: 300px;
+}
+
+.message-container {
+  border: 1px solid black;
+  width: 500px;
+}
+
+input {
+  flex-grow: 1;
+}

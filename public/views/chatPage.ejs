@@ -8,8 +8,27 @@
   <title>Document</title>
 </head>
 <body>
-  <h1>Test</h1>
-  <button id="enviar">Enviar menssagem</button>
+  <main>
+    <section class="chat-users-name">
+      <section class="users-name">
+        <div class="name">
+          <input type="text" data-testid="online-user" placeholder="Insira seu nickname">
+          <button type="button">Salvar</button>
+        </div>
+        <div class="users">
+
+        </div>
+      </section>
+      <section class="chat">
+        
+      </section>
+    </section>
+    <form class="send-message">
+      <input type="text" data-testid="message-box" placeholder="Digite uma nova mensagem aqui">
+      <button id="send" type="submit" data-testid="send-button">Enviar</button>
+    </form>
+  </main>
+
   <script src="/socket.io/socket.io.js"></script>
   <script src="../js/chatPage.js"></script>
 </body>

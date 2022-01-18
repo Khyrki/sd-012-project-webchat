@@ -1,0 +1,42 @@
+main {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-users-name {
+  border: 1px solid black;
+  display: flex;
+  justify-content: space-around;
+  padding: 15px;
+}
+
+.users-name {
+  display: flex;
+  flex-direction: column;
+}
+
+.users {
+  border: 1px solid red;
+  height: 250px;
+  margin-top: 10px;
+  overflow-y: scroll;
+  width: 100%;
+}
+
+.chat {
+  border: 1px solid red;
+  height: 280px;
+  overflow-y: scroll;
+  width: 50%;
+}
+
+.send-message {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.send-message input {
+  width: 65%;
+  margin-right: 10px;
+}

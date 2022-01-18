@@ -33,12 +33,22 @@ const disconnectUser = (socketId) => {
   return disconnect;
 };
 
-const createMessage = ({ chatMessage, nickname }) => {
-  const timestamp = format(new Date(), 'dd-MM-yyy HH:mm:ss');
+const createMessage = (io, socket) => {
+  socket.on('message', ({ chatMessage, nickname }) => {
+    const timestamp = format(new Date(), 'dd-MM-yyy HH:mm:ss');
+    const message = `${timestamp} - ${nickname}: ${chatMessage}`;
+    io.emit('message', message);
+  });
+};
 
-  const message = `${timestamp} - ${nickname}: ${chatMessage}`;
+const disconnect = (io, socket) => {
+  const { id } = socket;
 
-  return message;
+  socket.on('disconnect', () => {
+    const disconnectNotification = disconnectUser(id);
+    io.emit('systemMessage', disconnectNotification);
+    io.emit('nicknameList', users);
+  });
 };
 
 module.exports = (io) => io.on('connection', (socket) => {
@@ -51,14 +61,6 @@ module.exports = (io) => io.on('connection', (socket) => {
   socket.emit('userName', nickname);
   socket.emit('systemMessage', `Você se conectou como ${nickname}`);
   
-  socket.on('message', (message) => {
-    const formattedMessage = createMessage(message);
-    io.emit('message', formattedMessage);
-  });
-
-  socket.on('disconnect', () => {
-    const disconnectNotification = disconnectUser(id);
-    io.emit('systemMessage', disconnectNotification);
-    io.emit('nicknameList', users);
-  });
+  createMessage(io, socket);
+  disconnect(io, socket);
 });

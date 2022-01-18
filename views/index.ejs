@@ -19,7 +19,13 @@
     <button data-testid="nickname-button" id="nickname-button">Salvar</button>  
   </div>
   <div>
-    <ul id="chat-box"></ul>
+    <ul id="chat-box">
+      <% messages.map((messageInfo) => { 
+        const { timestamp, nickname, message } = messageInfo
+      %>
+        <li data-testid="message"><%= `${timestamp} - ${nickname}: ${message}` %></li>
+      <% }) %>
+    </ul>
   </div>
   <div>
     <input

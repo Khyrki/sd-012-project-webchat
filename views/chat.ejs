@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/chat.css">
+  <!-- <link rel="stylesheet" href="../frontend/chat.css""> -->
+  <title>Chat por Tópicos</title>
+</head>
+<body>
+  <main>
+    <div class="first-submain">
+      <div class="login-container">
+        <h3> User Config: </h3>
+        <form class="login-form">
+          <input data-testid="nickname-box" id="nicknameInput" type="text" placeholder="nickname" name="nickname" />
+          <button data-testid="nickname-button" id="nicknameBtn">Save</button>
+        </form>
+      </div>
+    </div>
+    <div class="second-submain">
+      <div id="chat-container">
+        <h3> Chat Messages: </h3>
+        <div class="messages-div">
+          <% messages.forEach((msg) => { %>
+            <!-- <p data-testid="messages"><%= msg.nickname %>: <%= msg.message %></p> -->
+            <p data-testid="message"><%= msg.timestamp %> - <%= msg.nickname %>: <%= msg.message %></p>
+          <% }) %>
+        </div>
+        <form action="">
+          <input data-testid="message-box" id="messageInput" autocomplete="off" /><button data-testid="send-button" id="sendBtn">Send</button>
+          <p id="warningNickname"></p>
+        </form>
+      </div>
+      <div class="online-users-container">
+        <h3> Online Users: </h3>
+        <ul class="online-users-div"></ul>
+      </div>
+    </div>
+  </main>
+  
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="./chat.js"></script>
+</body>
+</html>

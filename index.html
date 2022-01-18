@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Projeto Webchat</title>
+  </head>
+<body>
+  <script src="socket.io/socket.io.js"></script>
+  
+<div class='leftChatClients'>
+  <form id="client-form">
+    <input id="nickname-change" data-testid="nickname-box">
+    <button type="submit" data-testid="nickname-button">Trocar nickname</button>
+    <h3>Usuários on-line</h3>
+    <ul id="client-list"></ul>
+  </form>
+</div>
+<div id="rightChatMessages">
+  <ul id="message-screen"></ul>
+</div>
+<div class="footer-envio-message">
+  <form id="message">
+    <input type="text" id="mesage-input" data-testid="message-box">
+    <button type="submit" data-testid="send-button">Enviar mensagem</button>
+  </form>
+
+</div>
+<script>
+  function geraStringAleatoria(tamanho) {
+    let stringAleatoria = '';
+    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i < tamanho; i += 1) {
+        stringAleatoria += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+    }
+    return stringAleatoria;
+    // solução : https://www.webtutorial.com.br/funcao-para-gerar-uma-string-aleatoria-random-com-caracteres-especificos-em-javascript/
+}
+// Abre a conexão com o socket io
+const socket = io();
+
+// Cria usuário e coloca no sessionStore
+  const handleUser = geraStringAleatoria(16);
+  sessionStorage.setItem('userChat', handleUser);
+
+// Seleciona QUERYS
+const sendFormMessage = document.querySelector("#message");
+const messageInput = document.querySelector("#mesage-input");
+const messageScreen = document.querySelector('#message-screen');
+const clientList = document.querySelector('#client-list');
+const clientChangeForm = document.querySelector('#client-form');
+const clientChangeInput = document.querySelector('#nickname-change');
+
+// Envia o evento de mensagem ao clicar no "Enviar mensagem"
+  sendFormMessage.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const getUser = sessionStorage.getItem('userChat');
+  
+  const sendMesage = {
+    chatMessage: messageInput.value,
+    nickname: getUser,
+  }
+  socket.emit('message', sendMesage);
+  // zera o input
+  messageInput.value = '';
+});
+
+// Envia o evento de mudar o nickname
+  clientChangeForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const newNickname = clientChangeInput.value;
+  sessionStorage.setItem('userChat', newNickname)
+  
+  socket.emit('nicknameChange', newNickname);
+  // zera o input
+  clientChangeInput.value = '';
+});
+
+
+  socket.on('allMessages', (history) => {
+    if (history) {
+        history.forEach(e => {
+        const li = document.createElement('li');
+        li.setAttribute('data-testid', 'message');
+        li.textContent = `${e.timestamp} - ${e.nickname}: ${e.message}`;
+        messageScreen.appendChild(li);
+        });
+    }
+  })
+
+  socket.on('message', (newMessage) => {
+        const { timestamp, nickname, message } = newMessage;
+        const li = document.createElement('li');
+        li.setAttribute('data-testid', 'message');
+        li.textContent = newMessage
+        messageScreen.appendChild(li);
+  })
+
+  socket.emit('clientOn', sessionStorage.getItem('userChat'))
+
+  socket.on('clientOn', (listUsers) => {
+
+        clientList.innerHTML = '';
+        const myUser = sessionStorage.getItem('userChat');
+        const li = document.createElement('li');
+        li.setAttribute('data-testid', 'online-user');
+        li.textContent = myUser;
+        clientList.appendChild(li);
+
+        console.log(listUsers);
+        
+        listUsers.forEach((element) => {
+          if (element.nickname != myUser) {
+          const li = document.createElement('li');
+          li.setAttribute('data-testid', 'online-user');
+          li.textContent = element.nickname;
+          console.log('ELEMENT', element.nickname);
+          clientList.appendChild(li);
+          }
+        })
+  }) 
+
+
+</script>
+</body>
+</html>

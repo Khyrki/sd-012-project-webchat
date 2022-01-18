@@ -41,8 +41,6 @@ io.on('connection', (socket) => {
   connectedClients.push(socket);
 
   socket.on('message', (data) => {
-    console.log(data);
-
     emitMessageToAll(data);
   });
 });

@@ -6,6 +6,7 @@ const app = express();
 const http = require('http').createServer(app);
 const cors = require('cors');
 const socketio = require('socket.io');
+const webchatSocket = require('./src/sockets/webchat');
 
 dotenv.config();
 const { PORT } = process.env;
@@ -16,6 +17,8 @@ const io = socketio(http, {
     methods: ['GET', 'POST'],
   },
 });
+
+webchatSocket(io);
 
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`));

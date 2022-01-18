@@ -1,5 +1,5 @@
-const { WEBCHAT } = require('../../utils/strings');
-const { create, searchById } = require('../../models')(WEBCHAT);
+const { MESSAGES } = require('../../utils/strings');
+const { create, searchById } = require('../../models')(MESSAGES);
 
 module.exports = async (message, nickname, timestamp) => {
   const { insertedId } = await create({ message, nickname, timestamp });

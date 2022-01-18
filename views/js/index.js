@@ -13,11 +13,8 @@ const createLi = (liText, ulId, dataTextId) => {
   ul.appendChild(li);
 };
 
-socket.on('reconnect', (messages) => messages.forEach((msg) => {
-  const { message, nickname, timestamp } = msg;
-  const chatMessage = `${timestamp} - ${nickname}: ${message}`;
-  createLi(chatMessage, '#messages', 'message');
-}));
+socket.on('reconnect', (messages) => messages
+  .forEach((msg) => createLi(msg, '#messages', 'message')));
 
 let usersList = [];
 

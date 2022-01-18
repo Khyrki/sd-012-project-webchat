@@ -30,7 +30,11 @@
 
     <div id="mensagensContainer">
       <h3>Mensagens do chat:</h3>
-      <ul id="messages"></ul>
+      <ul id="messages">
+        <% history.forEach((msg) => { %>
+          <li data-testid="message"><%=`${msg.timeStamp} - ${msg.nickname}: ${msg.chatMessage}`%></li>
+        <% }) %>
+      </ul>
     </div>
 
     <form id="formMensage">

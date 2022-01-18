@@ -22,6 +22,7 @@ io.on('connection', async (socket) => {
     const dbMessages = await findMessages();
     socket.emit('allMessages', dbMessages);
 
+    // Client on
     socket.on('clientOn', (nickname) => {
         listUsers.push({ id: socket.id, nickname });
         io.emit('clientOn', listUsers);

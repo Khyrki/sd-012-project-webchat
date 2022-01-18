@@ -78,7 +78,7 @@ const clientChangeInput = document.querySelector('#nickname-change');
   clientChangeInput.value = '';
 });
 
-
+  // Lista todas as mensagens que vem do banco de dados.
   socket.on('allMessages', (history) => {
     if (history) {
         history.forEach(e => {

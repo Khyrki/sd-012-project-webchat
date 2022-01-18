@@ -1,1 +1,7 @@
-// Faça seu código aqui
+const server = require('./app');
+
+const { PORT = 3000 } = process.env;
+
+server.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});

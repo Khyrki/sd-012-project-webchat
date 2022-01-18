@@ -6,7 +6,9 @@ const randomNick = Array.from(Array(16),
   () => Math.floor(Math.random() * 36).toString(36)).join('');
 // https://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
 
-nickElem.innerHTML = sessionStorage.getItem('nick') || randomNick;
+const userNickname = sessionStorage.getItem('nick') || randomNick;
+nickElem.innerHTML = userNickname;
+socket.emit('newUser', userNickname);
 
 const changeNickInput = document.querySelector('#nickname-box');
 const changeNickButton = document.querySelector('#nickname-button');
@@ -20,6 +22,7 @@ changeNickButton.addEventListener('click', () => {
   changeNickInput.value = '';
   nickElem.innerHTML = newNick;
   sessionStorage.setItem('nick', newNick);
+  socket.emit('updateNick', newNick);
 });
 
 const sendButton = document.querySelector('#send-button');
@@ -44,3 +47,21 @@ socket.on('message', (message) => {
   li.setAttribute('data-testid', 'message');
   chatElem.appendChild(li);
 });
+
+const onlineUsersElem = document.querySelector('#users-list');
+
+socket.on('onlineUsers', (onlineUsers) => {
+  onlineUsersElem.innerHTML = '';
+  onlineUsers.forEach(({ nickname }) => {
+    const currentNickName = nickElem.innerHTML;
+    if (currentNickName === nickname) return;
+    const li = document.createElement('li');
+    li.innerHTML = nickname;
+    li.setAttribute('data-testid', 'online-user');
+    onlineUsersElem.appendChild(li);  
+  });
+});
+
+window.onbeforeunload = () => {
+  socket.disconnect();
+};

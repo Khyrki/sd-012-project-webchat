@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Webchat</title>
+  <title>Trybechat</title>
 </head>
 <body>
-  <h1>Socket.io</h1>
+  <h1>Trybechat</h1>
   <div>
     <span data-testid="online-user" id="online-user"></span>
     <input
@@ -26,6 +26,10 @@
         <li data-testid="message"><%= `${timestamp} - ${nickname}: ${message}` %></li>
       <% }) %>
     </ul>
+  </div>
+  <div>
+    <h2>Online</h2>
+    <ul id="users-list"></ul>
   </div>
   <div>
     <input

@@ -1,18 +1,16 @@
-const moment = require('moment');
-const Messages = require('../models/Messages');
+const message = require('./message');
+const newUser = require('./newUser');
+const updateNick = require('./updateNick');
+const disconnect = require('./disconnect');
+
+const onlineUsers = [];
 
 module.exports = (io) => io.on('connection', (socket) => {
-  socket.on('message', async ({ chatMessage, nickname }) => {
-    const date = new Date();
-    
-    const timestamp = moment(date).format('DD-MM-YYYY HH:MM:SS A');
+  message(io, socket);
 
-    await Messages.createMessage({
-      message: chatMessage,
-      nickname,
-      timestamp,
-    });
-  
-    io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
-  });
+  newUser(io, socket, onlineUsers);
+
+  updateNick(io, socket, onlineUsers);
+
+  disconnect(io, socket, onlineUsers);
 });

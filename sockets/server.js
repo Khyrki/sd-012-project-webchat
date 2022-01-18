@@ -17,17 +17,11 @@ const createMessage = (socket, io) => {
   socket.on('message', async ({ nickname, chatMessage }) => {
     io.emit('message', `${timestamp} - ${!nickname ? id : nickname}: ${chatMessage}`);
     await model.create({ nickname, chatMessage, timestamp });
-    // axios.post('http://localhost:3000', {
-    //   chatMessage,
-    //   nickname,
-    //   timestamp,
-    //   });
     });
 };
 
 const getMessages = async (socket) => {
   const messages = await model.findAll();
-  // const messages = axios.post('http://localhost:3000/webchat', {});
   socket.emit('allMessages', messages);
 };
 

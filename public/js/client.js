@@ -1,5 +1,4 @@
 const socket = window.io();
-
 const userConnect = document.querySelector('.users');
 const formMessages = document.querySelector('.form');
 const messagesUsers = document.querySelector('.messages');

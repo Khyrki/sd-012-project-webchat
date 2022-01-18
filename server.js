@@ -1,5 +1,5 @@
-const socket = require('./src/api/socket');
+const server = require('./src/api/socket');
 
-const SOCKET_PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
-socket.listen(SOCKET_PORT, () => console.log(`Server running on PORT ${SOCKET_PORT}`));
+server.listen(PORT, () => console.log(`Server running on PORT ${PORT}`));

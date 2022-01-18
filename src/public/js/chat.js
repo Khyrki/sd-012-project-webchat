@@ -1,19 +1,20 @@
 const socket = window.io('');
 
-let nickname = '';
+let username = '';
 
-socket.on('setUser', (content) => {
-  nickname = content;
+socket.on('setUser', (nickname) => {
+  username = nickname;
 });
 
 socket.on('setUsers', (users) => {
   const userList = document.getElementById('user-list');
   userList.innerHTML = '';
-  users.forEach((user) => {
+
+  Object.entries(users).forEach(([id, nickname]) => {
     const li = document.createElement('li');
-    li.innerText = user.nickname;
+    li.innerText = nickname;
     li.setAttribute('data-testid', 'online-user');
-    if (user.id === socket.id) return userList.prepend(li);
+    if (id === socket.id) return userList.prepend(li);
     userList.appendChild(li);
   });
 });
@@ -33,7 +34,7 @@ const setNicknameEvent = () => {
   nicknameButton.addEventListener('click', (e) => {
     e.preventDefault();
     socket.emit('setNickname', nicknameInput.value);
-    nickname = nicknameInput.value;
+    username = nicknameInput.value;
     nicknameInput.value = '';
   });
 };
@@ -46,7 +47,7 @@ const setMessageEvent = () => {
     socket.emit('message',
       {
         chatMessage: messageInput.value,
-        nickname,
+        nickname: username,
     });
     messageInput.value = '';
   });

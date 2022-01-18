@@ -4,37 +4,70 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WebChat</title>
+  <title>Resenha Chat</title>
 </head>
 <body>
-  <h1>WebChat</h1>
-  <ul id="messages"></ul>
-    <form id="form" action="">
-      <input id="nickname" autocomplete="on" /><input id="input" autocomplete="off" /><button>Send</button>
+  <h1>Resenha Chat</h1>
+  <div>
+    <h3>Usuários Online</h3>
+    <ul id="online-list" data-testid="online-user"></ul>
+  </div>
+  <div>
+    <h3>Mensagens</h3>
+    <ul id="messages"></ul>
+  </div>
+  <form id="nickname-container">
+    <input id="nickname" autocomplete="on" data-testid="nickname-box"/>
+    <button data-testid="nickname-button">Alterar nome</button>
+  </form>
+    <form id="message-container" action="">
+      <input id="input" autocomplete="off" data-testid="message-box"/>
+      <button data-testid="send-button">Enviar mensagem</button>
     </form>
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
+    let user = ''
     window.onload = () => {
-    const user = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    document.getElementById('nickname').value = user;
-    }
-    
-    const form = document.getElementById('form');
+      // https://gist.github.com/6174/6062387 (ref para criar random string)
+      user = (Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)).substring(0, 16);
+      document.getElementById('nickname').value = user;
+      socket.emit('new-user', user);
+    }    
+    const messageContainer = document.getElementById('message-container');
     const input = document.getElementById('input');
     const nickname = document.getElementById('nickname');
-    form.addEventListener('submit', (e) => {
+    const buttonNickname = document.getElementById('nickname-button');
+    const containerNickname = document.getElementById('nickname-container');
+    containerNickname.addEventListener('submit', (e) => {
       e.preventDefault();
-      if (input.value && nickname.value) {
-        socket.emit('message', {chatMessage: input.value, nickname: nickname.value}); 
+      user = nickname.value;
+      console.log(user)
+      socket.emit('edit-user', user);
+    });
+    messageContainer.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (input.value && user) {
+        socket.emit('message', {chatMessage: input.value, nickname: user});
         input.value = '';
       }
     });
     socket.on('message', (message) => {
       const messages = document.getElementById('messages');
       const li = document.createElement('li');
+      li.setAttribute('data-testid', 'message');
       li.textContent = message;
       messages.appendChild(li);
+    });
+    socket.on('online', (onlineList) => {
+      const ul = document.getElementById('online-list');
+      ul.innerHTML= '';
+      onlineList.forEach((user) => {
+        const li = document.createElement('li');
+        li.setAttribute('data-testid', 'online-user');
+        li.textContent = user.nickname;
+        ul.appendChild(li);
+      })
     });
   </script>
 </body>

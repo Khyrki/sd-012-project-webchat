@@ -67,8 +67,8 @@
     <div class="main-panel">
       <div class="infos">
         <div>
-          <input placeholder="Your nickname" />
-          <button>Save</button>
+          <input id="changeNick" data-testid="nickname-box" placeholder="Your nickname" />
+          <button id="saveNick" data-testid="nickname-button">Save</button>
         </div>
         <div>
           <ul id="users"></ul>
@@ -77,8 +77,8 @@
       <ul id="messages"></ul>
     </div>
     <form action="">
-      <input id="messageInput" autocomplete="off" />
-      <button>Send</button>
+      <input data-testid="message-box" id="messageInput" autocomplete="off" />
+      <button data-testid="send-button">Send</button>
     </form>
 
     <!-- JS -->
@@ -88,19 +88,54 @@
 
       const form = document.querySelector('form');
       const inputMessage = document.querySelector('#messageInput');
+      const userUL = document.querySelector('#users');
+      const nickButton = document.querySelector('#saveNick');
+
+      const generateRandomName = () => {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let nickname = '';
+        for ( let i = 0; i < 16; i++ ) {
+          nickname += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        sessionStorage.setItem('nickname', nickname);
+        socket.emit('newUser', nickname);
+      }
+
+      generateRandomName();
+
+      socket.on('newUser', (userList) => {
+        userUL.innerHTML = '';
+
+        userList.forEach(({ nickname }) => {
+          const li = document.createElement('li');
+          li.setAttribute('data-testid', 'online-user');
+          li.textContent = nickname;
+          userUL.appendChild(li);
+        })
+      }) 
 
       socket.on('message', (newMessage) => {
         const messagesUl = document.querySelector('#messages');
         const li = document.createElement('li');
+        li.setAttribute('data-testid', 'message');
         li.innerText = newMessage;
         messagesUl.appendChild(li);
       })
 
+      nickButton.addEventListener('click', () => {
+        const newNickname = document.querySelector('#changeNick');
+        const nickname = sessionStorage.getItem('nickname');
+        socket.emit('changeNick', { oldNickname: nickname, newNickname: newNickname.value });
+
+        sessionStorage.setItem('nickname', newNickname.value);
+        newNickname.value = '';
+      });
+
       form.addEventListener('submit', (e) => {
         e.preventDefault();
-        socket.emit('message', { chatMessage: inputMessage.value, nickname: 'randomNickname' });
+        const nickname = sessionStorage.getItem('nickname');
+        socket.emit('message', { chatMessage: inputMessage.value, nickname });
         inputMessage.value = '';
-        return false;
       });
     </script>
   </body>

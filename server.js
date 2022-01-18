@@ -16,6 +16,8 @@ const io = new Server(httpServer, {
   },
 });
 
+require('./sockets/chat')(io);
+
 io.on('connection', (socket) => {
   console.log(`${socket.id} se conectou`);
 });

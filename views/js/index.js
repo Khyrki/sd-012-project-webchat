@@ -5,10 +5,14 @@ const inputMessage = document.querySelector('#messageInput');
 const userForm = document.querySelector('#login');
 const inputUser = document.querySelector('#nickNameInput');
 
+let usersList = [];
+
+const nicknameFind = (id, users) => users.find((user) => user.id === id);
+
 userForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  socket.emit('login', { id: socket.id, newName: inputUser.value });
+  socket.emit('login', { newName: inputUser.value });
   
   inputUser.value = '';
   return false;
@@ -16,8 +20,10 @@ userForm.addEventListener('submit', (e) => {
 
 messageForm.addEventListener('submit', (e) => {
   e.preventDefault();
-
-  socket.emit('message', { chatMessage: inputMessage.value });
+  
+  const user = nicknameFind(socket.id, usersList);
+  
+  socket.emit('message', { chatMessage: inputMessage.value, nickname: user.nickname });
   
   inputMessage.value = '';
   return false;
@@ -32,6 +38,7 @@ const createLi = (liText, ulId, dataTextId) => {
 };
 
 socket.on('userOnline', (users) => {
+  usersList = users;
   const usersUl = document.querySelector('#users');
   usersUl.innerHTML = '';
 

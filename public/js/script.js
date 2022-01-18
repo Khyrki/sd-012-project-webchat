@@ -18,52 +18,15 @@ const messageList = document.querySelector('#messageList');
 //   return false;
 // });
 
-const composeDate = () => {
-  const date = new Date();
-  const year = date.getFullYear();
-  
-  let day = '';
-  let month = '';
-
-  if (date.getDay() + 1 < 10) {
-    day = `0${date.getDay()}`;
-  } else {
-    day = date.getDay();
-  }
-
-  if (date.getMonth() + 1 < 10) {
-    month = `0${date.getMonth() + 1}`;
-  } else {
-    month = date.getMonth() + 1;
-  }
-
-  const formattedDate = `${day}-${month}-${year}`;
-
-  return formattedDate;
-};
-
-const composeHour = () => {
-  const date = new Date();
-  const hour = date.getHours();
-  const minutes = date.getUTCMinutes();
-  const seconds = date.getSeconds();
-
-  const formattedHour = `${hour}:${minutes}:${seconds}`;
-  
-  return formattedHour;
-};
-
 messageForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  const date = composeDate();
-  const hour = composeHour();
   const message = messageInput.value;
   const nickname = document.querySelector('#userName').innerText;
 
-  const fomattedMessage = `${date} ${hour} - ${nickname}: ${message}`;
+  const chatMessage = message;
 
-  socket.emit('message', { chatMessage: fomattedMessage, nickname });
+  socket.emit('message', { chatMessage, nickname });
 
   messageInput.value = '';
   return false;
@@ -83,7 +46,7 @@ const createNicknameList = (nickNameArray) => {
   });
 };
 
-const createMessage = ({ chatMessage }) => {
+const createMessage = (chatMessage) => {
   const listItem = document.createElement('li');
 
   listItem.innerText = chatMessage;

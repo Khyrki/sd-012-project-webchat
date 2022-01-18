@@ -1,4 +1,5 @@
 const generator = require('nickname-generator');
+const { format } = require('date-fns');
 
 let users = [];
 
@@ -32,6 +33,14 @@ const disconnectUser = (socketId) => {
   return disconnect;
 };
 
+const createMessage = ({ chatMessage, nickname }) => {
+  const timestamp = format(new Date(), 'dd-MM-yyy HH:mm:ss');
+
+  const message = `${timestamp} - ${nickname}: ${chatMessage}`;
+
+  return message;
+};
+
 module.exports = (io) => io.on('connection', (socket) => {
   const { id } = socket;
   
@@ -43,7 +52,8 @@ module.exports = (io) => io.on('connection', (socket) => {
   socket.emit('systemMessage', `Você se conectou como ${nickname}`);
   
   socket.on('message', (message) => {
-    io.emit('message', { chatMessage: message.chatMessage, nickname: message.nickname });
+    const formattedMessage = createMessage(message);
+    io.emit('message', formattedMessage);
   });
 
   socket.on('disconnect', () => {

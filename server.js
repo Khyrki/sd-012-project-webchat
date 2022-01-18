@@ -1,6 +1,7 @@
 require('dotenv').config();
 const app = require('express')();
 const http = require('http').createServer(app);
+const moment = require('moment');
 const cors = require('cors');
 const io = require('socket.io')(http, {
   cors: {
@@ -10,22 +11,11 @@ const io = require('socket.io')(http, {
 });
 
 io.on('connection', (socket) => {
-  const date = new Date();
-  const { day, month, year, hour, minutes } = {
-    day: date.getDate(),
-    month: date.getMonth() + 1,
-    year: date.getFullYear(),
-    hour: date.getHours(),
-    minutes: date.getMinutes(),
-  };
+  // socket.broadcast.emit('message', `${socket.id} se conectou!`);
 
-  const nickname = socket.id;
-
-  // socket.emit('entered', `Olá, ${socket.id}!`);
-  socket.broadcast.emit('message', `${socket.id} se conectou!`);
-
-  socket.on('message', (msg) => {
-    io.emit('message', `${day}-${month}-${year} ${hour}:${minutes} - ${nickname}: ${msg}`);
+  socket.on('message', ({ chatMessage, nickname }) => {
+    const timestamp = moment().format('DD-MM-YYYY HH:mm');
+    io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
   });
 });
 

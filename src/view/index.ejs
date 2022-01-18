@@ -125,38 +125,41 @@
     const chatForm = document.querySelector('.chat__form');
     const chatInput = document.querySelector('.chat__chat-input');
     const chatButton = document.querySelector('.chat__chat-button');
+    
+    const randomUserName = () => {
+      const upper = [...Array(26).keys()]
+        .map((_, i) => String.fromCharCode(i + 65)).join('');
+      const alpha = upper.concat(upper.toLowerCase(), '0123456789');
+      let nickname = ''
+
+      while (nickname.length < 16) {
+        nickname += alpha[Math.floor(Math.random() * alpha.length)];
+      }
+
+      return nickname;
+    };
+
+    sessionStorage.setItem('nickname', randomUserName());
 
     welcome.addEventListener('click', () => {
       chatBox.classList.toggle('close');
     });
 
+
     chatForm.addEventListener('submit', (e) => {
       e.preventDefault();
+      const chatMessage = chatInput.value;
+      const nickname = sessionStorage.getItem('nickname');
+      socket.emit('message', { chatMessage, nickname });
+      chatInput.value = '';
     });
 
-    chatInput.addEventListener('keyup', (e) => {
-      const userMessage = e.target.value;
-      if (e.code === 'Enter' && userMessage.length) {
-        socket.emit('message', userMessage);
-        e.target.value = '';
-      };
-    });
-
-    chatButton.addEventListener('click', (e) => {
-      const userMessage = chatInput.value;
-      if (userMessage.length) {
-        socket.emit('message', userMessage);
-        chatInput.value = '';
-      };
-    });
-
-    const insertMessage = (msg) => {
+    const insertMessage = (userMessage) => {
       const li = document.createElement('li');
-      li.textContent = msg;
+      li.innerText = userMessage;
       chatBox.appendChild(li);
     };
 
-    // socket.on('entered', insertMessage);
     socket.on('message', insertMessage);
   </script>
 </body>

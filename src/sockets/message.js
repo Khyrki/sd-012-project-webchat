@@ -8,7 +8,7 @@ module.exports = (io) => {
       const formatedTimestamp = formateTimestamp(date);
       console.log(`${formatedTimestamp} ${nickname} >> ${chatMessage}`);
       messageModel.create(chatMessage, nickname, formatedTimestamp);
-      io.emit('message', `${formatedTimestamp} ${nickname} >> ${chatMessage}`);
+      io.emit('message', `${formatedTimestamp} <strong>${nickname}</strong> >> ${chatMessage}`);
     });
   });
 };

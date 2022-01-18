@@ -3,26 +3,70 @@
   margin: 0;
 }
 
+body {
+  background-color: rgb(196, 195, 195);
+}
+
+header {
+  background-color: green;
+  display: flex;
+  justify-content: space-around;
+  padding: 15px 0;
+}
+
+input {
+  flex-grow: 1;
+}
+
 form {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
 }
 
-.chat-container {
-  display: flex;
-  flex-direction: row;
+h3 {
+  padding: 15px 0;
+  text-align: center;
 }
 
-.user-container {
+.login-form {
+  width: 300px;
+}
+
+.login-form input {
+  border: none;
+  border-radius: 8px 0 0 8px;
+  padding: 0 30px;
+}
+
+.login-form button {
+  background-color: whitesmoke;
+  border: none;
+  border-radius: 0 8px 8px 0;
+}
+
+.chat-container {
+  background-color: white;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  min-height: 60vh;
 }
 
 .new-message-container {
   display: flex;
   flex-direction: row;
-  width: 800px;
+  height: 40px;
+  width: 100%;
+}
+
+.new-message-container input {
+  border: none;
+  padding: 0 30px;
+}
+
+.new-message-container button {
+  background-color: whitesmoke;
+  border: none;
 }
 
 .new-message-container form {
@@ -31,15 +75,19 @@ form {
 
 .user-list-container {
   border: 1px solid black;
-  flex-grow: 1;
   width: 300px;
+}
+
+.user-list-container li {
+  list-style-type: square;
 }
 
 .message-container {
   border: 1px solid black;
+  flex-grow: 1;
   width: 500px;
 }
 
-input {
-  flex-grow: 1;
+.message-container li {
+  list-style: circle;
 }

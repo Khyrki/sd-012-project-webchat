@@ -8,24 +8,26 @@
   <title>Webchat Project</title>
 </head>
 <body>
-  <h1>Webchat</h1>
+  <header>
+    <h1>Webchat</h1>
+    <form class="login-form">
+      <input data-testid="nickname-box" type="text" name="nickname" id="input-nickname" placeholder="Insira seu nickname">
+      <button data-testid="nickname-button" type="submit" id="btn-nickname">Salvar</button>
+    </form>
+  </header>
   <div class="chat-container">
-    <div class="user-container">
-      <form>
-        <input data-testid="nickname-box" type="text" name="nickname" id="input-nickname" placeholder="Insira seu nickname">
-        <button data-testid="nickname-button" type="submit" id="btn-nickname">Salvar</button>
-      </form>
-      <div class="user-list-container">
-        <h3>Usuários Online</h3>
-        <ul id="user-list"></ul>
-      </div>
+    <div class="user-list-container">
+      <h3>Usuários Online</h3>
+      <hr>
+      <ul id="user-list"></ul>
     </div>
     <div class="message-container">
       <h3>Mensagens</h3>
+      <hr>
       <ul id="message-list">
         <% if (messages && messages.length > 0) { %>
           <% messages.forEach(({ message, nickname, timestamp }) => { %>
-            <li data-testid="message">* <%= `${timestamp} ${nickname} >> ${message}` %> </li>
+            <li data-testid="message"><%= `${timestamp} ${nickname} >> ${message}` %> </li>
           <% }) %>
         <% } %>
       </ul>

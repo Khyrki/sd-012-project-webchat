@@ -20,10 +20,10 @@ socket.on('setUsers', (users) => {
 
 socket.on('message', (message) => {
   const messageList = document.getElementById('message-list');
-  const p = document.createElement('p');
-  p.innerText = message;
-  p.setAttribute('data-testid', 'message');
-  messageList.appendChild(p);
+  const li = document.createElement('li');
+  li.innerHTML = message;
+  li.setAttribute('data-testid', 'message');
+  messageList.appendChild(li);
 });
 
 const setNicknameEvent = () => {

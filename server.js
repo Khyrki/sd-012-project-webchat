@@ -17,14 +17,19 @@ const io = require('socket.io')(server, {
   },
 });
 
+const root = require('./controllers/routers/root');
+
 app.use(cors());
 app.use(express.static(`${__dirname}/views`));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 require('./sockets')(io);
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
+
+app.use(root);
 
 server.listen(PORT, () => console.log(`Servidor ouvindo na porta ${PORT}`));

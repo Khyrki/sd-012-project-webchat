@@ -3,6 +3,7 @@ const ERRORS = 'errors';
 const ID = 'id';
 const MESSAGE = 'message';
 const MESSAGES = 'messages';
+const WEBCHAT = 'webchat';
 
 module.exports = {
   ERROR,
@@ -10,4 +11,5 @@ module.exports = {
   ID,
   MESSAGE,
   MESSAGES,
+  WEBCHAT,
 };

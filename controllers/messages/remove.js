@@ -1,12 +1,10 @@
 const { OK } = require('http-status-codes').StatusCodes;
 
-const { MESSAGES } = require('../../utils/strings');
-const { remove, searchByField } = require('../../models')(MESSAGES);
+const { WEBCHAT } = require('../../utils/strings');
+const { remove } = require('../../models')(WEBCHAT);
 
 module.exports = async (req, res, _next) => {
-  const { message, nickname, timestamp } = req.body;
-
-  const { _id: id } = await searchByField({ message, nickname, timestamp });
+  const { id } = req.params;
   
   await remove(id);
 

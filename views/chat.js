@@ -35,7 +35,9 @@ socket.on('message', (message) => {
 const createUserList = (users) => {
   usersList.innerHTML = '';
   users.forEach((user) => {
+    if (user.nickname === sessionStorage.getItem('nickname')) return;
     const li = document.createElement('li');
+    li.setAttribute('data-testid', 'online-user');
     li.innerText = user.nickname;
     usersList.appendChild(li);
   });
@@ -44,6 +46,8 @@ const createUserList = (users) => {
 socket.on('newUser', createUserList);
 
 socket.on('nickUpdate', createUserList);
+
+socket.on('updatedUsers', createUserList);
 
 messageButton.addEventListener('click', () => {
   const messageInput = document.querySelector('#message-input');

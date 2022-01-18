@@ -11,7 +11,7 @@ app.use(cors());
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
-app.use(express.static(`${__dirname}/views`))
+app.use(express.static(`${__dirname}/views`));
 
 const io = require('socket.io')(httpServer, {
   cors: {

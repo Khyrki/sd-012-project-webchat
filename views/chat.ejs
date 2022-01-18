@@ -16,7 +16,7 @@
   <button id="message-button" data-testid="send-button">Enviar</button>
   <ul id="message-list">
     <% messages.forEach((message) => { %>
-      <li><%= `${message.timestamp} ${message.nickname}: ${message.message}` %></li>
+      <li data-testid="message"><%= `${message.timestamp} ${message.nickname}: ${message.message}` %></li>
     <%}) %>
   </ul>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>

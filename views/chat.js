@@ -1,15 +1,15 @@
 const socket = window.io();
 
-function gerenateRandomString(size) {
+const gerenateRandomString = (size) => {
   let randomString = '';
-  let caracters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  for (var i = 0; i < size; i++) {
+  const caracters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  for (let i = 0; i < size; i += 1) {
       randomString += caracters.charAt(Math.floor(Math.random() * caracters.length));
   }
   return randomString;
 };
 
-function passingUserForDocument(user) {
+const passingUserForDocument = (user) => {
   const span = document.querySelector('span');
   const randomUser = gerenateRandomString(16);
   span.innerText = `${user || randomUser}`;
@@ -23,7 +23,7 @@ const nicknameButton = document.querySelector('#nickname-button');
 
 socket.on('message', (message) => {
   const li = `<li data-testid="message">${message}</li>`;
-  messageList.innerHTML = messageList.innerHTML + li;
+  messageList.innerHTML += li;
 });
 
 messageButton.addEventListener('click', () => {

@@ -7,7 +7,7 @@ module.exports = (io) => {
     socket.on('message', async ({ chatMessage, nickname }) => {
       const date = gettingDateAndTime();
       const message = `${date} ${nickname}: ${chatMessage}`;
-      await chatModel.insertOne({ message: chatMessage, nickname, timestamp: date});
+      await chatModel.insertOne({ message: chatMessage, nickname, timestamp: date });
       io.emit('message', message);
     });
   });

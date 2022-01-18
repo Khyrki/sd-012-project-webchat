@@ -1,0 +1,32 @@
+body, html {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.displayed-message {
+  display: flex;
+}
+
+.displayed-message p {
+  padding: 0 10px;
+  margin: 0;
+}
+
+.webchat-form {
+  display: flex;
+  height: 40px;
+  justify-content: space-evenly;
+  position: fixed;
+  bottom: 10px;
+  width: 100vw;
+}
+
+.webchat-form .input-message {
+  width: 80%;
+}
+
+.webchat-form .btn-submit {
+  width: 10%;
+  border: none;
+}

@@ -4,14 +4,18 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/webchat.css">
   <title>Webchat</title>
 </head>
   <body>
-    <form class="webchat-form">
-      <input type="text" class="input-message">
-      <button type="submit" class="btn-submit">Enviar</button>
-    </form>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="./js/webchat.js"></script>
+    <main class="webchat-content">
+      <article class="webchat-messages" />
+      <form class="webchat-form">
+        <input type="text" class="input-message">
+        <button type="submit" class="btn-submit">Enviar</button>
+      </form>
+      <script src="/socket.io/socket.io.js"></script>
+      <script src="./js/webchat.js"></script>
+    </main>
   </body>
 </html>

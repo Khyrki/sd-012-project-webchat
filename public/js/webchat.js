@@ -1,6 +1,6 @@
 const socket = window.io();
 
-const webchat = document.querySelector('.webchat-form');
+const webchatForm = document.querySelector('.webchat-form');
 const input = document.querySelector('.input-message');
 
 const submitForm = (event) => {
@@ -15,10 +15,23 @@ const submitForm = (event) => {
   return false;
 };
 
-webchat.addEventListener('submit', (event) => submitForm(event));
+webchatForm.addEventListener('submit', (event) => submitForm(event));
 
 const createNewMessage = (message) => {
-  console.log(message);
+  const webchatMessages = document.querySelector('.webchat-messages');
+  const textMessageFrom = `${message.date} - ${message.nickname}`;
+
+  const messageFrom = document.createElement('strong');
+  messageFrom.innerText = `${textMessageFrom}:`;
+
+  const messageContent = document.createElement('p');
+  messageContent.innerText = message.chatMessage;
+
+  const displayedMessage = document.createElement('div');
+  displayedMessage.className = 'displayed-message';
+  displayedMessage.append(messageFrom, messageContent);
+
+  webchatMessages.appendChild(displayedMessage);
 };
 
 socket.on('serverMsg', (message) => createNewMessage(message));

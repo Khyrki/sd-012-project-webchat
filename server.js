@@ -13,8 +13,10 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-    socket.on('message', (msg) => {
-      io.emit('message', msg);
+    socket.on('message', ({ nickname, chatMessage }) => {
+      let  now = new Date
+      const returnMessage = `${now.getDate()}-${now.getMonth()}-${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()} - ${nickname}: ${chatMessage}`;
+      io.emit('message', returnMessage);
     });
   });
 

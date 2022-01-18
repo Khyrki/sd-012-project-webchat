@@ -2,38 +2,56 @@
 <html>
   <head>
     <title>WebChat - trybe</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
       const socket = io();
     </script>
   </head>
   <body>
     <div>
-      <div>
-        <input id='nickname' placeholder="Nickname" />
-        <button>Save</button>
-      </div>
-      <div>
-        <ul></ul>
-      </div>
+      <input data-testid="nickname-box" id='nickname' placeholder="Nickname" />
+      <button data-testid="nickname-button">Change Nickname</button>
       <ul id="messages"></ul>
     </div>
+    <ul id="users"></ul>
     <form action="">
-      <input id="messageInput" autocomplete="off" />
-      <button>Send</button>
+      <input data-testid="message-box" id="messageInput" autocomplete="off" />
+      <button data-testid="send-button">Send</button>
     </form>
 
   <script>
+    const geraStringAleatoria = () => {
+      let stringAleatoria = '';
+      const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      for (let i = 0; i < 16; i += 1) {
+          stringAleatoria += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+      }
+      socket.emit('newUser', stringAleatoria);
+    };
+
+    geraStringAleatoria();
+
     const form = document.querySelector('form');
     const inputMessage = document.querySelector('#messageInput');
     const inputNickname = document.querySelector('#nickname');
+    const userUl = document.querySelector('#users');
 
     const createMessage = (message) => {
       const messagesUl = document.querySelector('#messages');
       const li = document.createElement('li');
+      li.setAttribute('data-testid', 'message');
       li.innerText = message;
       messagesUl.appendChild(li);
     };
+
+    const findUser = (userList) => {
+      userList.forEach((list) => {
+        const userLi = document.createElement('li');
+        userLi.setAttribute('data-testid', 'online-user');
+        userLi.textContent = list.nickname;
+        userUl.appendChild(userLi)
+      })
+    }
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -43,6 +61,7 @@
     });
 
     socket.on('message', (message) => createMessage(message));
+    socket.on('newUser', (userList) => findUser(userList));
   </script>
 </body>
 </html>

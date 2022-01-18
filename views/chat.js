@@ -32,23 +32,18 @@ socket.on('message', (message) => {
   messageList.appendChild(li);
 });
 
-socket.on('newUser', (users) => {
+const createUserList = (users) => {
   usersList.innerHTML = '';
   users.forEach((user) => {
     const li = document.createElement('li');
     li.innerText = user.nickname;
     usersList.appendChild(li);
   });
-});
+};
 
-socket.on('nickUpdate', (users) => {
-  usersList.innerHTML = '';
-  users.forEach((user) => {
-    const li = document.createElement('li');
-    li.innerText = user.nickname;
-    usersList.appendChild(li);
-  });
-});
+socket.on('newUser', createUserList);
+
+socket.on('nickUpdate', createUserList);
 
 messageButton.addEventListener('click', () => {
   const messageInput = document.querySelector('#message-input');

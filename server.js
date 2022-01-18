@@ -5,6 +5,7 @@ const http = require('http');
 
 const server = http.createServer(app);
 const { Server } = require('socket.io');
+const { controllerNewMessageUser } = require('./back-end/controller/controllerMessageUser');
 
 const io = new Server(server);
 
@@ -13,10 +14,9 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-    socket.on('message', ({ nickname, chatMessage }) => {
-      const now = new Date();
-      const returnMessage = `${now.getDate()}-${now.getMonth()}-${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()} - ${nickname}: ${chatMessage}`;
-      io.emit('message', returnMessage);
+    socket.on('message', (userMessage) => {
+      const messageUserReturt = controllerNewMessageUser(userMessage);
+      io.emit('message', messageUserReturt);
     });
   });
 

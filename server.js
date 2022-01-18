@@ -1,36 +1,32 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
+const http = require('http').createServer(app);
 
-const EXPRESS_PORT = 3000;
-const SOCKETIO_PORT = 5000;
+const PORT = 3000;
 
-const socketIoServer = require('http').createServer();
-const io = require('socket.io')(socketIoServer, {
+const io = require('socket.io')(http, {
   cors: {
-    origin: `http://localhost:${EXPRESS_PORT}`,
+    origin: `http://localhost:${PORT}`,
     methods: ['GET', 'POST'], 
   },
 });
 
-io.on('connection', (socket) => {
-  console.log(`Uma nova conexão com ${socket.id} foi estabelecida!`);
-
-  // socket.emit('evento', []);
-});
+require('./sockets/chat')(io);
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
-app.listen(
-  EXPRESS_PORT, 
-  () => console.log(`Express App listening on port ${EXPRESS_PORT}!`),
-);
+app.get('/', (_req, res) => {
+  res.render('chat');
+});
 
-socketIoServer.listen(
-  SOCKETIO_PORT, console.log(`Socket.io Server listening on port ${SOCKETIO_PORT}!`),
+http.listen(
+  PORT, console.log(`Socket.io Server listening on port ${PORT}!`),
 );

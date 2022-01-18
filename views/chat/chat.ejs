@@ -1,30 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="">
   <title>Document</title>
 </head>
 <body>
-  <h1>Bem vindo</h1>
-  <input type="text" id="nickname-input" placeholder="Insira um nickname" />
-  <button id="nickname-button">Salvar</button>
-  <input type="text" id="message-input" placeholder="Mensagem..."/>
-  <button id="message-button">Enviar</button>
+  <h1>Bem vindo,<span data-testid="online-user"><span></h1>
+  <h1></h1>
+  <input type="text" id="nickname-input" placeholder="Insira um nickname" data-testid="nickname-box" />
+  <button id="nickname-button" data-testid="nickname-button">Salvar</button>
+  <input type="text" id="message-input" placeholder="Mensagem..." data-testid="message-box"/>
+  <button id="message-button" data-testid="send-button">Enviar</button>
   <ul id="message-list"></ul>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
   <script>
     const socket = io();
+
+    function gerenateRandomString(size) {
+      let randomString = '';
+      let caracters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      for (var i = 0; i < size; i++) {
+          randomString += caracters.charAt(Math.floor(Math.random() * caracters.length));
+      }
+      return randomString;
+    };
+
+    function passingUserForDocument(user) {
+      const span = document.querySelector('span');
+      const randomUser = gerenateRandomString(16);
+      span.innerText = `${user || randomUser}`;
+    };
+
+    passingUserForDocument();
 
     const messageButton = document.querySelector('#message-button');
     const messageList = document.querySelector('#message-list');
     const nicknameButton = document.querySelector('#nickname-button');
 
     socket.on('message', (message) => {
-      const li = document.createElement('li');
-      li.innerText = message;
-      messageList.appendChild(li);
+      const li = `<li data-testid="message">${message}</li>`;
+      messageList.innerHTML = messageList.innerHTML + li;
     });
 
     messageButton.addEventListener('click', () => {
@@ -37,7 +55,9 @@
     nicknameButton.addEventListener('click', () => {
       const nicknameInput = document.querySelector('#nickname-input');
       sessionStorage.setItem('nickname', nicknameInput.value);
+      passingUserForDocument(nicknameInput.value);
       nicknameInput.value = '';
+
     });
   </script>
 </body>

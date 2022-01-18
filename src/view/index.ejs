@@ -139,7 +139,15 @@
       if (e.code === 'Enter' && userMessage.length) {
         socket.emit('message', userMessage);
         e.target.value = '';
-      }
+      };
+    });
+
+    chatButton.addEventListener('click', (e) => {
+      const userMessage = chatInput.value;
+      if (userMessage.length) {
+        socket.emit('message', userMessage);
+        chatInput.value = '';
+      };
     });
 
     const insertMessage = (msg) => {
@@ -148,7 +156,7 @@
       chatBox.appendChild(li);
     };
 
-    socket.on('entered', insertMessage);
+    // socket.on('entered', insertMessage);
     socket.on('message', insertMessage);
   </script>
 </body>

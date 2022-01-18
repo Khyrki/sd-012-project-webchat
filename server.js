@@ -21,7 +21,7 @@ io.on('connection', (socket) => {
 
   const nickname = socket.id;
 
-  socket.emit('entered', `Olá, ${socket.id}!`);
+  // socket.emit('entered', `Olá, ${socket.id}!`);
   socket.broadcast.emit('message', `${socket.id} se conectou!`);
 
   socket.on('message', (msg) => {
@@ -33,10 +33,10 @@ const { PORT } = process.env;
 
 app.use(cors());
 app.set('view engine', 'ejs');
-app.set('views', 'src/view');
+app.set('views', `${__dirname}/view`);
 
 app.get('/', (_req, res) => {
-  res.sendFile(`${__dirname}/src/view/index.html`);
+  res.render(`${__dirname}/src/view/index`, { teste: 'hehe' });
 });
 
 http.listen(PORT, () => {

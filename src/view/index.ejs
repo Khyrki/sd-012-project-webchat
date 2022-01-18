@@ -150,8 +150,10 @@
       e.preventDefault();
       const chatMessage = chatInput.value;
       const nickname = sessionStorage.getItem('nickname');
-      socket.emit('message', { chatMessage, nickname });
-      chatInput.value = '';
+      if (chatMessage.length) {
+        socket.emit('message', { chatMessage, nickname });
+        chatInput.value = '';
+      }
     });
 
     const insertMessage = (userMessage) => {

@@ -21,6 +21,8 @@ const io = require('socket.io')(httpServer, {
 /* Definições para uso do ejs */
 app.set('view engine', 'ejs');
 
+app.set('views', './views');
+
 /* Acesso aos arquivos na pasta public */
 app.use(express.static(path.join(__dirname, 'public')));
 

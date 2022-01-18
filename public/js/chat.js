@@ -1,16 +1,18 @@
 const socket = window.io();
 
 /* paths de elementos */
-const formMensage = document.querySelector('#formMensage');
-const mensageInput = document.querySelector('#mensageInput');
 const list = document.querySelector('#messages');
 const listUsers = document.querySelector('#nicksList');
+const sendMensage = document.querySelector('#send-button');
+const mensageInput = document.querySelector('#message-box');
+const nickNameChange = document.querySelector('#nickname-box');
+const sendNickname = document.querySelector('#nickname-button');
 
 /* Criar li com a mensagem */
 const createMensage = (value, attribute) => {
   const newLi = document.createElement('li');
   if (attribute) {
-    newLi.setAttribute(`${attribute[0]}, ${attribute[1]}`);
+    newLi.setAttribute(`${attribute[0]}`, `${attribute[1]}`);
   }
   newLi.innerHTML = value;
   list.appendChild(newLi);
@@ -20,21 +22,33 @@ const createMensage = (value, attribute) => {
 const createUser = (value, attribute) => {
   const newLi = document.createElement('li');
   if (attribute) {
-    newLi.setAttribute(`${attribute[0]}, ${attribute[1]}`);
+    newLi.setAttribute(`${attribute[0]}`, `${attribute[1]}`);
   }
   newLi.innerHTML = value;
   listUsers.appendChild(newLi);
 };
 
 /* Gerar nick com 16 caracteres pelo socketID */
-const makeNick = (value) => value.splice(0, 16);
+const makeNick = (value) => value.slice(4);
 
-/* EventListener para o form de mensagem */
-formMensage.addEventListener('submit', (e) => {
+/* EventListener para o envio da mensagem */
+sendMensage.addEventListener('click', (e) => {
   e.preventDefault();
   const nickname = sessionStorage.getItem('nickname');
   if (mensageInput.value) {
     socket.emit('message', { chatMessage: mensageInput.value, nickname });
+  }
+  mensageInput.value = '';
+});
+
+/* EventListener para o envio de nickname */
+sendNickname.addEventListener('click', (e) => {
+  e.preventDefault();
+  const oldNick = sessionStorage.getItem('nickname');
+  const newNick = nickNameChange.value;
+  sessionStorage.setItem('nickname', newNick);
+  if (newNick) {
+    socket.emit('updateNickname', newNick, oldNick);
   }
   mensageInput.value = '';
 });
@@ -46,9 +60,10 @@ socket.on('connect', () => {
   socket.emit('newUser', nickName);
 });
 
+/* Atualizar a lista de usuarios na view */
 socket.on('updateUsersList', (users) => {
-  users.forEach((user) => createUser(user, ['testid', 'online-user']));
+  users.forEach((user) => createUser(user, ['data-testid', 'online-user']));
 });
 
 /* Criação da mensagem */
-socket.on('message', (msg) => createMensage(msg, ['testid', 'message']));
+socket.on('message', (msg) => createMensage(msg, ['data-testid', 'message']));

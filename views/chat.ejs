@@ -8,10 +8,30 @@
   </head>
   <body>
     <div id="nicksContainer">
+      <div id="changeNickContainer">
+        <input
+          id="nickname-box"
+          type="text"
+          name="changenick"
+          data-testid="nickname-box"
+          placeholder="Pleace type a nickname"
+        />
+        <button
+          type="button"
+          id="nickname-button"
+          data-testid="nickname-button"
+        >
+          Send
+        </button>
+      </div>
+      <h3>Lista de Usuários Online:</h3>
       <ul id="nicksList"></ul>
     </div>
 
-    <ul id="messages"></ul>
+    <div id="mensagensContainer">
+      <h3>Mensagens do chat:</h3>
+      <ul id="messages"></ul>
+    </div>
 
     <form id="formMensage">
       <input
@@ -21,7 +41,7 @@
         data-testid="message-box"
         placeholder="Pleace type a message"
       />
-      <button type="submit" id="send-button" data-testid="send-button">
+      <button type="button" id="send-button" data-testid="send-button">
         Send
       </button>
     </form>

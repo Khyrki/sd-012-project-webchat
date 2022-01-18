@@ -21,8 +21,32 @@ const chatPageController = require('./controllers/chatPage');
 
 app.use('/', chatPageController);
 
+const connectedClients = [];
+
+const emitMessageToAll = ({ nickname, chatMessage }) => {
+  const date = new Date();
+  const day = date.getDate();
+  const month = date.getMonth();
+  const year = date.getFullYear();
+  const hour = date.getHours();
+  const min = date.getMinutes();
+  const sec = date.getSeconds();
+
+  const message = `${day}-${month + 1}-${year} ${hour}:${min}:${sec} - ${nickname}: ${chatMessage}`;
+
+  connectedClients.forEach((client) => {
+    client.emit('message', message);
+  });
+};
+
 io.on('connection', (socket) => {
-  console.log(`client connected with id: ${socket.id}`);
+  connectedClients.push(socket);
+
+  socket.on('message', (data) => {
+    console.log(data);
+
+    emitMessageToAll(data);
+  });
 });
 
 http.listen(PORT, () => {

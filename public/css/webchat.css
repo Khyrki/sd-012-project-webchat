@@ -1,4 +1,4 @@
-body, html {
+body , html {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -9,16 +9,16 @@ body, html {
 }
 
 .displayed-message p {
-  padding: 0 10px;
   margin: 0;
+  padding: 0 10px;
 }
 
 .webchat-form {
+  bottom: 10px;
   display: flex;
   height: 40px;
   justify-content: space-evenly;
   position: fixed;
-  bottom: 10px;
   width: 100vw;
 }
 
@@ -27,6 +27,6 @@ body, html {
 }
 
 .webchat-form .btn-submit {
-  width: 10%;
   border: none;
+  width: 10%;
 }

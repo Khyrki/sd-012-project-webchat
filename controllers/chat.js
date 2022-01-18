@@ -1,3 +1,3 @@
 module.exports = (_req, res) => {
-  res.render('chat/chat')
+  res.render('chat/chat');
 };

@@ -20,6 +20,8 @@ const io = require('socket.io')(httpServer, {
   },
 });
 
+require('./sockets/chat')(io);
+
 app.get('/', chatController);
 
 httpServer.listen(PORT, () => {

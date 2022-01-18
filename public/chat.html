@@ -123,10 +123,9 @@
         });
       }) 
 
-      socket.on('allMessages', async (history) => {
-        const historyMessages = await history;
-        if (historyMessages) {
-          historyMessages.forEach(({ message, nickname, timestamp }) => {
+      socket.on('allMessages', (history) => {
+        if (history) {
+          history.forEach(({ message, nickname, timestamp }) => {
           const li = document.createElement('li');
           li.setAttribute('data-testid', 'message');
           li.textContent = `${timestamp} - ${nickname}: ${message}`;

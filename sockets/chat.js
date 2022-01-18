@@ -4,8 +4,9 @@ const {
 
 let userList = [];
 
-module.exports = (io) => io.on('connection', async (socket) => {
-  socket.emit('allMessages', await getAllMessages());
+const first = (io) => io.on('connection', async (socket) => {
+  const getAll = await getAllMessages();
+  socket.emit('allMessages', getAll);
 
   socket.on('message', ({ chatMessage, nickname }) => {
     saveMessage(nickname, chatMessage, formatMessage());
@@ -20,8 +21,16 @@ module.exports = (io) => io.on('connection', async (socket) => {
     userList.push({ id: socket.id, nickname: newNick });
     io.emit('newUser', userList);
   });
+});
+
+const second = (io) => io.on('connection', async (socket) => {
   socket.on('disconnect', () => {
     userList = removeSelectedUser(socket.id, userList);
     io.emit('newUser', userList);
   });
 });
+
+module.exports = {
+  first,
+  second,
+};

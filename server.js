@@ -4,6 +4,7 @@ const app = express();
 const cors = require('cors');
 const http = require('http').createServer(app);
 const socketIo = require('socket.io');
+const sockets = require('./sockets/chat');
 
 const io = socketIo(http, {
     cors: {
@@ -12,7 +13,8 @@ const io = socketIo(http, {
     },
 });
 
-require('./sockets/chat')(io);
+sockets.first(io);
+sockets.second(io);
 
 app.use(cors());
 

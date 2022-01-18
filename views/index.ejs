@@ -20,7 +20,15 @@
       </div>
       <ul class="users"></ul>
     </section>
-    <ul class="messages"></ul>
+    <ul class="messages">
+      <% messages.map((msg) => {
+        const { timestamp, message, nickname } = msg;
+      %>
+        <li data-testid="message">
+          <%= `${timestamp} - ${nickname}: ${message}` %>
+        </li>
+      <% }) %>
+    </ul>
     <div class="form-message">
       <label>
         <input type="text" class="message-box" data-testid="message-box" placeholder="Mensagem..." />

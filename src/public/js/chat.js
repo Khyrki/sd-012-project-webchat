@@ -13,6 +13,7 @@ socket.on('setUsers', (users) => {
     const li = document.createElement('li');
     li.innerText = user.nickname;
     li.setAttribute('data-testid', 'online-user');
+    if (user.id === socket.id) return userList.prepend(li);
     userList.appendChild(li);
   });
 });

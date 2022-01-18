@@ -3,7 +3,6 @@ let users = [];
 const setUser = (io, socket) => {
   const nickname = socket.id.substring(0, 16);
   users.push({ id: socket.id, nickname });
-  socket.emit('setUser', nickname);
   io.emit('setUsers', users);
 };
 

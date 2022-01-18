@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path');
 const cors = require('cors');
 require('dotenv').config();
 
@@ -20,13 +21,10 @@ app.use(cors());
 app.use(express.static(`${__dirname}/views`));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.set('view engine', 'ejs');
-app.set('views', './views');
-
-require('./sockets/chat')(io);
+require('./sockets')(io);
 
 app.get('/', (req, res) => {
-  res.sendFile(`${__dirname}/index.html`);
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 server.listen(PORT, () => console.log(`Servidor ouvindo na porta ${PORT}`));

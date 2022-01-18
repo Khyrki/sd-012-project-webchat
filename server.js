@@ -5,7 +5,7 @@ const http = require('http');
 const path = require('path');
 const socketIo = require('socket.io');
 const chatController = require('./controllers');
-const socketMessages = require('./sockets');
+const socketMessages = require('./sockets/server');
 
 const app = express();
 const httpServer = http.createServer(app);

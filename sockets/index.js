@@ -1,5 +1,7 @@
 const moment = require('moment');
 
+const { create, searchAll } = require('../controllers/messages');
+
 let users = [];
 
 const nickNameUpdate = (id, newName) => users.map((user) => {
@@ -9,20 +11,22 @@ const nickNameUpdate = (id, newName) => users.map((user) => {
   return user;
 });
 
-module.exports = (io) => io.on('connection', (socket) => {
-  users = [{ id: socket.id, nickname: socket.id.slice(0, 16) }, ...users];
+module.exports = (io) => io.on('connection', async (socket) => {
+  const messages = await searchAll();
+  socket.emit('reconnect', messages);
 
+  users = [{ id: socket.id, nickname: socket.id.slice(0, 16) }, ...users];
+  
   const timestamp = moment().format('DD-MM-yyyy HH:mm:ss');
 
   socket.on('login', ({ newName }) => {
-    const newUsers = nickNameUpdate(socket.id, newName);
-
-    users = newUsers;
+    users = nickNameUpdate(socket.id, newName);
 
     io.emit('userOnline', users);
   });
 
-  socket.on('message', ({ chatMessage, nickname }) => {   
+  socket.on('message', async ({ chatMessage, nickname }) => {
+    await create(chatMessage, nickname, timestamp);
     io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
   });
 

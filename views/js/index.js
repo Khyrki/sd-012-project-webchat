@@ -5,6 +5,20 @@ const inputMessage = document.querySelector('#messageInput');
 const userForm = document.querySelector('#login');
 const inputUser = document.querySelector('#nickNameInput');
 
+const createLi = (liText, ulId, dataTextId) => {
+  const ul = document.querySelector(ulId);
+  const li = document.createElement('li');
+  li.setAttribute('data-testid', dataTextId);
+  li.innerText = liText;
+  ul.appendChild(li);
+};
+
+socket.on('reconnect', (messages) => messages.forEach((msg) => {
+  const { message, nickname, timestamp } = msg;
+  const chatMessage = `${timestamp} - ${nickname}: ${message}`;
+  createLi(chatMessage, '#messages', 'message');
+}));
+
 let usersList = [];
 
 const nicknameFind = (id, users) => users.find((user) => user.id === id);
@@ -28,14 +42,6 @@ messageForm.addEventListener('submit', (e) => {
   inputMessage.value = '';
   return false;
 });
-
-const createLi = (liText, ulId, dataTextId) => {
-  const ul = document.querySelector(ulId);
-  const li = document.createElement('li');
-  li.setAttribute('data-testid', dataTextId);
-  li.innerText = liText;
-  ul.appendChild(li);
-};
 
 socket.on('userOnline', (users) => {
   usersList = users;

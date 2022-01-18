@@ -90,6 +90,7 @@
       const inputMessage = document.querySelector('#messageInput');
       const userUL = document.querySelector('#users');
       const nickButton = document.querySelector('#saveNick');
+      const messagesChat = document.querySelector('#messages');
 
       const generateRandomName = () => {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -113,13 +114,25 @@
 
         userList.forEach(({ nickname }) => {
           if (nickname != myUser) {
-          const li = document.createElement('li');
-          li.setAttribute('data-testid', 'online-user');
-          li.textContent = nickname;
-          userUL.appendChild(li);
-          }
-        })
+            const li = document.createElement('li');
+            li.setAttribute('data-testid', 'online-user');
+            li.textContent = nickname;
+            userUL.appendChild(li);
+            }
+        });
       }) 
+
+      socket.on('allMessages', async (history) => {
+        const teste = await history;
+        if (teste) {
+          teste.forEach(({ message, nickname, timestamp }) => {
+          const li = document.createElement('li');
+          li.setAttribute('data-testid', 'message');
+          li.textContent = `${timestamp} - ${nickname}: ${message}`;
+          messagesChat.appendChild(li);
+          });
+        }
+      });
 
       socket.on('message', (newMessage) => {
         const messagesUl = document.querySelector('#messages');
@@ -127,7 +140,7 @@
         li.setAttribute('data-testid', 'message');
         li.innerText = newMessage;
         messagesUl.appendChild(li);
-      })
+      });
 
       nickButton.addEventListener('click', () => {
         const newNickname = document.querySelector('#changeNick');

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h3>Chat</h3>
+  <div>
+    <section>
+      <form>
+        <label>
+          <span data-testid="online-user" class="online-user"></span>
+          <input type="text" data-testid="nickname-box" class="nickname-box" placeholder="Nickname..." />
+          <button data-testid="nickname-button" class="nickname-button">Salvar</button>
+        </label>
+      </form>
+      <ul class="users"></ul>
+    </section>
+    <ul class="messages"></ul>
+    <form class="formMessage">
+      <label>
+        <input type="text" data-testid="message-box" placeholder="Mensagem..." />
+        <button data-testid="send-button">Enviar</button>
+      </label>
+    </form>
+  </div>
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script src='./chat.js'></script>
+</html>

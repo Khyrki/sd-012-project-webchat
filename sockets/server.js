@@ -1,5 +1,6 @@
 const { format } = require('date-fns');
-const axios = require('axios');
+// const axios = require('axios');
+const model = require('../models/messages');
 
 const users = [];
 
@@ -15,17 +16,18 @@ const createMessage = (socket, io) => {
   const timestamp = format(new Date(), 'dd-MM-yyyy HH:mm:ss');
   socket.on('message', async ({ nickname, chatMessage }) => {
     io.emit('message', `${timestamp} - ${!nickname ? id : nickname}: ${chatMessage}`);
-    await axios.post('http://localhost:3000', {
-      chatMessage,
-      nickname,
-      timestamp,
-      });
+    await model.create({ nickname, chatMessage, timestamp });
+    // axios.post('http://localhost:3000', {
+    //   chatMessage,
+    //   nickname,
+    //   timestamp,
+    //   });
     });
 };
 
 const getMessages = async (socket) => {
-  // const messages = await messagesModel.getAllMessages();
-  const messages = await axios.post('http://localhost:3000/webchat', {});
+  const messages = await model.findAll();
+  // const messages = axios.post('http://localhost:3000/webchat', {});
   socket.emit('allMessages', messages);
 };
 

@@ -11,19 +11,43 @@ const gerenateRandomString = (size) => {
 
 const passingUserForDocument = (user) => {
   const span = document.querySelector('span');
-  const randomUser = gerenateRandomString(16);
-  span.innerText = `${user || randomUser}`;
+  const newUser = user || gerenateRandomString(16);
+  sessionStorage.setItem('nickname', newUser);
+  span.innerText = `${newUser}`;
 };
 
 passingUserForDocument();
 
+socket.emit('newUser', sessionStorage.getItem('nickname'));
+
 const messageButton = document.querySelector('#message-button');
 const messageList = document.querySelector('#message-list');
 const nicknameButton = document.querySelector('#nickname-button');
+const usersList = document.querySelector('#users-list');
 
 socket.on('message', (message) => {
-  const li = `<li data-testid="message">${message}</li>`;
-  messageList.innerHTML += li;
+  const li = document.createElement('li');
+  li.setAttribute('data-testid', 'message');
+  li.innerText = message;
+  messageList.appendChild(li);
+});
+
+socket.on('newUser', (users) => {
+  usersList.innerHTML = '';
+  users.forEach((user) => {
+    const li = document.createElement('li');
+    li.innerText = user.nickname;
+    usersList.appendChild(li);
+  });
+});
+
+socket.on('nickUpdate', (users) => {
+  usersList.innerHTML = '';
+  users.forEach((user) => {
+    const li = document.createElement('li');
+    li.innerText = user.nickname;
+    usersList.appendChild(li);
+  });
 });
 
 messageButton.addEventListener('click', () => {
@@ -37,5 +61,6 @@ nicknameButton.addEventListener('click', () => {
   const nicknameInput = document.querySelector('#nickname-input');
   sessionStorage.setItem('nickname', nicknameInput.value);
   passingUserForDocument(nicknameInput.value);
+  socket.emit('nickUpdate', nicknameInput.value);
   nicknameInput.value = '';
 });

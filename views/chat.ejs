@@ -8,12 +8,13 @@
   <title>Document</title>
 </head>
 <body>
-  <h1>Bem vindo,<span data-testid="online-user"><span></h1>
+  <h1>Bem vindo, <span data-testid="online-user"><span></h1>
   <h1></h1>
   <input type="text" id="nickname-input" placeholder="Insira um nickname" data-testid="nickname-box" />
   <button id="nickname-button" data-testid="nickname-button">Salvar</button>
   <input type="text" id="message-input" placeholder="Mensagem..." data-testid="message-box"/>
   <button id="message-button" data-testid="send-button">Enviar</button>
+  <ul id="users-list"></ul>
   <ul id="message-list">
     <% messages.forEach((message) => { %>
       <li data-testid="message"><%= `${message.timestamp} ${message.nickname}: ${message.message}` %></li>

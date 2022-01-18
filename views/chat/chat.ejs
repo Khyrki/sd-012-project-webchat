@@ -10,9 +10,25 @@
   <h1>Bem vindo</h1>
   <input type="text" id="message-input" />
   <button id="message-button">Enviar</button>
+  <ul id="message-list"></ul>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
   <script>
-    const socket = io()
+    const socket = io();
+
+    const button = document.querySelector('#message-button');
+    const messageInput = document.querySelector('#message-input');
+    const messageList = document.querySelector('#message-list');
+
+    socket.on('message', (message) => {
+      const li = document.createElement('li');
+      li.innerText = message;
+      messageList.appendChild(li);
+    });
+
+    button.addEventListener('click', () => {
+      socket.emit('message', { chatMessage: messageInput.value, nickname: socket.id});
+      messageInput.value = '';
+    });
   </script>
 </body>
 </html>

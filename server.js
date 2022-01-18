@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
-const chatController = require('./controllers/chat');
 require('dotenv').config();
 
 const PORT = process.env.PORT || 3000;
@@ -21,6 +20,8 @@ const io = require('socket.io')(httpServer, {
 });
 
 require('./sockets/chat')(io);
+
+const chatController = require('./controllers/chat');
 
 app.get('/', chatController);
 

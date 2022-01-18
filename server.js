@@ -1,27 +1,27 @@
 const express = require('express');
-const { urlencoded } = require('body-parser');
-
-const app = express();
-
-// const http = require('http').createServer(app);
+const { createServer } = require('http');
+const { Server } = require('socket.io');
+const path = require('path');
 require('dotenv').config();
 
 const { PORT } = process.env;
 
-app.use(urlencoded({ extended: true }));
+const app = express();
+const httpServer = createServer(app);
 
-app.set('view engine', 'ejs');
-app.set('views', './views');
+const io = new Server(httpServer, {
+  cors: {
+    origin: `http://localhost:${PORT}`,
+    methods: ['GET', 'POST'],
+  },
+});
 
-// const io = require('socket.io')(http, {
-//   cors: {
-//     origin: 'http://localhost:3000',
-//     methods: ['GET', 'POST'],
-//   },
-// });
+io.on('connection', (socket) => {
+  console.log(`${socket.id} se conectou`);
+});
 
-const chatController = require('./controller');
+httpServer.listen(PORT);
 
-app.get('/', chatController.webChat);
+app.use(express.static(path.join(`${__dirname}/public`)));
 
-app.listen(PORT, () => console.log(`Conectado a porta ${PORT}`));
+app.get('/', (_req, res) => res.sendFile(path.join(`${__dirname}/public/chat.html`)));

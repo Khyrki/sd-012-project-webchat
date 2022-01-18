@@ -2,15 +2,18 @@ const express = require('express');
 const http = require('http');
 const path = require('path');
 const { Server } = require('socket.io');
-const RootSocket = require('../sockets');
-const rootRouter = require('./router');
+const RootController = require('./controllers');
+const RootSocket = require('./sockets');
+const Views = require('./views');
 require('dotenv').config();
+
+const { PORT = 3000 } = process.env;
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: `http://localhost:${process.env.PORT || 3000}`,
+    origin: `http://localhost:${PORT || 3000}`,
     methods: ['GET', 'POST'],
   },
 });
@@ -26,7 +29,14 @@ app.set('views', path.resolve('src', 'views'));
 // middlewares;
 app.use(express.json());
 
-// router;
-app.use(rootRouter);
+// views;
+const views = new Views();
 
-module.exports = server;
+// controllers;
+const rootController = new RootController(app, views.map);
+rootController.execute();
+
+// server;
+server.listen(PORT, () => {
+  console.log(`Server is running on PORT ${3000}`);
+});

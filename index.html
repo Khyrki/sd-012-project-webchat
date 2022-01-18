@@ -42,6 +42,7 @@ const socket = io();
 // Cria usuário e coloca no sessionStore
   const handleUser = geraStringAleatoria(16);
   sessionStorage.setItem('userChat', handleUser);
+  socket.emit('clientOn', sessionStorage.getItem('userChat'))
 
 // Seleciona QUERYS
 const sendFormMessage = document.querySelector("#message");
@@ -97,8 +98,6 @@ const clientChangeInput = document.querySelector('#nickname-change');
         li.textContent = newMessage
         messageScreen.appendChild(li);
   })
-
-  socket.emit('clientOn', sessionStorage.getItem('userChat'))
 
   socket.on('clientOn', (listUsers) => {
 

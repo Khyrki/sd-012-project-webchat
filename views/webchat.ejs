@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebChat Project</title>
+  // importar o socket:
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <header>
+    <h1>WebChat Project</h1>
+  </header>
+  <br />
+
+  <form>
+    <input data-testid='nickname-box' id="nameBox" placeholder="Nickname" />
+    <button data-testid='nickname-button' id='changeNameBtn'>Change Name</button>
+  </form>
+
+  <ul id="messageList">
+    <% messages.forEach((msg) => { %>
+      <li data-testid='message' ><%= `${msg.timestamp} - ${msg.nickname}: ${msg.message}` %></li>
+    <% }) %>
+  </ul>
+
+  <form>
+    <input data-testid='message-box' id='messageBox' placeholder="Message"/>
+    <button data-testid='send-button' id='sendButton'>Enviar</button>
+  </form>
+
+  <h2>Online People:</h2>
+  <ul id="onlineContainer">
+  </ul>
+</body>
+</html>
+
+<script>
+  // objeto que vem do socket, conexão com o socket
+  const client = window.io();
+
+  // inserir mensagem
+  const insertMessage = (message) => {
+    const messageList = document.querySelector('#messageList');
+    const li = document.createElement('li');
+
+    // Adiciona um novo atributo ao li
+    li.setAttribute('data-testid', 'message');
+    li.innerText = message;
+    messageList.appendChild(li);
+  }
+
+  client.on('message', (message) => {
+    insertMessage(message);
+  });
+
+  client.on('connection', (clientId) => {
+    const storage = sessionStorage.getItem('webChatNickname');
+    const nickNameH = document.querySelector('#myNickName')
+    if (storage) {
+      client.emit('registeredUser', { data: true });
+    } else {
+      sessionStorage.setItem('webChatNickname', clientId);
+      client.emit('registeredUser', { data: false });
+    }
+  });
+
+  client.on('usuarios', (usuarios) => {
+    const onlineContainer = document.querySelector('#onlineContainer');
+    const myId = sessionStorage.getItem('webChatNickname');
+    const users = document.querySelectorAll('#onlineUser');
+
+    if (users.length === 0) {
+      usuarios.forEach((usuario) => {
+        const li = document.createElement('li');
+        li.innerText = usuario.userName;
+        li.id = usuario.clientId;
+        li.setAttribute('data-testid', 'online-user');
+        li.className = 'onlineUser';
+        if (usuario.userName === myId) {
+          onlineContainer.insertBefore(li, onlineContainer.firstChild);
+        } else {
+          onlineContainer.appendChild(li);
+        }
+      });
+    }
+  });
+
+  client.on('newUser', (data) => {
+    const li = document.createElement('li');
+    li.innerText = data.userName;
+    li.setAttribute('data-testid', 'online-user');
+    li.className = 'onlineUser';
+    li.id = data.clientId;
+    document.querySelector('#onlineContainer').appendChild(li);
+  });
+
+  document.querySelector('#changeNameBtn').addEventListener('click', (e) => {
+    e.preventDefault();
+    const oldName = sessionStorage.getItem('webChatNickname');
+    const newName = document.querySelector('#nameBox').value;
+    sessionStorage.setItem('webChatNickname', newName);
+    document.querySelector('#nameBox').value = '';
+    client.emit('changeName', { oldName: oldName, newName: newName });
+  });
+
+  client.on('changeName', (data) => {
+    const nameList = document.querySelectorAll('.onlineUser');
+    nameList.forEach((li) => {
+      if (li.innerText === data.oldName) {
+        li.innerText = data.newName;
+      }
+    });
+  });
+
+  client.on('disconnected', (disconectedId) => {
+    itemToRemove = document.querySelector(`#${disconectedId}`);
+    document.querySelector('#onlineContainer').removeChild(itemToRemove);
+  });
+
+  document.querySelector('#sendButton').addEventListener('click', (e) => {
+    e.preventDefault();
+    const msg = document.querySelector('#messageBox').value;
+    const myClient = sessionStorage.getItem('webChatNickname');
+    client.emit('message', { chatMessage: msg, nickname: myClient });
+    document.querySelector('#messageBox').value = '';
+  });
+
+</script>

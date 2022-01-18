@@ -60,7 +60,6 @@ module.exports = (io) => {
   io.on('connection', (socket) => {
     socket.on('login', ({ nickname }) => {
       serverReturnAfterLogin(socket, io, { nickname });
-
     });
 
     socket.on('disconnect', () => {

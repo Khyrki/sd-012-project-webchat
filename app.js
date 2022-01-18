@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
+const { formatDate } = require('./utils');
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -12,7 +13,11 @@ const io = socketIo(httpServer, {
 });
 
 io.on('connection', (socket) => {
-  console.log(`Welcome: ${socket.id}`);
+  socket.on('message', ({ chatMessage, nickname }) => {
+    const date = formatDate(new Date());
+    const message = `${date} - ${nickname}: ${chatMessage}`;
+    io.emit('message', message);
+  });
 });
 
 app.set('view engine', 'ejs');

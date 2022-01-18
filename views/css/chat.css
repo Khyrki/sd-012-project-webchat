@@ -1,0 +1,89 @@
+* {
+  margin: 1;
+  padding: 1;
+}
+
+body {
+  display: flex;
+  flex-flow: row nowrap;
+  font: 16px;
+  font-style: normal;
+}
+
+.loginUsersMessages {
+  display: flex;
+  flex-flow: row nowrap;
+  height: 100%;
+  width: 100%;
+}
+
+.messageInput {
+  background: black;
+  bottom: 0;
+  display: flex;
+  padding: 3px;
+  position: fixed;
+  width: 100%;
+}
+
+.loginUsers {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+
+.login {
+  display: flex;
+  width: 250px;
+}
+
+.users {
+  display: flex;
+  flex-flow: column;
+  height: 620px;
+}
+
+.messages {
+  display: flex;
+  flex-flow: column;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 1200px;
+}
+
+form input {
+  border: 0;
+  margin-right: 0.5%;
+  padding: 10px;
+  width: 90%;
+}
+
+form button {
+  background: rgb(130, 224, 255);
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  width: 9%;
+}
+
+.messages li {
+  padding: 5px 10px;
+}
+
+.messages li:nth-child( odd ) {
+  background: #eee;
+}
+
+.nickName {
+  border: 1px;
+  height: 30px;
+  width: 200px;
+}
+
+.login button {
+  background: rgb(130, 224, 255);
+  border: none;
+  width: 200px;
+}
+

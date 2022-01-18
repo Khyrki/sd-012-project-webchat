@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chat</title>
+    <link rel="stylesheet" href="./css/chat.css">
+  </head>
+  <body>
+    <section class="loginUsersMessages">
+      <section class="loginUsers">
+        <form action="" class="login" id="login">
+          <input
+            class="nickName"
+            data-testid="nickname-box"
+            type="text"
+            placeholder="Insira seu NickName"
+            id="nickNameInput"
+            autocomplete="off"
+          />
+          <button data-testid="nickname-button">Salvar</button>          
+        </form>
+        <ul class="users" id="users"></ul>
+      </section>
+      <ul class="messages" id="messages"></ul>
+    </section>    
+    <form action="" class="messageInput" id="messageForm">
+      <input
+        type="text"
+        data-testid="message-box"
+        placeholder="Insira uma nova mensagem aqui"
+        id="messageInput"
+        autocomplete="off"
+      />
+      <button data-testid="send-button">Enviar</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src='./js/chat.js'></script>
+  </body>
+</html>

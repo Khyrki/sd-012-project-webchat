@@ -37,6 +37,6 @@ main {
 }
 
 .send-message input {
-  width: 65%;
   margin-right: 10px;
+  width: 65%;
 }

@@ -10,6 +10,16 @@ const io = require('socket.io')(http, {
   },
 });
 
+const webchatController = require('./controllers/webchat');
+
+app.set('view engine', 'ejs');
+
+app.set('views', './views');
+
+app.use(express.static(`${__dirname}/views`));
+
+app.get('/', webchatController);
+
 require('./sockets/webchat')(io);
 
 http.listen(3000, () => console.log('listening on port 3000'));

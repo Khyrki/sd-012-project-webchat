@@ -27,12 +27,12 @@ const getDate = () => {
   return `${day}-${month}-${year} ${time.toLocaleTimeString('en-US')}`;
 };
 
-const onConnect = (socket) => ({ name }) => {
+const onConnect = (socket) => ({ nickname }) => {
   const index = connectedInChat.findIndex((user) => user.id === socket.id);
   if (index === -1) {
-    connectedInChat.push({ id: socket.id, name });
+    connectedInChat.push({ id: socket.id, nickname });
   } else {
-    connectedInChat[index] = { id: socket.id, name };
+    connectedInChat[index] = { id: socket.id, nickname };
   }
   io.emit('updateConnectedUsers', connectedInChat);
 };
@@ -40,10 +40,10 @@ const onConnect = (socket) => ({ name }) => {
 io.on('connection', (socket) => {
   socket.on('connectUser', onConnect(socket));
 
-  socket.on('message', ({ chatMessage, name }) => {
+  socket.on('message', ({ chatMessage, nickname }) => {
     const date = getDate();
-    Message.create({ date, name, chatMessage });
-    io.emit('message', `${date} ${name} ${chatMessage}`);
+    Message.create({ date, nickname, chatMessage });
+    io.emit('message', `${date} ${nickname} ${chatMessage}`);
   });
 
   socket.on('disconnect', () => {
@@ -56,7 +56,7 @@ io.on('connection', (socket) => {
 app.get('/', async (req, res) => {
   const messages = await Message.getAll();
   const formattedMessages = messages
-    .map(({ date, name, chatMessage }) => `${date} ${name} ${chatMessage}`);
+    .map(({ date, nickname, chatMessage }) => `${date} ${nickname} ${chatMessage}`);
     return res.status(200).render('index', { messages: formattedMessages, connectedInChat });
 });
 

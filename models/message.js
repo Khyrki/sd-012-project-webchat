@@ -5,6 +5,9 @@ const formatMessage = (chatMessage, nickname) => {
   return `${formatDate} ${formatTime} - ${nickname}: ${chatMessage}`;
 };
 
+const removeSelectedUser = (id, list) => list.filter((item) => item.id !== id);
+
 module.exports = {
   formatMessage,
+  removeSelectedUser,
 };

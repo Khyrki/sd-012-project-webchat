@@ -1,4 +1,4 @@
-const { formatMessage } = require('../models/message');
+const { formatMessage, removeSelectedUser } = require('../models/message');
 
 let userList = [];
 
@@ -11,10 +11,13 @@ module.exports = (io) => io.on('connection', (socket) => {
     userList.push({ id: socket.id, nickname });
     io.emit('newUser', userList);
   });
-  socket.on('changeNick', ({ oldNickname, newNickname }) => {
-    const removeOld = userList.filter((item) => item.nickname !== oldNickname);
-    removeOld.push({ id: socket.id, nickname: newNickname });
-    userList = removeOld;
+  socket.on('changeNick', (newNickname) => {
+    userList = removeSelectedUser(socket.id, userList);
+    userList.push({ id: socket.id, nickname: newNickname });
     io.emit('newUser', userList);
   });
+  socket.on('disconnect', () => {
+    userList = removeSelectedUser(socket.id, userList);
+    io.emit('newUser', userList);
+});
 });

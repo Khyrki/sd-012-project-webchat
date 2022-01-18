@@ -105,12 +105,19 @@
 
       socket.on('newUser', (userList) => {
         userUL.innerHTML = '';
+        const myUser = sessionStorage.getItem('nickname');
+        const li = document.createElement('li');
+        li.setAttribute('data-testid', 'online-user');
+        li.textContent = myUser;
+        userUL.appendChild(li);
 
         userList.forEach(({ nickname }) => {
+          if (nickname != myUser) {
           const li = document.createElement('li');
           li.setAttribute('data-testid', 'online-user');
           li.textContent = nickname;
           userUL.appendChild(li);
+          }
         })
       }) 
 
@@ -125,7 +132,7 @@
       nickButton.addEventListener('click', () => {
         const newNickname = document.querySelector('#changeNick');
         const nickname = sessionStorage.getItem('nickname');
-        socket.emit('changeNick', { oldNickname: nickname, newNickname: newNickname.value });
+        socket.emit('changeNick', newNickname.value);
 
         sessionStorage.setItem('nickname', newNickname.value);
         newNickname.value = '';

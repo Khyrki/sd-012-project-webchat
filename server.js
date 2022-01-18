@@ -11,7 +11,7 @@ const app = express();
 const httpServer = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 
-app.use(express.static(path.resolve(__dirname, './public')));
+app.use(express.static(path.join(`${__dirname}/public`)));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -31,7 +31,7 @@ socketMessages(io);
 
 app.use('/', chatController);
 app.get('/', (_req, res) => {
-  res.sendFile(path.resolve(__dirname, './public/index.html'));
+  res.sendFile(path.join(`${__dirname}/public`));
 });
 
 httpServer.listen(PORT, () => console.log(`Ouvindo na porta ${PORT}`));

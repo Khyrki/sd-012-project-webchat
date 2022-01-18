@@ -1,17 +1,4 @@
-const standardDateString = (date, equalizer) => {
-  return date + equalizer >= 10 ? date + equalizer : `0${date + equalizer}`;
-};
-
-const gettingDateAndTime = () => {
-  const now = new Date();
-  const day = standardDateString(now.getDate(), 0);
-  const month = standardDateString(now.getMonth(), 1);
-  const year = now.getFullYear();
-  const hour = standardDateString(now.getHours(), 0);
-  const minutes = standardDateString(now.getMinutes(), 0);
-  const seconds = standardDateString(now.getSeconds(), 0);
-  return `${day}/${month}/${year} ${hour}:${minutes}:${seconds}`;
-};
+const { gettingDateAndTime } = require('../utils/functions');
 
 module.exports = (io) => {
   io.on('connection', (socket) => {

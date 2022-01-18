@@ -8,16 +8,18 @@
 </head>
 <body>
   <h1>Bem vindo</h1>
-  <input type="text" id="message-input" />
+  <input type="text" id="nickname-input" placeholder="Insira um nickname" />
+  <button id="nickname-button">Salvar</button>
+  <input type="text" id="message-input" placeholder="Mensagem..."/>
   <button id="message-button">Enviar</button>
   <ul id="message-list"></ul>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
   <script>
     const socket = io();
 
-    const button = document.querySelector('#message-button');
-    const messageInput = document.querySelector('#message-input');
+    const messageButton = document.querySelector('#message-button');
     const messageList = document.querySelector('#message-list');
+    const nicknameButton = document.querySelector('#nickname-button');
 
     socket.on('message', (message) => {
       const li = document.createElement('li');
@@ -25,9 +27,17 @@
       messageList.appendChild(li);
     });
 
-    button.addEventListener('click', () => {
-      socket.emit('message', { chatMessage: messageInput.value, nickname: socket.id});
+    messageButton.addEventListener('click', () => {
+      const messageInput = document.querySelector('#message-input');
+      const nickname = sessionStorage.getItem('nickname') || socket.id;
+      socket.emit('message', { chatMessage: messageInput.value, nickname });
       messageInput.value = '';
+    });
+
+    nicknameButton.addEventListener('click', () => {
+      const nicknameInput = document.querySelector('#nickname-input');
+      sessionStorage.setItem('nickname', nicknameInput.value);
+      nicknameInput.value = '';
     });
   </script>
 </body>

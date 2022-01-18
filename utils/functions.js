@@ -11,7 +11,7 @@ const gettingDateAndTime = () => {
   const hour = standardValue(now.getHours(), 0);
   const minutes = standardValue(now.getMinutes(), 0);
   const seconds = standardValue(now.getSeconds(), 0);
-  return `${day}/${month}/${year} ${hour}:${minutes}:${seconds}`;
+  return `${day}-${month}-${year} ${hour}:${minutes}:${seconds}`;
 };
 
 module.exports = {

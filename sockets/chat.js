@@ -4,6 +4,7 @@ const {
 
 let userList = [];
 
+// Comment to push
 const first = (io) => io.on('connection', async (socket) => {
   const getAll = await getAllMessages();
   socket.emit('allMessages', getAll);

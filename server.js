@@ -41,9 +41,16 @@ const formatMessage = (chatMessage, nickname) => {
 
 io.on('connection', (socket) => {
   console.log(`Usuário conectado. ID: ${socket.id}`);
+  let currentUser;
 
   socket.on('message', ({ chatMessage, nickname }) => {
-    io.emit('serverMessage', formatMessage(chatMessage, nickname));
+    currentUser = nickname;
+    io.emit('serverMessage', formatMessage(chatMessage, currentUser));
+  });
+
+  socket.on('changeNickname', ({ nickname }) => {
+    currentUser = nickname;
+    console.log(currentUser);
   });
 });
 

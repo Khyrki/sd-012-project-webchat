@@ -12,8 +12,8 @@
     <div class="main-container">
       <div class="user">
         <div>
-          <input data-testid="nickname-box" type="text" placeholder="Insira seu nickname">
-          <button data-testid="nickname-button" type="submit">Salvar</button>
+          <input class="nickname-input" data-testid="nickname-box" type="text" placeholder="Insira seu nickname">
+          <button class="nickname-button" data-testid="nickname-button" type="button">Salvar</button>
         </div>
         <div>
           <ul class="users">
@@ -40,26 +40,44 @@
   }
 
   const createNickName = () => {
-    return `User-${random().toString(16).slice(2)}`;
+    return `User-${random().toString(16).slice(4)}`;
   };
 
-  const nickname = createNickName();
+  let nickname = createNickName();
 
-  const usersUl = document.querySelector('.users');
-  const li = document.createElement('li');
-  li.innerText = nickname;
-  usersUl.appendChild(li);
+  const setNickname = (nick) => {
+    nickname = nick
+    const usersUl = document.querySelector('.users');
+    const li = document.createElement('li');
+    li.innerText = nick;
+    li.setAttribute('data-testid', 'online-user');
+    usersUl.appendChild(li);
+  };
+
+  setNickname(nickname);
+
 
   socket.emit('connection');
   const form = document.querySelector('form');
   const inputMessage = document.querySelector('.input-message');
+  const nicknameButton = document.querySelector('.nickname-button');
+  const inputNickname = document.querySelector('.nickname-input');
 
   const createMessage = (message) => {
     const messagesUl = document.querySelector('.messages');
     const li = document.createElement('li');
     li.innerText = message;
+    li.setAttribute('data-testid', 'message');
     messagesUl.appendChild(li);
   };
+
+
+  nicknameButton.addEventListener('click', (e) => {
+    setNickname(inputNickname.value);
+    socket.emit('changeNickname', { nickname: inputNickname.value });
+    inputNickname.innerText = '';
+    return false;
+  });
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();

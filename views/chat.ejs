@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./chat.css">
+  <title>Document</title>
+</head>
+<body>
+  <h1>Bem vindo,<span data-testid="online-user"><span></h1>
+  <h1></h1>
+  <input type="text" id="nickname-input" placeholder="Insira um nickname" data-testid="nickname-box" />
+  <button id="nickname-button" data-testid="nickname-button">Salvar</button>
+  <input type="text" id="message-input" placeholder="Mensagem..." data-testid="message-box"/>
+  <button id="message-button" data-testid="send-button">Enviar</button>
+  <ul id="message-list">
+    <% messages.forEach((message) => { %>
+      <li><%= `${message.timestamp} ${message.nickname}: ${message.message}` %></li>
+    <%}) %>
+  </ul>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
+  <script src="./chat.js"></script>
+</body>
+</html>

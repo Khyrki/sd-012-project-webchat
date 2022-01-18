@@ -1,0 +1,28 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  min-height: 100vh;
+}
+
+body {
+  display: flex;
+}
+
+div {
+  background:gold;
+}
+
+.chat {
+  margin: auto;
+  width: 600px;
+  height: 450px;
+  border: 1px solid #ccc;
+}
+
+.chat__ul {
+  background-color: gold;
+}

@@ -10,15 +10,18 @@ const io = require('socket.io')(http, {
 });
 
 io.on('connection', (socket) => {
+  socket.emit('entered', 'Bem vindo');
   console.log('Alguém se conectou!');
 });
 
 const { PORT } = process.env;
 
 app.use(cors());
+app.set('view engine', 'ejs');
+app.set('views', 'src/view');
 
 app.get('/', (_req, res) => {
-  res.sendFile(`${__dirname}/index.html`);
+  res.sendFile(`${__dirname}/src/view/index.html`);
 });
 
 http.listen(PORT, () => {

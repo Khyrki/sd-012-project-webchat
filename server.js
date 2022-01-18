@@ -1,10 +1,13 @@
 // Faça seu código aqui.
 const express = require('express');
+const path = require('path');
 
 const app = express();
 
+app.use(express.static(path.resolve(__dirname, './public')));
+
 app.set('view engine', 'ejs');
-app.set('views', './views');
+app.set('views', './public/views');
 
 const http = require('http').createServer(app);
 
@@ -18,21 +21,16 @@ const io = require('socket.io')(http, {
 });
 
 const chatPageController = require('./controllers/chatPage');
+const getFullDate = require('./helps/getFullDate');
 
 app.use('/', chatPageController);
 
 const connectedClients = [];
 
 const emitMessageToAll = ({ nickname, chatMessage }) => {
-  const date = new Date();
-  const day = date.getDate();
-  const month = date.getMonth();
-  const year = date.getFullYear();
-  const hour = date.getHours();
-  const min = date.getMinutes();
-  const sec = date.getSeconds();
+  const fullDate = getFullDate();
 
-  const message = `${day}-${month + 1}-${year} ${hour}:${min}:${sec} - ${nickname}: ${chatMessage}`;
+  const message = `${fullDate} - ${nickname}: ${chatMessage}`;
 
   connectedClients.forEach((client) => {
     client.emit('message', message);

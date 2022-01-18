@@ -32,9 +32,10 @@ const createMessages = (message) => {
 };
 
 const getMessages = (messages) => {
-  messages.forEach(({ timestamp, nickname: nick, message }) => {
+  console.log(messages);
+  messages.forEach(({ timestamp, nickname: nick, chatMessage }) => {
     createMessages(
-      `${timestamp} - ${nick}: ${message}`,
+      `${timestamp} - ${nick}: ${chatMessage}`,
     );
   });
 };

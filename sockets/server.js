@@ -22,6 +22,7 @@ const createMessage = (socket, io) => {
 
 const getMessages = async (socket) => {
   const messages = await model.findAll();
+  // const messages = await axios.get('/webchat');
   socket.emit('allMessages', messages);
 };
 

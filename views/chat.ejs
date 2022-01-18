@@ -8,29 +8,23 @@
   </head>
   <body>
     <div id="nicksContainer">
-      <ul id="nicksList">
-      </ul>
+      <ul id="nicksList"></ul>
     </div>
 
     <ul id="messages"></ul>
 
-    <div class="sendMensage">
-      <form id="formMensage">
-        <input
-          id="mensageInput"
-          type="text"
-          data-testid="message-box"
-          placeholder="Pleace type a message"
-        />
-        <button
-          type="submit"
-          id="sendButton"
-          data-testid="send-button"
-        >
-            Send
-        </button>
-      </form>
-    </div>
+    <form id="formMensage">
+      <input
+        id="message-box"
+        type="text"
+        name="message"
+        data-testid="message-box"
+        placeholder="Pleace type a message"
+      />
+      <button type="submit" id="send-button" data-testid="send-button">
+        Send
+      </button>
+    </form>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="./js/chat.js"></script>

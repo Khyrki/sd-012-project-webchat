@@ -42,7 +42,7 @@ socket.on('userOnline', (users) => {
   const usersUl = document.querySelector('#users');
   usersUl.innerHTML = '';
 
-  users.forEach(({ nickname }) => createLi(nickname, '#users', 'online-user'));
+  usersList.forEach(({ nickname }) => createLi(nickname, '#users', 'online-user'));
 });
 
 socket.on('message', (chatMessage) => createLi(chatMessage, '#messages', 'message'));

@@ -26,9 +26,7 @@ const generateRandomName = () => {
 
   for (let index = 0; index < 16; index += 1) {
     const randomIndex = Math.ceil(Math.random() * (letters.length - 1));
-    // console.log(index);
     const letter = letters[randomIndex];
-    console.log(`${index} - ${letter}`);
     name += letter;
   }
   
@@ -60,7 +58,7 @@ const createNewMessage = (data) => {
 
 const getUsers = (users) => {
   const oldUsers = document.querySelectorAll('.user-online-name');
-  console.log(oldUsers);
+    
   if (oldUsers.length !== 0) {
     oldUsers.forEach((oldUser) => {
       usersElement.removeChild(oldUser);

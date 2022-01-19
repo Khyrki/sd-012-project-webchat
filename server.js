@@ -62,7 +62,6 @@ const saveMessageToHistory = async ({ chatMessage, nickname }) => {
 };
 
 const removeUsers = (socket) => {
-  console.log(socket.id);
   const remainingUsers = connectedNicknames.filter((connected) => connected.socketId !== socket.id);
 
   connectedNicknames = remainingUsers;
@@ -84,11 +83,12 @@ io.on('connection', (socket) => {
   });
 
   socket.on('changeNickname', (newNickname) => {
+    const user = connectedNicknames.find((connected) => connected.socketId === socket.id);
+    const indexOfUser = connectedNicknames.indexOf(user);
     const newUsers = connectedNicknames.filter((connected) => connected.socketId !== socket.id);
-
-    newUsers.push({ socketId: socket.id, nickname: newNickname });
+    newUsers.splice(indexOfUser, 0, { socketId: socket.id, nickname: newNickname });
     connectedNicknames = newUsers;
-
+    
     updateUsers(newUsers);
   });
 

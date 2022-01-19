@@ -1,7 +1,10 @@
+const { formatDate } = require('../helpers');
+
 module.exports = (io) => io.on('connection', (socket) => {
   socket.on('message', ({ nickname = 'Anonymous', chatMessage }) => {
     const date = new Date().toLocaleString();
-    io.emit('serverMsg', { date, nickname, chatMessage });
+    const formattedDate = formatDate(date);
+    io.emit('message', `${formattedDate} - ${nickname}: ${chatMessage}`);
   });
 
   socket.on('nickname', (nickname) => {

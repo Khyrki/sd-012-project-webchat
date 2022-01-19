@@ -16,15 +16,15 @@
     </aside>
 
     <form class="webchat-login">
-      <input type="text" class="input-nickname">
-      <button>Login</button>
+      <input type="text" class="input-nickname" data-testid="nickname-box">
+      <button data-testid="nickname-button">Login</button>
     </form>
 
     <article class="webchat-messages" />
 
     <form class="webchat-form">
-      <input type="text" class="input-message">
-      <button type="submit" class="btn-submit">Enviar</button>
+      <input type="text" class="input-message" data-testid="message-box">
+      <button type="submit" class="btn-submit" data-testid="send-button">Enviar</button>
     </form>
 
     <script src="/socket.io/socket.io.js"></script>

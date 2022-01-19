@@ -31,6 +31,13 @@ const createUser = (value, attribute) => {
 /* Gerar nick com 16 caracteres pelo socketID */
 const makeNick = (value) => value.slice(4);
 
+/* Limpa usuários na tela */
+const clearUsers = () => {
+  while (listUsers.firstChild) {
+    listUsers.removeChild(listUsers.lastChild);
+  }
+};
+
 /* EventListener para o envio da mensagem */
 sendMensage.addEventListener('click', (e) => {
   e.preventDefault();
@@ -62,8 +69,15 @@ socket.on('connect', () => {
 
 /* Atualizar a lista de usuarios na view */
 socket.on('updateUsersList', (users) => {
+  clearUsers();
   users.forEach((user) => createUser(user, ['data-testid', 'online-user']));
 });
 
 /* Criação da mensagem */
 socket.on('message', (msg) => createMensage(msg, ['data-testid', 'message']));
+
+window.onbeforeunload = () => {
+  const nickname = sessionStorage.getItem('nickname');
+  socket.emit('removeUser', nickname);
+  socket.disconnect();
+};

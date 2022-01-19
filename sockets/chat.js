@@ -9,17 +9,18 @@ module.exports = (io) => io.on('connection', (socket) => {
     users.push(nickName);
     io.emit('updateUsersList', users);
   });
-
   socket.on('message', ({ chatMessage, nickname }) => {
-    const time = new Date().toLocaleString().replace('/', '-');
-    const response = `${time.replace('/', '-')} ${nickname}: ${chatMessage}`;
+    const time = (new Date().toLocaleString().replace('/', '-'));
     saveMessage({ timeStamp: time.replace('/', '-'), nickname, chatMessage });
+    const response = `${time.replace('/', '-')} ${nickname}: ${chatMessage}`;
     io.emit('message', response);
-  });
-
-  socket.on('updateNickname', (newNick, oldNick) => {
+  }); socket.on('updateNickname', (newNick, oldNick) => {
     const positionInArray = users.findIndex((user) => user === oldNick);
     users[positionInArray] = newNick;
+    io.emit('updateUsersList', users);
+  }); socket.on('removeUser', (nickname) => {
+    const positionInArray = users.findIndex((user) => user === nickname);
+    users.splice(positionInArray, positionInArray + 1);
     io.emit('updateUsersList', users);
   });
 });

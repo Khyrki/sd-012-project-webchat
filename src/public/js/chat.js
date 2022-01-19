@@ -1,11 +1,16 @@
 const socket = window.io();
-
-// envia msg p servidor
+const inputNickname = document.querySelector('#nicknameInput');
 const formMessages = document.querySelector('#message-form');
 const inputMessage = document.querySelector('#messageInput');
+
+// envia msg p servidor
 formMessages.addEventListener('submit', (e) => {
   e.preventDefault();
-  socket.emit('clientMessage', inputMessage.value);
+  console.log(inputMessage.value);
+  socket.emit('message', { 
+    chatMessage: inputMessage.value,
+    nickname: inputNickname.value,
+  });
   inputMessage.value = '';
   return false;
 });
@@ -19,4 +24,4 @@ const createMessage = (message) => {
 };
 
 // escuta msg do server
-socket.on('serverMessage', (message) => createMessage(message));
+socket.on('message', (message) => createMessage(message));

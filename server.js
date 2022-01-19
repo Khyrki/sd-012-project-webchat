@@ -22,4 +22,8 @@ app.set('views', './views');
 
 require('./socket')(io);
 
+app.get('/', (req, res) => {
+  res.send('');
+});
+
 http.listen(PORT, () => console.log(`server rodando na porta ${PORT}`));

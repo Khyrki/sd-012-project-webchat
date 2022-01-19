@@ -54,7 +54,6 @@ function messageCreation(message) {
   messageLi.classList.add('message');
   messageLi.setAttribute(dataId, 'message');
   messageLi.innerText = message;
-
   messageUl.appendChild(messageLi);
 }
 

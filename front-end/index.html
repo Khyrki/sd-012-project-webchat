@@ -78,12 +78,10 @@
     socket.on('message', function(msg) {
       elementLi(msg)
     });
-    /* socket.on('getMessages', function(allMessages) {
-      let item = document.createElement('li');
-      item.textContent = msg;
-      item.setAttribute('data-testid', "message");
-      messages.appendChild(item);
-      window.scrollTo(0, document.body.scrollHeight);
-    }); */
+    socket.on('getMessages', function(allMessages) {
+      allMessages.forEach(el => {
+        elementLi(`${el.timestamp} - ${el.nickname}: ${el.message}`);
+      });
+    });
   </script>
 </html>

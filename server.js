@@ -1,14 +1,8 @@
 const express = require('express');
-// const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 
 const app = express();
 const http = require('http').createServer(app);
-
-const PORT = process.env.PORT || 3000;
-
-app.set('view engine', 'ejs');
-
-app.set('views', './views');
 
 const io = require('socket.io')(http, {
   cors: {
@@ -16,6 +10,13 @@ const io = require('socket.io')(http, {
     method: ['GET', 'POST'],
   },
 });
+const chatModel = require('./models/chat');
+
+const PORT = process.env.PORT || 3000;
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set('view engine', 'ejs');
+app.set('views', './views');
 
 const formatMessage = (chatMessage, nickname) => {
   const date = new Date();
@@ -46,16 +47,28 @@ io.on('connection', (socket) => {
   socket.on('message', ({ chatMessage, nickname }) => {
     currentUser = nickname;
     io.emit('serverMessage', formatMessage(chatMessage, currentUser));
+    chatModel.create({ chatMessage, nickname, full: formatMessage(chatMessage, nickname) });
   });
 
   socket.on('changeNickname', ({ nickname }) => {
     currentUser = nickname;
-    console.log(currentUser);
+    io.emit('newNickname', currentUser);
+  });
+
+  socket.on('login', (nickname) => {
+    io.emit('setNickname', nickname);
   });
 });
 
-app.get('/', (req, res) => {
-  res.status(200).render('chat/index', {});
+app.get('/', async (req, res) => {
+  const history = await chatModel.getAllMessages();
+
+  res.render('chat/index', { history });
+});
+
+app.get('/all', async (req, res) => {
+  const all = await chatModel.getAllMessages();
+  res.status(200).json(all);
 });
 
 http.listen(PORT, () => {

@@ -5,8 +5,72 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WebChat</title>
-</head>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Ubuntu';
+      margin: 0;
+    }
 
+    li {
+      margin-bottom: 5px;
+      margin-top: 5px;
+    }
+
+    .main {
+      background-color: rgb(238, 238, 238);
+      height: 100vh;
+    }
+
+    .main-container {
+      display: flex;
+      justify-content: center;
+    }
+
+    .user {
+      display: flex;
+      flex-direction: column;
+      width: 40%;
+    }
+
+    .user input {
+      width: 75%;
+    }
+
+    .users {
+      background-color: rgb(247, 247, 247);
+    }
+
+    .users li:nth-child(odd) {
+      background-color: rgb(68, 134, 88);
+      color: aliceblue;
+    }
+
+    .message {
+      background-color: rgb(247, 247, 247);
+      display: flex;
+      height: 100vh;
+      width: 60%;
+    }
+
+    .messages li:nth-child(odd) {
+      background-color: rgb(203, 255, 203);
+    }
+
+    .footer {
+      display: flex;
+      position: fixed;
+      bottom: 0%;
+      width: 100%;
+    }
+
+    .footer input {
+      width: 100%;
+    }
+
+
+  </style>
+</head>
 <body>
   <form class="main" action="">
     <div class="main-container">
@@ -22,6 +86,9 @@
       </div>
       <div class="message">
         <ul class="messages">
+          <% history.forEach((message) => { %>
+            <li data-testid="message"><%= message.full %></li>
+          <% }) %>
         </ul>
       </div>
     </div>
@@ -54,8 +121,7 @@
     usersUl.appendChild(li);
   };
 
-  setNickname(nickname);
-
+  socket.emit('login', nickname);
 
   socket.emit('connection');
   const form = document.querySelector('form');
@@ -73,7 +139,6 @@
 
 
   nicknameButton.addEventListener('click', (e) => {
-    setNickname(inputNickname.value);
     socket.emit('changeNickname', { nickname: inputNickname.value });
     inputNickname.innerText = '';
     return false;
@@ -87,6 +152,8 @@
   });
 
   socket.on('serverMessage', (message) => createMessage(message));
+  socket.on('setNickname', (nicknama) => setNickname(nickname));
+  socket.on('newNickname', (updatedNick) => setNickname(updatedNick));
 </script>
 
 </html>

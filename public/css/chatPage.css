@@ -20,6 +20,7 @@ main {
   height: 250px;
   margin-top: 10px;
   overflow-y: scroll;
+  text-align: center;
   width: 100%;
 }
 
@@ -39,8 +40,4 @@ main {
 .send-message input {
   margin-right: 10px;
   width: 65%;
-}
-
-.user-nickname {
-  text-align: center;
 }

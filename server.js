@@ -27,6 +27,7 @@ const { create } = require('./models/chat');
 app.use('/', chatPageController);
 
 const connectedClients = [];
+let connectedNicknames = [];
 
 const emitMessageToAll = ({ nickname, chatMessage }) => {
   const fullDate = getFullDate();
@@ -35,6 +36,14 @@ const emitMessageToAll = ({ nickname, chatMessage }) => {
 
   connectedClients.forEach((client) => {
     client.emit('message', message);
+  });
+};
+
+const updateUsers = (users) => {
+  const nicknames = users.map((connected) => connected.nickname);
+
+  connectedClients.forEach((client) => {
+    client.emit('users', nicknames);
   });
 };
 
@@ -52,6 +61,14 @@ const saveMessageToHistory = async ({ chatMessage, nickname }) => {
   return messageSaved;
 };
 
+const removeUsers = (socket) => {
+  console.log(socket.id);
+  const remainingUsers = connectedNicknames.filter((connected) => connected.socketId !== socket.id);
+
+  connectedNicknames = remainingUsers;
+  updateUsers(remainingUsers);
+};
+
 io.on('connection', (socket) => {
   connectedClients.push(socket);
 
@@ -60,6 +77,22 @@ io.on('connection', (socket) => {
 
     emitMessageToAll(data);
   });
+
+  socket.on('userConnected', (nickname) => {
+    connectedNicknames.push({ socketId: socket.id, nickname });
+    updateUsers(connectedNicknames);
+  });
+
+  socket.on('changeNickname', (newNickname) => {
+    const newUsers = connectedNicknames.filter((connected) => connected.socketId !== socket.id);
+
+    newUsers.push({ socketId: socket.id, nickname: newNickname });
+    connectedNicknames = newUsers;
+
+    updateUsers(newUsers);
+  });
+
+  socket.on('disconnect', () => removeUsers(socket));
 });
 
 http.listen(PORT, () => {

@@ -1,9 +1,9 @@
 const socket = window.io('http://localhost:3000');
 const nicknameInput = document.getElementById('nickname');
 const saveNicknameBtn = document.getElementById('save-nickname');
-const userNicknameElem = document.getElementsByClassName('user-nickname')[0];
 const userMessageElem = document.getElementById('user-message');
 const chat = document.getElementsByClassName('chat')[0];
+const usersElement = document.getElementsByClassName('users')[0];
 
 const button = document.getElementById('send');
 button.addEventListener('click', (e) => {
@@ -25,8 +25,11 @@ const generateRandomName = () => {
   let name = '';
 
   for (let index = 0; index < 16; index += 1) {
-    const randomIndex = Math.ceil(Math.random() * letters.length);
-    name += letters[randomIndex];
+    const randomIndex = Math.ceil(Math.random() * (letters.length - 1));
+    // console.log(index);
+    const letter = letters[randomIndex];
+    console.log(`${index} - ${letter}`);
+    name += letter;
   }
   
   sessionStorage.setItem('nickname', name);
@@ -36,14 +39,15 @@ generateRandomName();
 
 const nickname = sessionStorage.getItem('nickname');
 
-userNicknameElem.innerHTML = nickname;
+socket.emit('userConnected', nickname);
 
 saveNicknameBtn.addEventListener('click', () => {
   const newNickname = nicknameInput.value;
 
   sessionStorage.setItem('nickname', newNickname);
-  userNicknameElem.innerHTML = newNickname;
   nicknameInput.value = '';
+
+  socket.emit('changeNickname', newNickname);
 });
 
 const createNewMessage = (data) => {
@@ -54,4 +58,23 @@ const createNewMessage = (data) => {
   chat.appendChild(newMessage);
 };
 
+const getUsers = (users) => {
+  const oldUsers = document.querySelectorAll('.user-online-name');
+  console.log(oldUsers);
+  if (oldUsers.length !== 0) {
+    oldUsers.forEach((oldUser) => {
+      usersElement.removeChild(oldUser);
+    });
+  }
+
+  users.forEach((user) => {
+    const userElem = document.createElement('p');
+    userElem.innerHTML = user;
+    userElem.classList.add('user-online-name');
+    userElem.dataset.testid = 'online-user';
+    usersElement.appendChild(userElem);
+  });
+};
+
 socket.on('message', createNewMessage);
+socket.on('users', getUsers);

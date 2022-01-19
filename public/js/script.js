@@ -4,6 +4,8 @@ window.onbeforeunload = (_event) => {
   socket.disconnect();
 };
 
+const testid = 'data-testid';
+
 const nicknameForm = document.querySelector('#nicknameForm');
 const nicknameInput = document.querySelector('#nicknameInput');
 const nicknameList = document.querySelector('#nicknameList');
@@ -51,7 +53,7 @@ const createNicknameList = ((socketUsers) => {
   nickNameArray.forEach(({ nickname }) => {
     const listItem = document.createElement('li');
     listItem.setAttribute('class', 'nickname');
-    listItem.setAttribute('data-testid', 'online-user');
+    listItem.setAttribute(testid, 'online-user');
     listItem.innerText = nickname;
     nicknameList.appendChild(listItem);
   });
@@ -59,7 +61,7 @@ const createNicknameList = ((socketUsers) => {
 
 const createMessage = (message) => {
   const listItem = document.createElement('li');
-    listItem.setAttribute('data-testid', 'message');
+    listItem.setAttribute(testid, 'message');
     listItem.innerText = message;
 
     messageList.appendChild(listItem);
@@ -71,15 +73,12 @@ const defineActualUserNamer = (userName) => {
   messageLabel.innerText = userName;
 };
 
-// const createSystemMessage = (message) => {
-//   const listItem = document.createElement('li');
-
-//   listItem.innerText = message;
-
-//   messageList.appendChild(listItem);
-// };
+const renderPastMessages = (messagesArray) => {
+  messagesArray.forEach((message) => createMessage(message));
+};
 
 socket.on('message', (message) => createMessage(message));
 // socket.on('systemMessage', (systemMessage) => createSystemMessage(systemMessage));
 socket.on('userName', (userName) => defineActualUserNamer(userName));
 socket.on('onlineUsersList', (nickNameArray) => createNicknameList(nickNameArray));
+socket.on('pastMessages', (messagesArray) => renderPastMessages(messagesArray));

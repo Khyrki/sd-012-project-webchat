@@ -281,7 +281,6 @@ describe('4 - Informe a todos os clientes quem está online no momento', () => {
     client1Nicknames = await page.$$eval(dataTestid('online-user'), (nodes) => nodes.map((n) => n.innerText));
     await page.waitForTimeout(500);
     expect(client1Nicknames.length).toBe(1);
-    console.log('TESTE IT 3', client1Nicknames);
     expect(client1Nicknames).toEqual(
       expect.arrayContaining([
         expect.stringMatching(nickname),

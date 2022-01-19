@@ -1,8 +1,9 @@
 const generator = require('nickname-generator');
 const { format } = require('date-fns');
 
+const { saveMessageHistory, messageHistory } = require('../models/index');
+
 const socketUsers = [];
-// const messagesArray = [];
 
 const usersArrayGenerator = (id, nickname) => {
   socketUsers.unshift({ id, nickname });
@@ -27,29 +28,14 @@ const nicknameGenerator = (id) => {
   return nickname;
 };
 
-const createMessage = (io, socket, _id) => {
-  socket.on('message', ({ chatMessage, nickname }) => {
+const createMessage = async (io, socket, _id) => {
+  socket.on('message', async ({ chatMessage, nickname }) => {
     const timestamp = format(new Date(), 'dd-MM-yyy HH:mm:ss');
     const message = `${timestamp} - ${!nickname ? nicknameGenerator() : nickname}: ${chatMessage}`;
-    // messagesArray.push({ chatMessage, id, nickname, timestamp });
+    await saveMessageHistory({ message: chatMessage, nickname, timestamp });
     io.emit('message', message);
   });
 };
-
-// const updateMessageNickname = (id, newNickname) => {
-//   // const indexArray = messagesArray.map((item, index) => {
-//   //   if (item.id === id) return index;
-//   // });
-//   const indexArray = [];
-//   messagesArray.forEach((item, index) => {
-//     if (item.id === id) {
-//       indexArray.push(index);
-//     }
-//   });
-//   indexArray.forEach((index) => {
-//     messagesArray[index].nickname = newNickname;
-//   });
-// };
 
 const findIndex = (id, array) => {
   let indexOf = '';
@@ -84,13 +70,30 @@ const disconnect = (io, socket, id) => {
   });
 };
 
-module.exports = (io) => io.on('connection', (socket) => {
+const pastMessages = async () => {
+  try {
+    const messagesArray = await messageHistory();
+    if (!messagesArray) return [];
+
+    const messagesToRender = messagesArray.map(({ message, nickname, timestamp }) =>
+      `${timestamp} - ${nickname}: ${message}`);
+
+    return messagesToRender;
+  } catch (err) {
+    console.log('Erro no chat.js');
+    return err;
+  }
+};
+
+module.exports = (io) => io.on('connection', async (socket) => {
   const { id } = socket;
   
   const nickname = nicknameGenerator(id);
   
   socket.emit('userName', nickname);
   io.emit('onlineUsersList', socketUsers);
+  const renderPastMessages = await pastMessages();
+  socket.emit('pastMessages', renderPastMessages);
   
   createMessage(io, socket, id);
   disconnect(io, socket, id);

@@ -4,19 +4,19 @@ window.onbeforeunload = (_event) => {
   socket.disconnect();
 };
 
-// const nicknameForm = document.querySelector('#nicknameForm');
-// const nicknameInput = document.querySelector('#nicknameInput');
+const nicknameForm = document.querySelector('#nicknameForm');
+const nicknameInput = document.querySelector('#nicknameInput');
 const nicknameList = document.querySelector('#nicknameList');
 const messageForm = document.querySelector('#messageForm');
 const messageInput = document.querySelector('#messageInput');
 const messageList = document.querySelector('#messageList');
 
-// nicknameForm.addEventListener('submit', (e) => {
-//   e.preventDefault();
-//   socket.emit('nickname', nicknameInput.value);
-//   nicknameInput.value = '';
-//   return false;
-// });
+nicknameForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  socket.emit('changeNick', nicknameInput.value);
+  nicknameInput.value = '';
+  return false;
+});
 
 messageForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -33,28 +33,34 @@ messageForm.addEventListener('submit', (e) => {
 });
 
 const createNicknameList = (nickNameArray) => {
-  while (nicknameList.firstChild) {
-    nicknameList.removeChild(nicknameList.firstChild);
-  }
+  nicknameList.innerHTML = '';
   nickNameArray.forEach(({ nickname }) => {
     const listItem = document.createElement('li');
     listItem.setAttribute('class', 'nickname');
+    listItem.setAttribute('data-testid', 'online-user');
   
-    listItem.innerText = nickname;
+    listItem.innerHTML = nickname;
   
     nicknameList.appendChild(listItem);
   });
 };
 
-const createMessage = (chatMessage) => {
-  const listItem = document.createElement('li');
+const createMessage = (messagesArray) => {
+  while (messageList.firstChild) {
+    messageList.removeChild(messageList.firstChild);
+  }
+  messagesArray.forEach(({ chatMessage, nickname, timestamp }) => {
+    const message = `${timestamp} - ${nickname}: ${chatMessage}`;
+    const listItem = document.createElement('li');
+    listItem.setAttribute('data-testid', 'message');
+    listItem.innerText = message;
 
-  listItem.innerText = chatMessage;
-
-  messageList.appendChild(listItem);
+    messageList.appendChild(listItem);
+  });
 };
 
 const defineActualUserNamer = (userName) => {
+  console.log(userName);
   const messageLabel = document.querySelector('#userName');
 
   messageLabel.innerText = userName;
@@ -68,7 +74,7 @@ const createSystemMessage = (message) => {
   messageList.appendChild(listItem);
 };
 
-socket.on('message', (chatMessage) => createMessage(chatMessage));
+socket.on('message', (messagesArray) => createMessage(messagesArray));
 socket.on('systemMessage', (systemMessage) => createSystemMessage(systemMessage));
 socket.on('userName', (userName) => defineActualUserNamer(userName));
 socket.on('nicknameList', (nickNameArray) => createNicknameList(nickNameArray));

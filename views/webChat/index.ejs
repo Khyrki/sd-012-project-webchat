@@ -5,14 +5,15 @@
   </head>
   <body>
     <ul data-testid="nickname-box" id="nicknamesContainer">
-
     </ul>
     <form id="nicknameForm">
       <input data-testid="nickname-box" id="nicknameInput" autocomplete="off" />
       <button data-testid="nickname-button">Alterar Nickname</button>
     </form>
     <ul id="chatMessages">
-
+      <% history.forEach((message) => { %>
+        <li><%= message.timestamp %> - <%= message.nickname %>: <%= message.message %></li>
+      <% }) %>
     </ul>
     <form id="messageForm">
       <input data-testid="message-box" id="messageInput" autocomplete="off" />

@@ -1,3 +1,5 @@
+const historyModel = require('../models/history');
+
 // Código retirado do repositório do colega Lucianl Almeida Turma 12
 const createDate = () => {
   const date = new Date();
@@ -16,7 +18,7 @@ const generateRandomNickname = () => {
   let nickname = '';
   const charactersLength = characters.length;
   for (let index = 0; index < 16; index += 1) {
-      nickname += characters.charAt(Math.floor(Math.random() * charactersLength));
+    nickname += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
 
   return nickname;
@@ -27,8 +29,10 @@ module.exports = (io) => io.on('connection', (socket) => {
 
   socket.emit('newConnection', { nickname: randomNickName, id: socket.id });
 
-  socket.on('message', ({ nickname, chatMessage }) => {
+  socket.on('message', async ({ nickname, chatMessage }) => {
+    const timestamp = createDate();
     io.emit('message', `${createDate()} - ${nickname}: ${chatMessage}`);
+    await historyModel.createMessage({ message: chatMessage, nickname, timestamp });
   });
 
   socket.on('changeNickname', (nickname) => {

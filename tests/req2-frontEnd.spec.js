@@ -14,7 +14,7 @@ const anotherChatMessage = 'Your best and wisest refuge from all troubles is in 
 const yetAnotherChatMessage = 'The science of operations, as derived from mathematics more especially, is a science of itself, and has its own abstract truth and value.';
 const nickname = 'Ada Lovelace';
 
-describe.skip('2 - Crie um frontend para que as pessoas interajam com o chat', () => {
+describe('2 - Crie um frontend para que as pessoas interajam com o chat', () => {
   let browser;
   let page;
 
@@ -34,7 +34,6 @@ describe.skip('2 - Crie um frontend para que as pessoas interajam com o chat', (
     await page.waitForSelector(dataTestid('online-user'));
 
     const givenNickname = await page.$$eval(dataTestid('online-user'), (nodes) => nodes.map((n) => n.innerText));
-
     expect(givenNickname[0]).toMatch(/^[\w'-]{16}$/);
   });
 

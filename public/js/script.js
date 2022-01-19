@@ -1,67 +1,75 @@
-// const socket = window.io();
+const socket = window.io();
 
-// window.onbeforeunload = (_event) => {
-//   socket.disconnect();
-// };
+window.onbeforeunload = (_event) => {
+  socket.disconnect();
+};
 
-// const nicknameForm = document.querySelector('#nicknameForm');
-// const nicknameInput = document.querySelector('#nicknameInput');
-// const nicknameList = document.querySelector('#nicknameList');
-// const messageForm = document.querySelector('#messageForm');
-// const messageInput = document.querySelector('#messageInput');
-// const messageList = document.querySelector('#messageList');
+const nicknameForm = document.querySelector('#nicknameForm');
+const nicknameInput = document.querySelector('#nicknameInput');
+const nicknameList = document.querySelector('#nicknameList');
+const messageForm = document.querySelector('#messageForm');
+const messageInput = document.querySelector('#messageInput');
+const messageList = document.querySelector('#messageList');
 
-// nicknameForm.addEventListener('submit', (e) => {
-//   e.preventDefault();
-//   socket.emit('changeNick', nicknameInput.value);
-//   nicknameInput.value = '';
-//   return false;
-// });
+nicknameForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  socket.emit('changeNick', nicknameInput.value);
+  nicknameInput.value = '';
+  return false;
+});
 
-// messageForm.addEventListener('submit', (e) => {
-//   e.preventDefault();
+messageForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const nickname = document.querySelector('#userName').innerText;
+  const chatMessage = messageInput.value;
+  socket.emit('message', { chatMessage, nickname });
+  messageInput.value = '';
+  return false;
+});
 
-//   const message = messageInput.value;
-//   const nickname = document.querySelector('#userName').innerText;
+const changePosition = (array) => {
+  if (!array) return [];
+  let indexOf = '';
+  const userNickname = document.querySelector('#userName').innerText;
 
-//   const chatMessage = message;
+  array.forEach((item, index) => {
+    if (item.nickname === userNickname) {
+      indexOf = index;
+    }
+  });
+/* fonte do código para mudar a posicao do array 
+https://www.horadecodar.com.br/2020/03/30/javascript-mudar-a-posicao-de-um-elemento-no-array/ */
+  const newArray = [...array];
+  newArray.splice(0, 0, newArray.splice(indexOf, 1)[0]);
+  return newArray;
+};
 
-//   socket.emit('message', { chatMessage, nickname });
+const createNicknameList = ((socketUsers) => {
+  nicknameList.innerHTML = '';
+  const nickNameArray = changePosition(socketUsers);
 
-//   messageInput.value = '';
-//   return false;
-// });
+  nickNameArray.forEach(({ nickname }) => {
+    const listItem = document.createElement('li');
+    listItem.setAttribute('class', 'nickname');
+    listItem.setAttribute('data-testid', 'online-user');
+    listItem.innerText = nickname;
+    nicknameList.appendChild(listItem);
+  });
+});
 
-// const createNicknameList = (nickNameArray) => {
-//   nicknameList.innerHTML = '';
-//   nickNameArray.forEach(({ nickname }) => {
-//     const listItem = document.createElement('li');
-//     listItem.setAttribute('class', 'nickname');
-//     listItem.setAttribute('data-testid', 'online-user');
-  
-//     listItem.innerHTML = nickname;
-  
-//     nicknameList.appendChild(listItem);
-//   });
-// };
+const createMessage = (message) => {
+  const listItem = document.createElement('li');
+    listItem.setAttribute('data-testid', 'message');
+    listItem.innerText = message;
 
-// const createMessage = (messagesArray) => {
-//   messageList.innerHTML = '';
-//   messagesArray.forEach(({ chatMessage, nickname, timestamp }) => {
-//     const message = `${timestamp} - ${nickname}: ${chatMessage}`;
-//     const listItem = document.createElement('li');
-//     listItem.setAttribute('data-testid', 'message');
-//     listItem.innerText = message;
+    messageList.appendChild(listItem);
+};
 
-//     messageList.appendChild(listItem);
-//   });
-// };
+const defineActualUserNamer = (userName) => {
+  const messageLabel = document.querySelector('#userName');
 
-// const defineActualUserNamer = (userName) => {
-//   const messageLabel = document.querySelector('#userName');
-
-//   messageLabel.innerText = userName;
-// };
+  messageLabel.innerText = userName;
+};
 
 // const createSystemMessage = (message) => {
 //   const listItem = document.createElement('li');
@@ -71,7 +79,7 @@
 //   messageList.appendChild(listItem);
 // };
 
-// socket.on('message', (messagesArray) => createMessage(messagesArray));
+socket.on('message', (message) => createMessage(message));
 // socket.on('systemMessage', (systemMessage) => createSystemMessage(systemMessage));
-// socket.on('userName', (userName) => defineActualUserNamer(userName));
-// socket.on('nicknameList', (nickNameArray) => createNicknameList(nickNameArray));
+socket.on('userName', (userName) => defineActualUserNamer(userName));
+socket.on('onlineUsersList', (nickNameArray) => createNicknameList(nickNameArray));

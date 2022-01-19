@@ -1,34 +1,23 @@
-// const generator = require('nickname-generator');
+const generator = require('nickname-generator');
 const { format } = require('date-fns');
 
-// let users = [];
-// let ioUsers = [];
+const socketUsers = [];
 // const messagesArray = [];
 
-// const nicknameGenerator = (id) => {
-//   let nickname = generator.randomNickname({ locale: 'fr', separator: '-', suffixLength: 0 });
+const usersArrayGenerator = (id, nickname) => {
+  socketUsers.unshift({ id, nickname });
+};
 
-//   while (nickname.length < 16) {
-//     nickname = generator.randomNickname({ locale: 'fr', separator: '-', suffixLength: 0 });
-//     if (nickname.length > 16) {
-//       nickname = nickname.slice(0, 16);
-//     }
-//   }
+const nicknameGenerator = (id) => {
+  let nickname = generator.randomNickname({ locale: 'fr', separator: '-', suffixLength: 0 });
 
-//   users.unshift({
-//     id,
-//     nickname,
-//   });
+  while (nickname.length !== 16) {
+    nickname = generator.randomNickname({ locale: 'fr', separator: '-', suffixLength: 0 });
+  }
 
-//   ioUsers.push({ id, nickname });
-
-//   const loginNotification = `Usuário ${nickname} se conectou.`;
-
-//   return {
-//     loginNotification,
-//     nickname,
-//   };
-// };
+  usersArrayGenerator(id, nickname);
+  return nickname;
+};
 
 // const disconnectUser = (socketId) => {
 //   const { nickname } = users.find(({ id }) => id === socketId);
@@ -43,7 +32,7 @@ const { format } = require('date-fns');
 const createMessage = (io, socket, _id) => {
   socket.on('message', ({ chatMessage, nickname }) => {
     const timestamp = format(new Date(), 'dd-MM-yyy HH:mm:ss');
-    const message = `${timestamp} - ${nickname}: ${chatMessage}`;
+    const message = `${timestamp} - ${!nickname ? nicknameGenerator() : nickname}: ${chatMessage}`;
     // messagesArray.push({ chatMessage, id, nickname, timestamp });
     io.emit('message', message);
   });
@@ -73,54 +62,36 @@ const createMessage = (io, socket, _id) => {
 //   });
 // };
 
-// const updateNickname = (id, oldNickname, newNickname) => {
-//   let indexOf = '';
-//     users.find((item, index) => {
-//       indexOf = index;
-//       return item.id === id;
-//     });
-//     users[indexOf].nickname = newNickname;
-//     const { nickname } = users[indexOf];
+const findIndex = (id, array) => {
+  let indexOf = '';
+  array.forEach((item, index) => {
+    if (item.id === id) indexOf = index;
+  });
+  return indexOf;
+};
 
-//     updateMessageNickname(id, newNickname);
+const updateUsersArray = (id, newNickname) => {
+  const socketIndex = findIndex(id, socketUsers);
+  socketUsers[socketIndex].nickname = newNickname;
+};
 
-//     const ioNotification = `${oldNickname} alterou seu apelido para ${nickname}`;
-//     const socketNotification = `Você alterou seu apelido para ${nickname}`;
-
-//     return {
-//       nickname,
-//       ioNotification,
-//       socketNotification,
-//     };
-// };
-
-// const nicknameManager = (io, socket, id) => {
-//   const { nickname: oldNickname } = users.find(({ id: socketId }) => socketId === id);
-
-//   socket.on('changeNick', (nick) => {
-//     const { nickname } = updateNickname(id, oldNickname, nick);
-
-//     // socket.broadcast.emit('systemMessage', ioNotification);
-//     io.emit('nicknameList', users);
-//     io.emit('message', messagesArray);
-//     // socket.emit('systemMessage', socketNotification);
-//     socket.emit('userName', nickname);
-//   });
-// };
+const nicknameManager = (io, socket, id) => {
+  socket.on('changeNick', (nick) => {
+    updateUsersArray(id, nick);
+    socket.emit('userName', nick);
+    io.emit('onlineUsersList', socketUsers);
+  });
+};
 
 module.exports = (io) => io.on('connection', (socket) => {
   const { id } = socket;
   
-  // const { nickname } = nicknameGenerator(id);
+  const nickname = nicknameGenerator(id);
   
-  // io.emit('nicknameList', users);
-  // socket.emit('nicknameList', users);
-  // io.emit('message', messagesArray);
-  // socket.broadcast.emit('systemMessage', loginNotification);
-  // socket.emit('userName', nickname);
-  // socket.emit('systemMessage', `Você se conectou como ${nickname}`);
+  socket.emit('userName', nickname);
+  io.emit('onlineUsersList', socketUsers);
   
   createMessage(io, socket, id);
   // disconnect(io, socket, id);
-  // nicknameManager(io, socket, id);
+  nicknameManager(io, socket, id);
 });

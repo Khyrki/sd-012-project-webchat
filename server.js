@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const socketIo = require('socket.io');
+const { getAllMessages } = require('./controller/chatController');
 
 const app = express();
 const http = require('http').createServer(app);
@@ -23,9 +24,12 @@ app.set('views', './public/views');
 
 app.use(express.static(path.join(__dirname, '/public')));
 
-app.get('/', (_req, res) => {
-    res.render('chat');
-  });
+// app.get('/', (_req, res) => {
+//     res.render('chat');
+// });
+
+app.get('/', getAllMessages);
+// app.post('/', chatController.createMessages);
 
 http.listen(PORT, () => {
     console.log(`Ouvindo na porta ${PORT}`);    

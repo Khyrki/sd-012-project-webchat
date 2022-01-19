@@ -13,7 +13,10 @@
       </form>
     </aside>
     <section>
-      <ul id="messages">   
+      <ul id="messages">
+        <% allMessages.forEach((msg) => { %>
+          <li data-testid="message"><%=msg.timeStamp%> - <%=msg.nickname%> - <%=msg.message%></li>
+        <% }) %>           
       </ul>
       <form id="send-message">
         <input id="messageInput" data-testid="message-box" autocomplete="off" />

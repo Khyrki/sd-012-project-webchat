@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const { createMessages } = require('../models/chatModel');
 
 const day = new Date().getDate();
 const month = new Date().getMonth() + 1;
@@ -15,8 +16,9 @@ const timeStamp = `${day}-${treatedMonth}-${year} ${treatedHour}:${minute}:${sec
 module.exports = (io) => io.on('connection', (socket) => {
     const randomNickname = crypto.randomBytes(8).toString('hex');
     socket.emit('connection', ({ nickname: randomNickname, id: socket.id }));
-    socket.on('message', ({ chatMessage, nickname }) => {               
+    socket.on('message', async ({ chatMessage, nickname }) => {
         io.emit('message', `${timeStamp} ${nickname}: ${chatMessage}`);        
+        await createMessages({ message: chatMessage, nickname, timeStamp });             
     });
     socket.on('changeNickname', (nickname) => {        
         io.emit('changeNickname', { id: socket.id, nickname });

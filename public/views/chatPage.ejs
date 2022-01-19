@@ -21,7 +21,11 @@
         </div>
       </section>
       <section class="chat">
-        
+        <% if (messages) { %>
+          <% messages.forEach((message) => { %>
+            <p data-testid="message"> <%= `${message.timestamp} - ${message.nickname}: ${message.message}` %> </p>
+          <% }) %>
+         <%}%>
       </section>
     </section>
     <form class="send-message">

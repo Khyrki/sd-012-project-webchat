@@ -1,6 +1,10 @@
-module.exports = (req, res, next) => {
+const { read } = require('../models/chat');
+
+module.exports = async (req, res, next) => {
   try {
-    return res.status(200).render('chatPage');
+    const messages = await read();
+
+    return res.status(200).render('chatPage', { messages });
   } catch (error) {
     next(error);
   }

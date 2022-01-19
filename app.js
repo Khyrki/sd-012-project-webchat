@@ -39,9 +39,13 @@ app.set('views', './views');
 app.use(express.static(__dirname));
 
 app.get('/', async (_req, res) => {
-  const messages = await MessageModel.getAll();
+  try {
+    const messages = await MessageModel.getAll();
 
-  res.status(200).render('webchat', { messages });
+    res.status(200).render('webchat', { messages });
+  } catch (error) {
+    res.status(500).send('Internal error');
+  }
 });
 
 module.exports = httpServer;

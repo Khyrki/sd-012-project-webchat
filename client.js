@@ -23,7 +23,6 @@ const createNickname = (nickname) => {
 
 const changeNickname = ({ newName, currentName }) => {
   const usersLi = document.querySelectorAll('.user');
-  console.log([...usersLi]);
   const nicknameLi = [...usersLi].find((li) => li.innerText === currentName);
 
   nicknameLi.innerText = newName;

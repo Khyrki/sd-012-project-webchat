@@ -31,7 +31,7 @@
     id="message-list"
   >
     <% messages.forEach(({ timestamp, nickname, message }) => { %>
-      <li><%= `${timestamp} - ${nickname}: ${message}` %>  </li>
+      <li class="message" data-testid="message"><%= `${timestamp} - ${nickname}: ${message}` %>  </li>
     <% }); %>
   </ul>
 

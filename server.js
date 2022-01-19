@@ -12,8 +12,14 @@ const io = require('socket.io')(http, {
 
 require('./sockets/chat')(io);
 
+app.set('view engine', 'ejs');
+
+app.set('views', './views');
+
+app.use(express.static(`${__dirname}/views`));
+
 app.get('/', (_req, res) => {
-  res.sendFile(`${__dirname}/index.html`);
+  res.render('index', {});
 });
 
 http.listen(3000, () => {

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebChat</title>
+</head>
+<body>
+  <div>
+    <span data-testid="online-user" id="online-user"></span>
+    <input
+      type="text"
+      data-testid="nickname-box"
+      id="nickname-box"
+      placeholder="Nickname"
+    >
+    <button data-testid="nickname-button" id="nickname-button">Salvar</button>  
+  </div>
+  <div>
+    <ul id="chat-box"></ul>
+  </div>
+  <div>
+    <input
+      type="text"
+      data-testid="message-box"
+      id="message-box"
+      placeholder="Digite uma mensagem aqui"
+    >
+    <button data-testid="send-button" id="send-button">Enviar</button>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = window.io();
+
+    const nickElem = document.querySelector('#online-user');
+
+    const randomNick = Array.from(Array(16), 
+      () => Math.floor(Math.random() * 36).toString(36)).join('');
+
+    nickElem.innerHTML = sessionStorage.getItem('nick') || randomNick;
+
+    const nicknameInput = document.querySelector('#nickname-box');
+    const nicknameButton = document.querySelector('#nickname-button');
+    const sendButton = document.querySelector('#send-button');
+    const messageInput = document.querySelector('#message-box');
+    const chat = document.querySelector('#chat-box');
+
+    nicknameInput.addEventListener('keyup', (event) => {
+      if (event.key === 'Enter') nicknameButton.click();
+    });
+
+    nicknameButton.addEventListener('click', () => {
+      const newNick = nicknameInput.value;
+      nicknameInput.value = '';
+      nickElem.innerHTML = newNick;
+      sessionStorage.setItem('nick', newNick);
+    });
+
+
+    messageInput.addEventListener('keyup', (event) => {
+      if (event.key === 'Enter') sendButton.click();
+    });
+
+    sendButton.addEventListener('click', () => {
+      const chatMessage = messageInput.value;
+      const nickname = nickElem.innerHTML;
+      socket.emit('message', { chatMessage, nickname });
+      messageInput.value = '';
+    });
+
+
+    socket.on('message', (message) => {
+      const li = document.createElement('li');
+      li.innerHTML = message;
+      li.setAttribute('data-testid', 'message');
+      chat.appendChild(li);
+    });
+  </script>
+</body>
+</html>

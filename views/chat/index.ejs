@@ -8,7 +8,7 @@
   <style>
     * {
       box-sizing: border-box;
-      font-family: 'Ubuntu';
+      font-family: 'system-ui';
       margin: 0;
     }
 
@@ -68,7 +68,6 @@
       width: 100%;
     }
 
-
   </style>
 </head>
 <body>
@@ -100,21 +99,16 @@
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-  const socket = window.io();
-
-  const random = () => {
-    return Math.random();
-  }
+  const socket = window.io('');
 
   const createNickName = () => {
-    return `User-${random().toString(16).slice(4)}`;
+    return `User-${Math.random().toString(16).slice(4)}`;
   };
 
   let nickname = createNickName();
 
+  const usersUl = document.querySelector('.users');
   const setNickname = (nick) => {
-    nickname = nick
-    const usersUl = document.querySelector('.users');
     const li = document.createElement('li');
     li.innerText = nick;
     li.setAttribute('data-testid', 'online-user');
@@ -123,7 +117,7 @@
 
   socket.emit('login', nickname);
 
-  socket.emit('connection');
+  socket.emit('connection', nickname);
   const form = document.querySelector('form');
   const inputMessage = document.querySelector('.input-message');
   const nicknameButton = document.querySelector('.nickname-button');
@@ -151,9 +145,24 @@
     return false;
   });
 
-  socket.on('serverMessage', (message) => createMessage(message));
-  socket.on('setNickname', (nicknama) => setNickname(nickname));
+  const updateUsers = (arr) => {
+    arr.forEach(user => {
+      setNickname(user);
+    });
+  }
+
+  const inserOnFirstPosition = (currentUser) => {
+    nickname = currentUser;
+    const li = document.createElement('li');
+    li.innerText = currentUser;
+    li.setAttribute('data-testid', 'online-user');
+    usersUl.insertBefore(li, usersUl.firstChild);
+  }
+
+  socket.on('message', (message) => createMessage(message));
+  socket.on('newNicknameMain', (currentUser) => inserOnFirstPosition(currentUser));
   socket.on('newNickname', (updatedNick) => setNickname(updatedNick));
+  socket.on('setNickname', (loggedUsers) => updateUsers(loggedUsers));
 </script>
 
 </html>

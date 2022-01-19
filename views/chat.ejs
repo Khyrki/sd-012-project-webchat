@@ -9,8 +9,9 @@
 <body>
   <h1>ResenhaChat</h1>
   <div>
+    <h2>Bem-vindo <span id="current-user" data-testid="online-user"></span></h2>
     <h3>Usuários Online</h3>
-    <ul id="online-list" data-testid="online-user"></ul>
+    <ul id="online-list"></ul>
   </div>
   <div>
     <h3>Mensagens</h3>
@@ -35,7 +36,8 @@
     window.onload = () => {
       // https://gist.github.com/6174/6062387 (ref para criar random string)
       user = (Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)).substring(0, 16);
-      document.getElementById('nickname').value = user;
+      document.getElementById('current-user').innerText = '';
+      document.getElementById('current-user').innerText = user;
       socket.emit('new-user', user);
     }    
     const messageContainer = document.getElementById('message-container');
@@ -46,6 +48,8 @@
     containerNickname.addEventListener('submit', (e) => {
       e.preventDefault();
       user = nickname.value;
+      document.getElementById('current-user').innerText = '';
+      document.getElementById('current-user').innerText = user;
       console.log(user)
       socket.emit('edit-user', user);
     });
@@ -65,11 +69,17 @@
     });
     socket.on('online', (onlineList) => {
       const ul = document.getElementById('online-list');
-      ul.innerHTML= '';
+      // ref while: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Statements/while
+      while (ul.childNodes.length > 0) {
+        ul.removeChild(ul.lastChild);
+      }
+      const indexUser = onlineList.findIndex((item) => item.nickname === user);
+      // ref splice: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+      onlineList.splice(indexUser, 1);
       onlineList.forEach((user) => {
         const li = document.createElement('li');
         li.setAttribute('data-testid', 'online-user');
-        li.textContent = user.nickname;
+        li.innerText = user.nickname;
         ul.appendChild(li);
       })
     });

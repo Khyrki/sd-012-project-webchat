@@ -1,11 +1,13 @@
 class RenderBaseController {
-  constructor(view) {
+  constructor(view, model) {
     this.view = view;
+    this.model = model;
     this.handle = this.handle.bind(this);
   }
 
-  handle(_req, res) {
-    res.render(this.view);
+  async handle(_req, res) {
+    const messages = await this.model.find();
+    res.render(this.view, { messages });
   }
 }
 

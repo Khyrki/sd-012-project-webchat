@@ -3,6 +3,7 @@ const http = require('http');
 const path = require('path');
 const { Server } = require('socket.io');
 const RootController = require('./controllers');
+const Models = require('./models');
 const RootSocket = require('./sockets');
 const Views = require('./views');
 require('dotenv').config();
@@ -18,8 +19,14 @@ const io = new Server(server, {
   },
 });
 
+// views;
+const views = new Views();
+
+// models;
+const models = new Models();
+
 // sockets;
-const sockets = new RootSocket(io);
+const sockets = new RootSocket(io, models.map);
 sockets.execute();
 
 // settings;
@@ -32,11 +39,8 @@ app.use(express.json());
 // public files;
 app.use(express.static(path.resolve(__dirname, 'public')));
 
-// views;
-const views = new Views();
-
 // controllers;
-const rootController = new RootController(app, views.map);
+const rootController = new RootController(app, views.map, models.map);
 rootController.execute();
 
 // server;

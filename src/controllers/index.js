@@ -1,13 +1,16 @@
 const RenderBaseController = require('./Base/RenderBaseController');
 
 class RootController {
-  constructor(app, views) {
+  constructor(app, views, models) {
     this.app = app;
     this.views = views;
+    this.models = models;
   }
 
   execute() {
-    this.app.get('/', new RenderBaseController(this.views.home).handle);
+    const renderBaseController = new RenderBaseController(this.views.home, this.models.message);
+
+    this.app.get('/', renderBaseController.handle);
   }
 }
 

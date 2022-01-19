@@ -23,7 +23,10 @@
     </form>
   </header>
   <main>
-    <ul id="messages"></ul>
+    <% if (messages.length) {
+      messages = messages.map((message) => `<li data-testid="message">${message}</li>`)
+    } -%>
+    <ul id="messages"><%- messages.join('')  %></ul>
     <form>
       <input
         id="message-box"

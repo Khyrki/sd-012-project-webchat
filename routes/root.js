@@ -1,8 +1,8 @@
 const express = require('express');
-const getAllMessages = require('../controllers/chatControllers');
+const getMessages = require('../controllers/chatControllers');
 
 const root = express.Router({ mergeParams: true });
 
-root.get('/', getAllMessages);
+root.get('/', getMessages);
 
 module.exports = root;

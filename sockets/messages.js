@@ -1,5 +1,5 @@
 const handleDate = require('../helpers/handleDate');
-const createMessage = require('../models/saveMessage');
+const { saveMessage } = require('../models/saveMessage');
 
 module.exports = (io) => io.on('connection', (socket) => {
   console.log('newUser', `O usuário ${socket.id} entrou na conversa!`);
@@ -11,7 +11,7 @@ module.exports = (io) => io.on('connection', (socket) => {
   socket.on('message', ({ chatMessage, nickname }) => {
     const date = new Date();
     const treatedDate = handleDate(date);
-    createMessage('messages', { chatMessage, nickname, treatedDate });
+    saveMessage('messages', { chatMessage, nickname, treatedDate });
     io.emit('message', `${treatedDate} ${nickname} >> ${chatMessage}`);
   });
 });

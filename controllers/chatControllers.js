@@ -1,9 +1,9 @@
-const getAll = require('../models/getAllMessages.js');
+const { getAllMessages } = require('../models');
 
-const getAllMessages = async (_req, res) => {
-  const messages = await getAll();
+const getMessages = async (_req, res) => {
+  const messages = await getAllMessages();
 
-  res.status(200).render('views/chat', messages);
+  res.status(200).render('views/chat', { messages });
 };
 
-module.exports = getAllMessages;
+module.exports = getMessages;

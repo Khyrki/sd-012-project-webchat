@@ -5,15 +5,15 @@ const messageBox = document.getElementById('messageBox');
 // const sendButton = document.getElementById('sendButton');
 const messageForm = document.getElementById('messageForm');
 
-const setNickname = (nickName) => {
-  nickNameDisplayer.innerText = nickName;
+const setNickname = (nickname) => {
+  nickNameDisplayer.innerText = nickname;
 };
 
 messageForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const chatMessage = messageBox.value;
-  const nickName = nickNameDisplayer.innerText;
-  socket.emit('message', { chatMessage, nickName });
+  const nickname = nickNameDisplayer.innerText;
+  socket.emit('message', { chatMessage, nickname });
   messageBox.value = '';
   return false;
 });

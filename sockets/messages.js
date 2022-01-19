@@ -8,10 +8,10 @@ module.exports = (io) => io.on('connection', (socket) => {
     console.log('userDisconnected', `O usuário ${socket.id} saiu da conversa!`);
   });
 
-  socket.on('message', ({ chatMessage, nickName }) => {
+  socket.on('message', ({ chatMessage, nickname }) => {
     const date = new Date();
     const treatedDate = handleDate(date);
-    saveMessage({ chatMessage, nickName, treatedDate });
-    io.emit('message', `${treatedDate} ${nickName} >> ${chatMessage}`);
+    saveMessage({ chatMessage, nickname, treatedDate });
+    io.emit('message', `${treatedDate} ${nickname} >> ${chatMessage}`);
   });
 });

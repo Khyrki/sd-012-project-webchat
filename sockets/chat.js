@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+
 const day = new Date().getDate();
 const month = new Date().getMonth() + 1;
 const year = new Date().getFullYear();
@@ -11,7 +13,12 @@ const treatedMonth = month < 10 ? `0${month}` : month;
 const timeStamp = `${day}-${treatedMonth}-${year} ${treatedHour}:${minute}:${second} ${amPm}`;
 
 module.exports = (io) => io.on('connection', (socket) => {
-    socket.on('message', ({ chatMessage, nickname }) => {        
-        io.emit('message', `${timeStamp} ${nickname}: ${chatMessage}`);
+    const randomNickname = crypto.randomBytes(8).toString('hex');
+    socket.emit('connection', ({ nickname: randomNickname, id: socket.id }));
+    socket.on('message', ({ chatMessage, nickname }) => {               
+        io.emit('message', `${timeStamp} ${nickname}: ${chatMessage}`);        
+    });
+    socket.on('changeNickname', (nickname) => {        
+        io.emit('changeNickname', { id: socket.id, nickname });
     });
 });

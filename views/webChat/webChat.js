@@ -4,6 +4,9 @@ const messageForm = document.querySelector('#messageForm');
 const inputMessage = document.querySelector('#messageInput');
 const nicknameForm = document.querySelector('#nicknameForm');
 const inputNickname = document.querySelector('#nicknameInput');
+const nicknamesContainer = document.querySelector('#nicknamesContainer');
+
+const DATA_TEST_LABEL = 'data-testid';
 
 messageForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -18,32 +21,36 @@ nicknameForm.addEventListener('submit', (e) => {
     const newNickname = inputNickname.value;
     sessionStorage.setItem('nickname', newNickname);
     inputNickname.value = '';
-    socket.emit('changeNickname', newNickname);
+    socket.emit('clientsChange', newNickname);
     return false;
 });
 
 const sendMessage = (message) => {
     const chatMessages = document.querySelector('#chatMessages');
-    console.log(chatMessages);
     const li = document.createElement('li');
-    li.setAttribute('data-testid', 'message');
+    li.setAttribute(DATA_TEST_LABEL, 'message');
     li.innerText = message;
     chatMessages.appendChild(li);
 };
 
-socket.on('message', (message) => sendMessage(message));
-
-socket.on('newConnection', ({ nickname, id }) => {
-    sessionStorage.setItem('nickname', nickname);
-    const nicknameContainer = document.querySelector('#nicknamesContainer');
+const renderNicknames = ({ nickname, id }) => {
     const li = document.createElement('li');
-    li.setAttribute('data-testid', 'online-user');
+    li.setAttribute(DATA_TEST_LABEL, 'online-user');
     li.setAttribute('id', id);
     li.innerText = nickname;
-    nicknameContainer.appendChild(li);
+    nicknamesContainer.appendChild(li);
+};
+
+socket.on('message', (message) => sendMessage(message));
+
+socket.on('clientsChange', (clients) => {
+    console.log(clients);
+    const { nickname } = clients.find((client) => client.id === socket.id);
+    sessionStorage.setItem('nickname', nickname);
+    nicknamesContainer.innerHTML = '';
+    clients.forEach(renderNicknames);
 });
 
-socket.on('changeNickname', ({ newNickname, id }) => {
-    const currentNickname = document.querySelector(`#${id}`);
-    currentNickname.innerHTML = newNickname;
-});
+window.onbeforeunload = (_event) => {
+    socket.disconnect();
+};

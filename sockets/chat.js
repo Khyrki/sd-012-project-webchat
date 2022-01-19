@@ -23,19 +23,30 @@ const generateRandomNickname = () => {
 
   return nickname;
 };
+
+const currentClients = [];
   
 module.exports = (io) => io.on('connection', (socket) => {
   const randomNickName = generateRandomNickname();
 
-  socket.emit('newConnection', { nickname: randomNickName, id: socket.id });
+  currentClients.push({ id: socket.id, nickname: randomNickName });
+  io.emit('clientsChange', currentClients);
 
   socket.on('message', async ({ nickname, chatMessage }) => {
     const timestamp = createDate();
-    io.emit('message', `${createDate()} - ${nickname}: ${chatMessage}`);
     await historyModel.createMessage({ message: chatMessage, nickname, timestamp });
+    io.emit('message', `${createDate()} - ${nickname}: ${chatMessage}`);
   });
 
-  socket.on('changeNickname', (nickname) => {
-    io.emit('changeNickname', { id: socket.id, newNickname: nickname });
+  socket.on('clientsChange', (nickname) => {
+    const index = currentClients.indexOf(currentClients.find((client) => client.id === socket.id));
+    currentClients[index].nickname = nickname;
+    io.emit('clientsChange', currentClients);
+  });
+
+  socket.on('disconnect', () => {
+    currentClients.splice(currentClients
+      .indexOf(currentClients.find((client) => client.id === socket.id)), 1);
+    socket.broadcast.emit('clientsChange', currentClients);
   });
 }); 

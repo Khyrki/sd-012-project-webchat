@@ -48,6 +48,8 @@
       const stringAleatoria = geraStringAleatoria();
       userNickNameInput.value = stringAleatoria;
       nameUser.innerText = stringAleatoria;
+      socket.emit('getMessages');
+
 }
     function alterarName() {
       nameUser.innerText = userNickNameInput.value;
@@ -64,13 +66,24 @@
         messageUser.value = '';
       }
     });
-  
-    socket.on('message', function(msg) {
+
+    const elementLi = (msg) => {
       let item = document.createElement('li');
       item.textContent = msg;
       item.setAttribute('data-testid', "message");
       messages.appendChild(item);
       window.scrollTo(0, document.body.scrollHeight);
+    }
+  
+    socket.on('message', function(msg) {
+      elementLi(msg)
     });
+    /* socket.on('getMessages', function(allMessages) {
+      let item = document.createElement('li');
+      item.textContent = msg;
+      item.setAttribute('data-testid', "message");
+      messages.appendChild(item);
+      window.scrollTo(0, document.body.scrollHeight);
+    }); */
   </script>
 </html>

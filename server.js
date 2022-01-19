@@ -5,7 +5,7 @@ const http = require('http');
 
 const server = http.createServer(app);
 const { Server } = require('socket.io');
-const { controllerNewMessageUser } = require('./back-end/controller/controllerMessageUser');
+const { controllerNewMessageUser, getAllMessages } = require('./back-end/controller/controllerMessageUser');
 
 const io = new Server(server);
 
@@ -17,6 +17,10 @@ io.on('connection', (socket) => {
     socket.on('message', async (userMessage) => {
       const messageUserReturt = await controllerNewMessageUser(userMessage);
       io.emit('message', messageUserReturt);
+    });
+    socket.on('getMessages', async () => {
+      const messegeAll = await getAllMessages();
+      io.emit('getMessages', messegeAll);
     });
   });
 

@@ -1,4 +1,4 @@
-const { saveMessage } = require('../models/modelSaveMessage');
+const { saveMessage, controllerGetMessageAll } = require('../models/modelSaveMessage');
 
 const dateAndTime = () => {
     const now = new Date();
@@ -10,8 +10,12 @@ const dateAndTime = () => {
 const controllerNewMessageUser = async ({ nickname, chatMessage }) => {
     const timestamp = dateAndTime();
     const messageSaved = await saveMessage(nickname, chatMessage, timestamp);
-    // const returnMessage = `${dateAndTime()} - ${nickname}: ${chatMessage}`;
     return messageSaved;
 };
 
-module.exports = { controllerNewMessageUser };
+const getAllMessages = async () => {
+    const allMessages = await controllerGetMessageAll();
+    return allMessages;
+};
+
+module.exports = { controllerNewMessageUser, getAllMessages };

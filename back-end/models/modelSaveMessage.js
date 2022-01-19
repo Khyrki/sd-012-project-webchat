@@ -8,4 +8,10 @@ const saveMessage = async (nickname, message, timestamp) => {
     return `${timestamp} - ${nickname}: ${message}`;
 };
 
-module.exports = { saveMessage };
+const controllerGetMessageAll = async () => {
+    const messages = await connection()
+        .then((db) => db.collection('messages').find().toArray());
+    return messages;
+};
+
+module.exports = { saveMessage, controllerGetMessageAll };

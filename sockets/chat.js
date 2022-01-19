@@ -15,19 +15,13 @@ const nicknameGenerator = (id) => {
     nickname = generator.randomNickname({ locale: 'fr', separator: '-', suffixLength: 0 });
   }
 
+  if (nickname.length > 16) {
+    nickname.slice(0, 15);
+  }
+
   usersArrayGenerator(id, nickname);
   return nickname;
 };
-
-// const disconnectUser = (socketId) => {
-//   const { nickname } = users.find(({ id }) => id === socketId);
-
-//   users = users.filter(({ id }) => id !== socketId);
-
-//   const disconnect = `Usuário ${nickname} se desconectou`;
-
-//   return disconnect;
-// };
 
 const createMessage = (io, socket, _id) => {
   socket.on('message', ({ chatMessage, nickname }) => {
@@ -37,15 +31,6 @@ const createMessage = (io, socket, _id) => {
     io.emit('message', message);
   });
 };
-
-// const disconnect = (io, socket, id) => {
-//   socket.on('disconnect', () => {
-//     // const disconnectNotification = disconnectUser(id);
-//     disconnectUser(id);
-//     // io.emit('systemMessage', disconnectNotification);
-//     io.emit('nicknameList', users);
-//   });
-// };
 
 // const updateMessageNickname = (id, newNickname) => {
 //   // const indexArray = messagesArray.map((item, index) => {
@@ -83,6 +68,32 @@ const nicknameManager = (io, socket, id) => {
   });
 };
 
+const disconnectUser = (socketId) => {
+  // const { nickname } = socketUsers.find(({ id }) => id === socketId);
+  const indexOf = findIndex(socketId, socketUsers);
+  socketUsers.splice(indexOf, 1);
+  // users = users.filter(({ id }) => id !== socketId);
+  // socketUsers = socketUsers.map((socket) => {
+  //   if (socket.id !== socketId) {
+  //     return socket;
+  //   }
+  // });
+ 
+  // console.log(socketUsers);
+  // const disconnect = `Usuário ${nickname} se desconectou`;
+
+  // return disconnect;
+};
+
+const disconnect = (io, socket, id) => {
+  socket.on('disconnect', () => {
+    // const disconnectNotification = disconnectUser(id);
+    disconnectUser(id);
+    // io.emit('systemMessage', disconnectNotification);
+    io.emit('onlineUsersList', socketUsers);
+  });
+};
+
 module.exports = (io) => io.on('connection', (socket) => {
   const { id } = socket;
   
@@ -92,6 +103,6 @@ module.exports = (io) => io.on('connection', (socket) => {
   io.emit('onlineUsersList', socketUsers);
   
   createMessage(io, socket, id);
-  // disconnect(io, socket, id);
+  disconnect(io, socket, id);
   nicknameManager(io, socket, id);
 });

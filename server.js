@@ -49,6 +49,16 @@ const formatFirst = (nickname, users, socket) => {
     socket.emit('login', users);
 };
 
+const changeNickname = async (nickname, socket) => {
+    await userModel.update(socket.id, nickname);
+    const users = await userModel.getAll();
+    socket.broadcast.emit('changeNickname', { users, currentUser: nickname });
+    users.pop();
+    users.unshift({ nickname });
+    console.log(users);
+    socket.emit('changeNickname', { users, currentUser: nickname });
+};
+
 io.on('connection', (socket) => {
   console.log(`Usuário conectado. ID: ${socket.id}`);
   let currentUser;
@@ -59,16 +69,7 @@ io.on('connection', (socket) => {
     chatModel.create({ chatMessage, nickname, full: formatMessage(chatMessage, nickname) });
   });
 
-  socket.on('changeNickname', async ({ nickname }) => {
-    // currentUser = nickname;
-    await userModel.update(socket.id, nickname);
-    const users = await userModel.getAll();
-    socket.broadcast.emit('changeNickname', { users, currentUser: nickname });
-    users.pop();
-    users.unshift({ nickname });
-    console.log(users);
-    socket.emit('changeNickname', { users, currentUser: nickname });
-  });
+  socket.on('changeNickname', async (nickname) => changeNickname(nickname, socket));
 
   socket.on('login', async ({ nickname }) => {
     await userModel.create({ nickname, _id: socket.id });

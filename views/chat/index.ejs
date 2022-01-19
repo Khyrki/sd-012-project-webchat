@@ -135,7 +135,7 @@
 
 
   nicknameButton.addEventListener('click', (e) => {
-    socket.emit('changeNickname', { nickname: inputNickname.value });
+    socket.emit('changeNickname', inputNickname.value);
     inputNickname.innerText = '';
     return false;
   });

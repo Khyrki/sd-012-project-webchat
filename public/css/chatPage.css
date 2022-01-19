@@ -40,3 +40,7 @@ main {
   margin-right: 10px;
   width: 65%;
 }
+
+.user-nickname {
+  text-align: center;
+}

@@ -5,15 +5,16 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../css/chatPage.css">
-  <title>Document</title>
+  <title>Online Chat</title>
 </head>
 <body>
   <main>
+    <h3 class="user-nickname" data-testid="online-user"></h3>
     <section class="chat-users-name">
       <section class="users-name">
         <div class="name">
-          <input id="nickname" type="text" data-testid="online-user" placeholder="Insira seu nickname">
-          <button type="button">Salvar</button>
+          <input id="nickname" type="text" data-testid="nickname-box" placeholder="Insira seu nickname">
+          <button id="save-nickname" type="button" data-testid="nickname-button">Salvar</button>
         </div>
         <div class="users">
 
@@ -24,7 +25,7 @@
       </section>
     </section>
     <form class="send-message">
-      <input type="text" data-testid="message-box" placeholder="Digite uma nova mensagem aqui">
+      <input id="user-message" type="text" data-testid="message-box" placeholder="Digite uma nova mensagem aqui">
       <button id="send" type="submit" data-testid="send-button">Enviar</button>
     </form>
   </main>

@@ -11,7 +11,7 @@ module.exports = (io) => {
     socket.on('message', ({ chatMessage, nickname }) => {
       const dateTime = getDateTime();
 
-      const formattedMsg = `${dateTime} ${nickname} ${chatMessage}`;
+      const formattedMsg = `${dateTime} ${nickname}: ${chatMessage}`;
       console.log(formattedMsg);
       io.emit('message', formattedMsg);
     });

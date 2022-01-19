@@ -14,8 +14,8 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-    socket.on('message', (userMessage) => {
-      const messageUserReturt = controllerNewMessageUser(userMessage);
+    socket.on('message', async (userMessage) => {
+      const messageUserReturt = await controllerNewMessageUser(userMessage);
       io.emit('message', messageUserReturt);
     });
   });

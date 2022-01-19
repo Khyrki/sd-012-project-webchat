@@ -7,9 +7,9 @@ const dateAndTime = () => {
     return `${date} ${time}`;
 };
 
-const controllerNewMessageUser = ({ nickname, chatMessage }) => {
-    const date = dateAndTime();
-    const messageSaved = saveMessage(nickname, chatMessage, date);
+const controllerNewMessageUser = async ({ nickname, chatMessage }) => {
+    const timestamp = dateAndTime();
+    const messageSaved = await saveMessage(nickname, chatMessage, timestamp);
     // const returnMessage = `${dateAndTime()} - ${nickname}: ${chatMessage}`;
     return messageSaved;
 };

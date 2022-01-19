@@ -22,6 +22,7 @@ const io = require('socket.io')(http, {
 
 const chatPageController = require('./controllers/chatPage');
 const getFullDate = require('./helps/getFullDate');
+const { create } = require('./models/chat');
 
 app.use('/', chatPageController);
 
@@ -37,11 +38,26 @@ const emitMessageToAll = ({ nickname, chatMessage }) => {
   });
 };
 
+const saveMessageToHistory = async ({ chatMessage, nickname }) => {
+  const fullDate = getFullDate();
+
+  const newMessage = {
+    message: chatMessage,
+    nickname,
+    timestamp: fullDate,
+  };
+
+  const messageSaved = await create(newMessage);
+
+  return messageSaved;
+};
+
 io.on('connection', (socket) => {
   connectedClients.push(socket);
 
   socket.on('message', (data) => {
-    console.log(data);
+    saveMessageToHistory(data);
+
     emitMessageToAll(data);
   });
 });

@@ -3,14 +3,20 @@ const {
 } = require('../models/message');
 
 let userList = [];
+let allMessagesBD = [];
+
+const getMessages = async () => {
+  allMessagesBD = await getAllMessages();
+};
 
 // Comment to push
 const first = (io) => io.on('connection', async (socket) => {
-  const getAll = await getAllMessages();
-  socket.emit('allMessages', getAll);
+  socket.emit('allMessages', allMessagesBD);
 
   socket.on('message', ({ chatMessage, nickname }) => {
-    saveMessage(nickname, chatMessage, formatMessage());
+    const resultMessage = formatMessage();
+    saveMessage(nickname, chatMessage, resultMessage);
+    allMessagesBD.push({ message: chatMessage, nickname, timestamp: resultMessage });
     io.emit('message', `${formatMessage()} - ${nickname}: ${chatMessage}`);
   });
   socket.on('newUser', (nickname) => {
@@ -34,4 +40,5 @@ const second = (io) => io.on('connection', async (socket) => {
 module.exports = {
   first,
   second,
+  getMessages,
 };

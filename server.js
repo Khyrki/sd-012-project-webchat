@@ -15,6 +15,7 @@ const io = socketIo(http, {
 
 sockets.first(io);
 sockets.second(io);
+sockets.getMessages();
 
 app.use(cors());
 

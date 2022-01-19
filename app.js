@@ -4,6 +4,7 @@ const socketIo = require('socket.io');
 const crypto = require('crypto');
 
 const { formatDate } = require('./utils');
+const MessageModel = require('./models/Message');
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -18,8 +19,11 @@ io.on('connection', (socket) => {
   const username = crypto.randomBytes(16).toString('hex').substring(0, 16);
   socket.emit('connect-user', username);
 
-  socket.on('message', ({ chatMessage, nickname }) => {
+  socket.on('message', async ({ chatMessage, nickname }) => {
     const date = formatDate(new Date());
+
+    await MessageModel.create({ message: chatMessage, nickname, timestamp: date });
+
     const message = `${date} - ${nickname}: ${chatMessage}`;
     io.emit('message', message);
   });
@@ -34,8 +38,10 @@ app.set('views', './views');
 
 app.use(express.static(__dirname));
 
-app.get('/', (_req, res) => {
-  res.status(200).render('webchat');
+app.get('/', async (_req, res) => {
+  const messages = await MessageModel.getAll();
+
+  res.status(200).render('webchat', { messages });
 });
 
 module.exports = httpServer;

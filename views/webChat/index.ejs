@@ -4,13 +4,21 @@
     <title>Socket.IO - Trybe</title>
   </head>
   <body>
+    <ul data-testid="nickname-box" id="nicknamesContainer">
+
+    </ul>
+    <form id="nicknameForm">
+      <input data-testid="nickname-box" id="nicknameInput" autocomplete="off" />
+      <button data-testid="nickname-button">Alterar Nickname</button>
+    </form>
     <ul id="chatMessages">
 
     </ul>
-    <form action="">
-      <input id="messageInput" autocomplete="off" /><button>Send</button>
+    <form id="messageForm">
+      <input data-testid="message-box" id="messageInput" autocomplete="off" />
+      <button data-testid="send-button">Send</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="./webChat.js"></script>
+    <script src="./webChat/webChat.js"></script>
   </body>
 </html>

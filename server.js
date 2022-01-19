@@ -53,6 +53,7 @@ const saveMessageToHistory = async ({ chatMessage, nickname }) => {
 };
 
 const sendUserList = () => {
+  console.log(usersInfo);
   io.emit('users', usersInfo);
 };
 
@@ -60,6 +61,15 @@ const onDisconnect = (socket) => {
   const user = usersInfo.find((userInfo) => userInfo.socketId === socket.id);
   const userIndex = usersInfo.indexOf(user);
   usersInfo.splice(userIndex, 1);
+
+  sendUserList();
+};
+
+const changeNickname = (newNickname, socket) => {
+  const user = usersInfo.find((userInfo) => userInfo.socketId === socket.id);
+  const userIndex = usersInfo.indexOf(user);
+  user.nickname = newNickname;
+  usersInfo.splice(userIndex, 1, user);
 
   sendUserList();
 };
@@ -77,7 +87,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('changeNickname', (newNickname) => {
-    
+    changeNickname(newNickname, socket);
   });
 
   socket.on('disconnect', () => {

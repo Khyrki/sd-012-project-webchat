@@ -41,6 +41,8 @@ const createNewMessage = (message) => {
 };
 
 const createNewUser = (nickname) => {
+  sessionStorage.setItem('user', nickname);
+
   const userList = document.querySelector('.user-list');
   const user = document.createElement('li');
   user.className = 'user';
@@ -48,6 +50,10 @@ const createNewUser = (nickname) => {
   user.innerText = nickname;
   userList.appendChild(user);
 };
+
+window.addEventListener('load', () => {
+  socket.emit('nickname');
+});
 
 socket.on('message', (message) => createNewMessage(message));
 socket.on('serverNickname', (nickname) => createNewUser(nickname));

@@ -7,7 +7,7 @@ module.exports = (io) => io.on('connection', (socket) => {
     io.emit('message', `${formattedDate} - ${nickname}: ${chatMessage}`);
   });
 
-  socket.on('nickname', (nickname) => {
+  socket.on('nickname', (nickname = socket.id.slice(0, 16)) => {
     io.emit('serverNickname', nickname);
   });
 });

@@ -15,5 +15,5 @@ require('./sockets/chat')(io);
 app.use(express.static(`${__dirname}/public`));
 
 server.listen(3000, () => {
-  console.log('Ouvindo na porta 3k!');
+  console.log('Ouvindo na porta 3k!!');
 });

@@ -18,18 +18,37 @@
   <body>
     <ul id="messages"></ul>
     <form id="form" action="">
-      <input id="userNickName" autocomplete="off"/>
-      <input id="messageUser" autocomplete="off" /><button>Send</button>
+      <input id="userNickName" data-testid="online-user" autocomplete="off"/>
+      <p data-testid="online-user" id="nameUser"></p>
+      <input id="messageUser" data-testid="message-box" autocomplete="off" />
+      <button data-testid="send-button">Send</button>
     </form>
   </body>
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    var socket = io();
+    const socket = io();
+
+    function geraStringAleatoria() {
+    let stringAleatoria = '';
+    let caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const tamanho = 16;
+    for (let i = 0; i < tamanho; i++) {
+        stringAleatoria += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+    }
+    return stringAleatoria;
+}
   
     let messages = document.getElementById('messages');
     let form = document.getElementById('form');
     let messageUser = document.getElementById('messageUser');
     let userNickName = document.getElementById('userNickName');
+    let nameUser = document.getElementById('nameUser');
+
+    window.onload = function(){
+      const stringAleatoria = geraStringAleatoria();
+      userNickName.value = stringAleatoria;
+      nameUser.textContent = stringAleatoria;
+}
   
     form.addEventListener('submit', function(e) {
       e.preventDefault();

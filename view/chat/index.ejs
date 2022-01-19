@@ -4,14 +4,15 @@
   <title>Web Chat</title>
 </head>
 <body>
-  <p id="nickName" data-testid="online-user">NickName</p>
   <form>
     <input type="text" placeholder="NickName" id="nickname-box" data-testid="nickname-box" />
     <button id="changeNickName" data-testid="nickname-button">Chenge Nickname</button>
   </form>
-  <div id="onlineUsers">
-  </div>
-  <div id="messages"></div>
+  <ul id="onlineUsers">
+    <li id="nickName" data-testid="online-user">NickName</li>
+  </ul>
+  <ul id="messages" data-testid="message-box">
+  </ul>
   <form>
     <input type="text" id="message-box" data-testid="message-box" />
     <button data-testid="send-button" id="send-button">Send Message</button>

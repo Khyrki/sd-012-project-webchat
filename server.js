@@ -9,7 +9,7 @@ const socketIo = require('socket.io');
 const bodyParser = require('body-parser');
 
 const chat = require('./sockets/chat');
-const chatController = require('./controllers/chat');
+const { chatIDE } = require('./controllers/chat');
 
 const { PORT } = process.env || 3000;
 
@@ -33,7 +33,8 @@ const io = socketIo(httpServer, {
 });
 
 chat(io);
-chatController(app);
+
+app.get('/', chatIDE);
 
 app.use(cors());
 

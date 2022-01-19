@@ -32,7 +32,9 @@ sendButton.addEventListener('click', (e) => {
   socket.emit('message', { chatMessage: message.value });
 });
 
-socket.on('connection', (names) => names.forEach((nickname) => newUser(nickname)));
+socket.on('connection', (messages) => messages.forEach((_message) => newMessage(_message)));
+
+socket.on('userConnection', (nicknames) => nicknames.forEach((nickname) => newUser(nickname)));
 
 socket.on('message', (receivedMessage) => newMessage(receivedMessage));
 

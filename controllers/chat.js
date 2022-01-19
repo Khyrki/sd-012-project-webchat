@@ -1,29 +1,21 @@
-const { io } = require('socket.io-client');
-
 const statusCode = require('http-status-codes').StatusCodes;
 
-const socket = io('http://localhost:3000');
+const { newMessageModel, getAllModel } = require('../models/chat');
 
-const chatController = (req, res, next) => {
-  try {
-    const { nickname, chatMessage } = req.body;
-    socket.emit('message', { nickname, chatMessage });
+const newMessage = async ({ nickname, chatMessage, timestamp }) => {
+  const message = { nickname, chatMessage, timestamp };
 
-    res.status(statusCode.OK).end();
-  } catch (err) {
-    next(err);
-  }
+  await newMessageModel(message);
 };
 
-const chatIDE = (_req, res, next) => {
-  try {
-    res.status(statusCode.OK).render(`${__dirname}/index.html`);
-  } catch (err) {
-    next(err);
-  }
+const getAll = async () => getAllModel();
+
+const chatIDE = (_req, res) => {
+  res.status(statusCode.OK).render(`${__dirname}/index.html`);
 };
 
-module.exports = (route) => {
-  route.get('/', chatIDE);
-  route.post('/', chatController);
+module.exports = {
+  chatIDE,
+  newMessage,
+  getAll,
 };

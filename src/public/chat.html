@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TrybeChat</title>
+    <link rel="stylesheet" href="./css/chat.css">
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <div class="content">
+      <div class="content-superior">
+        <div class="superior-esq">
+          <span class="head-nickname">
+            <form id="nickname-form" action="">
+              <input id="nicknameInput" type="text" /><button>Salvar</button>
+            </form>
+          </span>
+          <div class="body-users">
+            <ul id="users"></ul>
+          </div>
+        </div>
+        <div class="superior-dir">
+          <ul id="messages"></ul>
+        </div>
+      </div>
+      <span class="content-inferior">
+        <form id="message-form" action="">
+          <input id="messageInput" type="text"/><button>Enviar</button>
+        </form>
+      </span>
+    </div>
+  </body>
+  <script src="./js/chat.js"></script>
+</html>

@@ -1,7 +1,7 @@
 const getAllMessages = require('./getAllMessages');
-const createMessage = require('./createMessage');
+const saveMessage = require('./saveMessage');
 
 module.exports = {
   getAllMessages,
-  createMessage,
+  saveMessage,
 };

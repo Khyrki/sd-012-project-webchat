@@ -11,6 +11,7 @@ const io = require('socket.io')(http, {
   },
 });
 const Sockets = require('./src/sockets');
+
 app.use(express.static(path.resolve(__dirname, 'src', 'public')));
 
 Sockets.chat(io);

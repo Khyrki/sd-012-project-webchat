@@ -18,4 +18,5 @@ const createMessage = (message) => {
   messageUl.appendChild(li);
 };
 
+// escuta msg do server
 socket.on('serverMessage', (message) => createMessage(message));

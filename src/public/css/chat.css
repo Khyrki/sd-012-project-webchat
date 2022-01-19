@@ -1,10 +1,70 @@
+:root {
+  --primary-background: #cee1d8
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: blue;
 }
 
 body {
-  background-color: blue;
+  justify-content: center;
+  display: flex;
+  background-color: var(--primary-background)
+}
+
+.content {
+  align-items: center;
+  border: 2px solid black;
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  justify-content: space-around;
+  margin: auto;
+  margin-top: 10px;
+  width: 80vw;
+}
+
+.content-superior {
+  border: 2px solid red;
+  display: flex;
+  height: 85%;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.content-inferior {
+  border: 2px solid red;
+  height: 10%;
+  width: 100%;
+}
+
+.superior-esq {
+  display: flex;
+  border: 2px solid blue;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-around;
+  width: 35%;
+}
+
+.head-nickname {
+  border: 2px solid yellow;
+  display: flex;
+  height: 10%;
+  justify-content: space-around;
+
+}
+
+.body-users {
+  border: 2px solid purple;
+  height: 80%;
+
+}
+
+.superior-dir {
+  border: 2px solid green;
+  height: 100%;
+  width: 60%;
 }

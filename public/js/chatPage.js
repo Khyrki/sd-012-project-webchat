@@ -68,11 +68,10 @@ const getUsers = (users) => {
   }
 
   const myUser = users.find((user) => user.socketId === socketId);
-  const myUserIndex = users.indexOf(myUser);
-  users.splice(myUserIndex, 1);
-  users.unshift(myUser);
+  const newUserList = users.filter((user) => user.socketId !== socketId);
+  newUserList.unshift(myUser);
 
-  users.forEach((user) => {
+  newUserList.forEach((user) => {
     const userElem = document.createElement('p');
     userElem.innerHTML = user.nickname;
     userElem.classList.add('user-online-name');

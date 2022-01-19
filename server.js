@@ -26,7 +26,8 @@ const { create } = require('./models/chat');
 
 app.use('/', chatPageController);
 
-const usersInfo = [];
+const connectedSockets = [];
+let usersInfo = [];
 
 const emitMessageToAll = ({ nickname, chatMessage }) => {
   const fullDate = getFullDate();
@@ -53,28 +54,27 @@ const saveMessageToHistory = async ({ chatMessage, nickname }) => {
 };
 
 const sendUserList = () => {
-  console.log(usersInfo);
-  io.emit('users', usersInfo);
+  connectedSockets.forEach((socket) => {
+    socket.emit('users', usersInfo);
+  });
 };
 
 const onDisconnect = (socket) => {
-  const user = usersInfo.find((userInfo) => userInfo.socketId === socket.id);
-  const userIndex = usersInfo.indexOf(user);
-  usersInfo.splice(userIndex, 1);
-
+  const newUserList = usersInfo.filter((userInfo) => userInfo.socketId !== socket.id);
+  usersInfo = newUserList;
   sendUserList();
 };
 
 const changeNickname = (newNickname, socket) => {
-  const user = usersInfo.find((userInfo) => userInfo.socketId === socket.id);
-  const userIndex = usersInfo.indexOf(user);
-  user.nickname = newNickname;
-  usersInfo.splice(userIndex, 1, user);
-
+  const users = usersInfo.filter((userInfo) => userInfo.socketId !== socket.id);
+  const newUser = { socketId: socket.id, nickname: newNickname };
+  users.push(newUser);
+  usersInfo = users;
   sendUserList();
 };
 
 io.on('connection', (socket) => {
+  connectedSockets.push(socket);
   socket.on('message', (data) => {
     saveMessageToHistory(data);
     emitMessageToAll(data);
@@ -92,6 +92,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     onDisconnect(socket);
+    socket.disconnect();
   });
 });
 

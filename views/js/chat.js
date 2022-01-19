@@ -1,18 +1,29 @@
 const socket = window.io();
 
-const nickNameDisplayer = document.getElementById('userNickname');
+const nicknameDisplayer = document.getElementById('userNickname');
+const nicknameInput = document.getElementById('nicknameInput');
 const messageBox = document.getElementById('messageBox');
 // const sendButton = document.getElementById('sendButton');
 const messageForm = document.getElementById('messageForm');
+const nicknameForm = document.getElementById('nicknameForm');
 
 const setNickname = (nickname) => {
-  nickNameDisplayer.innerText = nickname;
+  nicknameDisplayer.innerText = nickname;
 };
+
+nicknameForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const key = nicknameDisplayer.innerText;
+  const userNickname = nicknameInput.value;
+  sessionStorage.setItem(key, userNickname);
+  setNickname(sessionStorage.getItem(key));
+  nicknameInput.value = '';
+});
 
 messageForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const chatMessage = messageBox.value;
-  const nickname = nickNameDisplayer.innerText;
+  const nickname = nicknameDisplayer.innerText;
   socket.emit('message', { chatMessage, nickname });
   messageBox.value = '';
   return false;
@@ -21,11 +32,11 @@ messageForm.addEventListener('submit', (e) => {
 socket.on('newConnection', (socketId) => {
   const sixteenCarachNick = socketId.substring(0, 16);
 
-  if (sessionStorage.getItem('key')) {
-    return setNickname(sessionStorage.getItem('key'));
+  if (sessionStorage.getItem(sixteenCarachNick)) {
+    return setNickname(sessionStorage.getItem(sixteenCarachNick));
   }
 
-  sessionStorage.setItem('key', sixteenCarachNick);
+  sessionStorage.setItem(sixteenCarachNick, sixteenCarachNick);
 
   setNickname(sixteenCarachNick);
 });

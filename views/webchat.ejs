@@ -7,8 +7,46 @@
   <title>Webchat</title>
 </head>
 <body>
-  <h1>Teste</h1>
+  <form id="nickname-form">
+    <input
+      type="text"
+      placeholder="Insira seu nickname"
+      id="nickname-input"
+      data-testid="nickname-box"
+    />
+    <button
+      type="submit"
+      id="nickname-button"
+      data-testid="nickname-button"
+    >
+      Salvar
+    </button>
+  </form>
+
+  <ul
+    id="nickname-list"
+  ></ul>
+
+  <ul
+    id="message-list"
+  ></ul>
+
+  <form id="message-form">
+    <input
+      type="text"
+      placeholder="Digite uma nova mensagem aqui"
+      id="message-input"
+      data-testid="message-box"
+    />
+    <button
+      type="submit"
+      id="send-button"
+      data-testid="send-button"
+    >
+      Enviar
+    </button>
+  </form>
 </body>
 <script src="/socket.io/socket.io.js"></script>
-<script src="/client.js"></script>
+<script src="../client.js" type="text/javascript"></script>
 </html>

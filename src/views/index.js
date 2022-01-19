@@ -1,11 +1,11 @@
 class Views {
   constructor() {
-    this.chat = 'chat';
+    this.home = 'home';
   }
 
   get map() {
     return {
-      chat: this.chat,
+      home: this.home,
     };
   }
 }

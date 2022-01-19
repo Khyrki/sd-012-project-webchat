@@ -7,7 +7,7 @@ class RootController {
   }
 
   execute() {
-    this.app.get('/', new RenderBaseController(this.views.chat).handle);
+    this.app.get('/', new RenderBaseController(this.views.home).handle);
   }
 }
 

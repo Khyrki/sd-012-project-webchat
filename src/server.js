@@ -24,10 +24,13 @@ sockets.execute();
 
 // settings;
 app.set('view engine', 'ejs');
-app.set('views', path.resolve('src', 'views'));
+app.set('views', path.resolve(__dirname, 'views'));
 
 // middlewares;
 app.use(express.json());
+
+// public files;
+app.use(express.static(path.resolve(__dirname, 'public')));
 
 // views;
 const views = new Views();

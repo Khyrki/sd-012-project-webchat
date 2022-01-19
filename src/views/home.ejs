@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="/socket.io/socket.io.js"></script>
+  <title>chat</title>
+</head>
+<body>
+  <header>
+    <p data-testid="online-user" id="online-user"></p>
+    <form>
+      <input
+        id="nickname-box"
+        type="text"
+        data-testid="nickname-box"
+        placeholder="type your custom name here"
+      >
+      <button type="submit" data-testid="nickname-button" id="nickname-button">
+        Change Name
+      </button>
+    </form>
+  </header>
+  <main>
+    <ul id="messages"></ul>
+    <form>
+      <input
+        id="message-box"
+        type="text"
+        data-testid="message-box"
+        placeholder="type message here"
+      >
+      <button type="submit" data-testid="send-button" id="send-button">
+        Send
+      </button>
+    </form>
+  </main>
+  <script src="js/home.js"></script>
+</body>
+</html>

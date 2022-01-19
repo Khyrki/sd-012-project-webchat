@@ -3,10 +3,10 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const socketIo = require('socket.io');
-const { getAllMessages } = require('./controller/chatController');
 
 const app = express();
 const http = require('http').createServer(app);
+const { getAllMessages } = require('./controller/chatController');
 
 const PORT = process.env.PORT || 3000;
 

@@ -3,17 +3,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/style.css">
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
     <title>Webchat</title>
   </head>
   <body>
     <header>
       <form>
+        <h3 id="userNickname" data-testid="online-user"></h3>
         <input data-testid="nickname-box"/>
         <button data-testid="nickname-button">Salvar</button>
       </form>
     </header>
-    <script> const socket = io('http://localhost:3000');</script>
     <script src="./js/chat.js"></script>
   </body>
 </html>

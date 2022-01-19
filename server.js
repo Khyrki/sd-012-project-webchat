@@ -3,8 +3,7 @@ const { createServer } = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
 const messagesSocket = require('./sockets/messages');
-const usersSocket = require('./sockets/users');
-const root = require('./routes/root');
+// const root = require('./routes/root');
 
 const app = express();
 const httpServer = createServer(app);
@@ -21,9 +20,10 @@ app.set('views', './views');
 
 app.use(express.static(path.resolve(__dirname, 'views')));
 
-app.use('/', root);
+app.get('/', (_req, res) => {
+  res.status(200).render('chat');
+});
 
 messagesSocket(io);
-usersSocket(io);
 
 httpServer.listen(3000);

@@ -1,5 +1,6 @@
 {
     "root": true,
+    "ignorePatterns": "**.ejs",
     "env": {
         "browser": true,
         "commonjs": true,

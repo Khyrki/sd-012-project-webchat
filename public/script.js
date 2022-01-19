@@ -14,20 +14,24 @@ socket.on('user', (userName) => {
 });
 
 window.addEventListener('load', () => {
-  socket.emit('user');
+  if (localStorage.getItem('nickname')) {
+    nickname.innerText = JSON.parse(localStorage.getItem('nickname'));
+  } else {
+    socket.emit('user');
+  }
   socket.emit('messagesHistory');
 });
 
 messageBtn.addEventListener('click', () => {
   socket.emit('message',
-  { chatMessage: messageBox.value, nickname: JSON.parse(sessionStorage.getItem('nickname')) });
+  { chatMessage: messageBox.value, nickname: JSON.parse(localStorage.getItem('nickname')) });
   messageBox.value = '';
 });
 
 nicknameForm.addEventListener('submit', (e) => {
   e.preventDefault();
   nickname.innerText = nicknameBox.value;
-  sessionStorage.setItem('nickname', JSON.stringify(nicknameBox.value));
+  localStorage.setItem('nickname', JSON.stringify(nicknameBox.value));
   nicknameBox.value = '';
 });
 
@@ -40,9 +44,12 @@ socket.on('message', (message) => {
 });
 
 socket.on('messagesHistory', (msgs) => {
+  console.log(msgs);
+
   msgs.forEach((message) => {
     const li = document.createElement('li');
-    li.innerText = `${message.date} - ${message.nickname}: ${message.chatMessage}`;
+    li.innerText = `${message.timestamp} - ${message.nickname}: ${message.message}`;
     li.setAttribute('data-testid', 'message');
+    messages.appendChild(li);
   });
 });

@@ -8,12 +8,24 @@
   <title>Webchat</title>
 </head>
 <body>
-  <h1>Chat</h1>
+  <h1>Usuários</h1>
+  <ul id="user-list"></ul>
+  <h1>Mensagens</h1>
   <ul id="message-list"></ul>
   <form>
-    <input type="text" id="nickname" autocomplete="on"/>
-    <input type="text" id="message-input" autocomplete="off"/>
-    <button type="submit" id="send-button">Enviar</button>
+    <label for="nickname">
+      Nickname:
+      <input type="text" id="nickname" name="nickname" data-testid="nickname-box" autocomplete="on"/>
+    </label>
+    <button id="save-name-btn" data-testid="nickname-button">Salvar</button>
+  </form>
+  <form id="message-form">
+    <label for="message">
+      Mensagem:
+      <input type="text" id="message-input" name="message" data-testid="message-box" autocomplete="off"/>
+    </label>
+   
+    <button type="submit" id="send-button" data-testid="send-button">Enviar</button>
   </form>
 
   <script>
@@ -21,29 +33,52 @@
     const socket = io('http://localhost:3000');
 
     const sendButton = document.getElementById('send-button');
-    const form = document.querySelector('form');
+    const form = document.getElementById('message-form');
     const messageInput = document.getElementById('message-input');
     const username = document.getElementById('nickname');
+    const nameButton = document.getElementById('save-name-btn')
+    const userList = document.getElementById('user-list')
+    
+    window.onload = () => {
+      socket.emit('newUser');
+    }
 
+    nameButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      sessionStorage.setItem('user', username.value);
+    });
+    
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      console.log(messageInput.value);
       socket.emit('message',
       { chatMessage: messageInput.value, nickname: username.value});
       messageInput.value = '';
       return false;
     });
 
+    const renderUser = (name) => {
+      const newUser = document.createElement('li');
+      userList.appendChild(newUser);
+      newUser.innerText = name;
+      newUser.setAttribute('data-testid', 'online-user');
+    }
+
     const createMessage = (message) => {
       const messageContainer = document.querySelector('#message-list');
       const msgText = document.createElement('li');
-      msgText.innerText = message;
       messageContainer.appendChild(msgText);
+      msgText.innerText = message;
+      msgText.setAttribute('data-testid', 'message');
     };
 
     socket.on('message', (newMessage) => {
       createMessage(newMessage);
     });
+
+    socket.on('newUser', (nickname) => {
+      renderUser(nickname);
+      sessionStorage.setItem('user', nickname);
+    })
 
   </script>
 </body>

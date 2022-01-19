@@ -1,4 +1,5 @@
 const getDateTime = require('../helpers/getDateTime');
+const randomNickname = require('../helpers/randomNickname');
 
 module.exports = (io) => {
   io.on('connection', (socket) => {
@@ -12,8 +13,12 @@ module.exports = (io) => {
       const dateTime = getDateTime();
 
       const formattedMsg = `${dateTime} ${nickname}: ${chatMessage}`;
-      console.log(formattedMsg);
       io.emit('message', formattedMsg);
+    });
+
+    socket.on('newUser', () => {
+      const nickname = randomNickname(16);
+      io.emit('newUser', nickname);
     });
   });
 };

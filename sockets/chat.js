@@ -18,6 +18,10 @@ const nicknameGenerator = (id) => {
   if (nickname.length > 16) {
     nickname.slice(0, 15);
   }
+  nickname = nickname
+    .replace(' ', '-')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
 
   usersArrayGenerator(id, nickname);
   return nickname;
@@ -69,27 +73,13 @@ const nicknameManager = (io, socket, id) => {
 };
 
 const disconnectUser = (socketId) => {
-  // const { nickname } = socketUsers.find(({ id }) => id === socketId);
   const indexOf = findIndex(socketId, socketUsers);
   socketUsers.splice(indexOf, 1);
-  // users = users.filter(({ id }) => id !== socketId);
-  // socketUsers = socketUsers.map((socket) => {
-  //   if (socket.id !== socketId) {
-  //     return socket;
-  //   }
-  // });
- 
-  // console.log(socketUsers);
-  // const disconnect = `Usuário ${nickname} se desconectou`;
-
-  // return disconnect;
 };
 
 const disconnect = (io, socket, id) => {
   socket.on('disconnect', () => {
-    // const disconnectNotification = disconnectUser(id);
     disconnectUser(id);
-    // io.emit('systemMessage', disconnectNotification);
     io.emit('onlineUsersList', socketUsers);
   });
 };

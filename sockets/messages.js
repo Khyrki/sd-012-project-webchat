@@ -1,5 +1,5 @@
 const handleDate = require('../helpers/handleDate');
-const createMessage = require('../models/createMessage');
+const createMessage = require('../models/saveMessage');
 
 module.exports = (io) => io.on('connection', (socket) => {
   console.log('newUser', `O usuário ${socket.id} entrou na conversa!`);

@@ -18,8 +18,9 @@
   <body>
     <ul id="messages"></ul>
     <form id="form" action="">
-      <input id="userNickName" data-testid="online-user" autocomplete="off"/>
+      <input id="userNickName" autocomplete="off"/>
       <p data-testid="online-user" id="nameUser"></p>
+      <button>nick Name</button>
       <input id="messageUser" data-testid="message-box" autocomplete="off" />
       <button data-testid="send-button">Send</button>
     </form>
@@ -27,6 +28,12 @@
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
+
+    let messages = document.getElementById('messages');
+    let form = document.getElementById('form');
+    let messageUser = document.getElementById('messageUser');
+    let userNickName = document.getElementById('userNickName');
+    let nameUser = document.getElementById('nameUser');
 
     function geraStringAleatoria() {
     let stringAleatoria = '';
@@ -37,17 +44,10 @@
     }
     return stringAleatoria;
 }
-  
-    let messages = document.getElementById('messages');
-    let form = document.getElementById('form');
-    let messageUser = document.getElementById('messageUser');
-    let userNickName = document.getElementById('userNickName');
-    let nameUser = document.getElementById('nameUser');
-
     window.onload = function(){
       const stringAleatoria = geraStringAleatoria();
       userNickName.value = stringAleatoria;
-      nameUser.textContent = stringAleatoria;
+      nameUser.innerText = stringAleatoria;
 }
   
     form.addEventListener('submit', function(e) {
@@ -65,6 +65,7 @@
     socket.on('message', function(msg) {
       let item = document.createElement('li');
       item.textContent = msg;
+      item.setAttribute('data-testid', "message");
       messages.appendChild(item);
       window.scrollTo(0, document.body.scrollHeight);
     });

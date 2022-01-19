@@ -1,5 +1,5 @@
 const handleDate = require('../helpers/handleDate');
-const { saveMessage } = require('../models/saveMessage');
+const { saveMessage } = require('../models');
 
 module.exports = (io) => io.on('connection', (socket) => {
   socket.emit('newConnection', socket.id);

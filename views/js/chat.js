@@ -29,3 +29,11 @@ socket.on('newConnection', (socketId) => {
 
   setNickname(sixteenCarachNick);
 });
+
+socket.on('message', (message) => {
+  const messagesUl = document.getElementById('messages');
+  const li = document.createElement('li');
+  li.innerText = message;
+  li.setAttribute('data-testid', 'message');
+  messagesUl.appendChild(li);
+});

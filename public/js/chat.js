@@ -38,6 +38,14 @@ const clearUsers = () => {
   }
 };
 
+/* Mover nickname do usuario para o 1 do array 
+https://www.codegrepper.com/code-examples/javascript/change+position+of+element+in+array+javascript */
+function moveElement(array, initialIndex, finalIndex) {
+  array.splice(finalIndex, 0, array.splice(initialIndex, 1)[0]);
+  console.log(array);
+  return array;
+}
+
 /* EventListener para o envio da mensagem */
 sendMensage.addEventListener('click', (e) => {
   e.preventDefault();
@@ -70,14 +78,18 @@ socket.on('connect', () => {
 /* Atualizar a lista de usuarios na view */
 socket.on('updateUsersList', (users) => {
   clearUsers();
-  users.forEach((user) => createUser(user, ['data-testid', 'online-user']));
+  const nickname = sessionStorage.getItem('nickname');
+  const position = users.findIndex((user) => user === nickname);
+  const newA = moveElement(users, position, 0);
+  newA.forEach((user) => createUser(user, ['data-testid', 'online-user']));
 });
 
 /* Criação da mensagem */
 socket.on('message', (msg) => createMensage(msg, ['data-testid', 'message']));
 
+/* Antes de atualizar/fechar */
 window.onbeforeunload = () => {
   const nickname = sessionStorage.getItem('nickname');
-  socket.emit('removeUser', nickname);
+  socket.emit('disconnect', nickname);
   socket.disconnect();
 };

@@ -11,9 +11,6 @@ const httpServer = require('http').createServer(app);
 /* Definição da porta */
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
-app.use(express.json());
-
 /* Definições para uso do ejs */
 app.set('view engine', 'ejs');
 
@@ -31,6 +28,9 @@ const io = require('socket.io')(httpServer, {
 });
 
 require('./sockets/chat')(io);
+
+app.use(cors());
+app.use(express.json());
 
 const { allMessages } = require('./controllers/chatController');
 

@@ -1,8 +1,19 @@
-module.exports = (io) => io.on('connection', (socket) => {
-  socket.on('message', ({ chatMessage, nickname }) => {
-    const time = new Date();
+const { create } = require('../models/index');
 
-    io.emit('message',
-      `${time.toLocaleString('es-CL', { timeZone: 'UTC' })} ${nickname} ${chatMessage}`);
+module.exports = (io) => io.on('connection', (socket) => {
+  console.log(`Cliente conectado ${socket.id}`);
+
+  io.emit('online');
+  
+  socket.on('message', async ({ chatMessage, nickname }) => {
+    const time = new Date();
+    const timestamp = time.toLocaleString('es-CL', { timeZone: 'UTC' });
+    const msg = `${timestamp} ${nickname} ${chatMessage}`;
+    await create({ chatMessage, nickname, timestamp });
+    io.emit('message', msg);
+  });
+
+  socket.on('newNickname', (newNickname) => {
+    io.emit('new', newNickname);
   });
 });

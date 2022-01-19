@@ -1,9 +1,25 @@
 const { formatDate } = require('../helpers');
+const { newMessage, getAllMessages } = require('../models/chat');
+
+const connect = async (socket) => {
+  const messages = await getAllMessages();
+  console.log(messages);
+  socket.emit('loadMessages', messages);
+};
 
 module.exports = (io) => io.on('connection', (socket) => {
-  socket.on('message', ({ nickname = 'Anonymous', chatMessage }) => {
+  connect(socket);
+
+  socket.on('message', async ({ nickname = 'Anonymous', chatMessage }) => {
     const date = new Date().toLocaleString();
     const formattedDate = formatDate(date);
+
+    await newMessage({
+      message: chatMessage,
+      nickname,
+      date: formattedDate,
+    });
+
     io.emit('message', `${formattedDate} - ${nickname}: ${chatMessage}`);
   });
 

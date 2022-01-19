@@ -31,11 +31,17 @@ const submitNickname = (event) => {
 webchatForm.addEventListener('submit', (event) => submitMessage(event));
 webchatLoginForm.addEventListener('submit', (event) => submitNickname(event));
 
-const createNewMessage = (message) => {
+const createNewMessage = (msg) => {
   const webchatMessages = document.querySelector('.webchat-messages');
   const displayedMessage = document.createElement('p');
   displayedMessage.setAttribute('data-testid', 'message');
-  displayedMessage.innerText = message;
+
+  if (typeof msg === 'object') {
+    const { message, nickname, date } = msg;
+    displayedMessage.innerText = `${date} - ${nickname}: ${message}`;
+  } else {
+    displayedMessage.innerText = msg;
+  }
 
   webchatMessages.appendChild(displayedMessage);
 };
@@ -55,5 +61,13 @@ window.addEventListener('load', () => {
   socket.emit('nickname');
 });
 
+const connectMessages = (msgs) => {
+  msgs.forEach((msg) => {
+    const { message, nickname, date } = msg;
+    createNewMessage({ message, nickname, date });
+  });
+};
+
 socket.on('message', (message) => createNewMessage(message));
 socket.on('serverNickname', (nickname) => createNewUser(nickname));
+socket.on('loadMessages', (message) => connectMessages(message));

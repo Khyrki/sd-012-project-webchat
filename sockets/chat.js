@@ -1,10 +1,19 @@
+const getDateTime = require('../helpers/getDateTime');
+
 module.exports = (io) => {
   io.on('connection', (socket) => {
-    console.log(`Uma nova conexão com ${socket.id} foi estabelecida!`);
+    console.log(`Nova conexão com ${socket.id}!`);
 
-    socket.on('newMessage', ({}) => {
-
+    socket.on('disconnect', () => {
+      console.log(`Um usuário desconectou em ${socket.id}.`);
     });
-  // socket.emit('evento', []);
+
+    socket.on('message', ({ chatMessage, nickname }) => {
+      const dateTime = getDateTime();
+
+      const formattedMsg = `${dateTime} ${nickname} ${chatMessage}`;
+      console.log(formattedMsg);
+      io.emit('message', formattedMsg);
+    });
   });
 };

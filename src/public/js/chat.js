@@ -20,6 +20,7 @@ const createMessage = (message) => {
   const messageUl = document.querySelector('#messages');
   const li = document.createElement('li');
   li.innerText = message;
+  li.setAttribute('data-testid', 'message');
   messageUl.appendChild(li);
 };
 

@@ -11,11 +11,12 @@
         <div class="superior-esq">
           <div class="head-nickname">
             <form id="nickname-form" action="">
-              <input id="nicknameInput" type="text" /><button>Salvar</button>
+              <input id="nicknameInput" data-testid="nickname-box" type="text" />
+              <button data-testid="nickname-button">Salvar</button>
             </form>
           </div>
           <div class="body-users">
-            <ul id="users"></ul>
+            <ul id="users" ></ul>
           </div>
         </div>
         <div class="superior-dir">
@@ -24,7 +25,8 @@
       </div>
       <span class="content-inferior">
         <form id="message-form" action="">
-          <input id="messageInput" type="text"/><button>Enviar</button>
+          <input id="messageInput" data-testid="message-box" type="text"/>
+          <button data-testid="send-button">Enviar</button>
         </form>
       </span>
     </div>

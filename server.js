@@ -11,6 +11,7 @@ const io = require('socket.io')(http, {
   },
 });
 const chatModel = require('./models/chat');
+const userModel = require('./models/user');
 
 app.use(cors());
 app.use(express.static(`${__dirname}/views`));
@@ -34,10 +35,23 @@ const formatMessage = (chatMessage, nickname) => {
   return strMessage;
 };
 
+const removeAndUpdate = async (id) => {
+  await userModel.remove(id);
+    const users = await userModel.getAll();
+    io.emit('login', users);
+};
+
+const formatFirst = (nickname, users, socket) => {
+    socket.broadcast.emit('login', users);
+    users.pop();
+    users.unshift({ nickname });
+    // console.log(nickname, usersFirst, users);
+    socket.emit('login', users);
+};
+
 io.on('connection', (socket) => {
   console.log(`Usuário conectado. ID: ${socket.id}`);
   let currentUser;
-  const loggedUsers = [];
 
   socket.on('message', ({ chatMessage, nickname }) => {
     currentUser = nickname;
@@ -45,16 +59,24 @@ io.on('connection', (socket) => {
     chatModel.create({ chatMessage, nickname, full: formatMessage(chatMessage, nickname) });
   });
 
-  socket.on('changeNickname', ({ nickname }) => {
-    currentUser = nickname;
-    socket.broadcast.emit('newNickname', currentUser);
-    socket.emit('newNicknameMain', currentUser);
+  socket.on('changeNickname', async ({ nickname }) => {
+    // currentUser = nickname;
+    await userModel.update(socket.id, nickname);
+    const users = await userModel.getAll();
+    socket.broadcast.emit('changeNickname', { users, currentUser: nickname });
+    users.pop();
+    users.unshift({ nickname });
+    console.log(users);
+    socket.emit('changeNickname', { users, currentUser: nickname });
   });
 
-  socket.on('login', (nickname) => {
-    loggedUsers.push(nickname);
-    io.emit('setNickname', loggedUsers);
+  socket.on('login', async ({ nickname }) => {
+    await userModel.create({ nickname, _id: socket.id });
+    const users = await userModel.getAll();
+    formatFirst(nickname, users, socket);
   });
+
+  socket.on('disconnect', async () => removeAndUpdate(socket.id));
 });
 
 app.get('/', async (_req, res, _next) => {

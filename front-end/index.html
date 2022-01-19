@@ -17,6 +17,7 @@
   </head>
   <body>
     <ul id="messages"></ul>
+    <ul id="onlineUser"></ul>
     <form id="form" action="">
       <input id="userNickNameInput" data-testid="nickname-box" autocomplete="off"/>
       <p data-testid="online-user" id="nameUser"></p>
@@ -30,6 +31,7 @@
     const socket = io();
 
     let messages = document.getElementById('messages');
+    let onlineUser = document.getElementById('onlineUser');
     let form = document.getElementById('form');
     let messageUser = document.getElementById('messageUser');
     let userNickNameInput = document.getElementById('userNickNameInput');
@@ -67,20 +69,20 @@
       }
     });
 
-    const elementLi = (msg) => {
+    const elementLimessages = (msg, atribut) => {
       let item = document.createElement('li');
       item.textContent = msg;
-      item.setAttribute('data-testid', "message");
+      item.setAttribute('data-testid', atribut);
       messages.appendChild(item);
       window.scrollTo(0, document.body.scrollHeight);
     }
   
     socket.on('message', function(msg) {
-      elementLi(msg)
+      elementLimessages(msg, "message")
     });
     socket.on('getMessages', function(allMessages) {
       allMessages.forEach(el => {
-        elementLi(`${el.timestamp} - ${el.nickname}: ${el.message}`);
+        elementLimessages(`${el.timestamp} - ${el.nickname}: ${el.message}`, "message");
       });
     });
   </script>

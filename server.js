@@ -20,8 +20,8 @@ io.on('connection', (socket) => {
       io.emit('message', messageUserReturt);
     });
     socket.on('getMessages', async () => {
-      const messegeAll = await getAllMessages();
-      io.emit('getMessages', messegeAll);
+      const messageAll = await getAllMessages();
+      socket.emit('getMessages', messageAll);
     });
   });
 

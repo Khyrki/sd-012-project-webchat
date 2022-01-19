@@ -22,6 +22,10 @@ app.use(express.static(path.join(__dirname, './public')));
 
 require('./src/sockets/chat')(io);
 
+app.get('/', (_req, res) => {
+  res.sendFile(path.resolve(__dirname, './public/index.html'));
+});
+
 const port = process.env.PORT || 3000;
 
 httpServer.listen(port, () => console.log(`app running on port ${port}`));

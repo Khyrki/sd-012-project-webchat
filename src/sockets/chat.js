@@ -1,9 +1,9 @@
-const { createMessages } = require('../../models/messages');
+const crypto = require('crypto');
+
+const { createMessages, getMessages } = require('../../models/messages');
 
 module.exports = async (io) => {
   io.on('connection', (socket) => {
-    console.log(`Usuário conectado. ID: ${socket.id} `);
-
     socket.on('message', async (message) => {
       const date = new Intl.DateTimeFormat(
         'pt-BR',
@@ -14,6 +14,15 @@ module.exports = async (io) => {
       io.emit('message', msg);
   
       await createMessages(message.chatMessage, message.nickname, date);
+    });
+
+    socket.on('user', () => {
+      io.emit('user', crypto.randomBytes(8).toString('hex'));
+    });
+
+    socket.on('messagesHistory', async () => {
+      const messages = await getMessages();
+      io.emit('messagesHistory', messages);
     });
   });
 };

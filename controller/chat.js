@@ -1,3 +1,3 @@
-module.exports = (_req, res) => {
-  res.sendFile('../index.html');
+module.exports = (req, res) => {
+  res.status(200).render('index', {});
 };

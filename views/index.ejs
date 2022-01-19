@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Webchat</title>
+</head>
+<body>
+  <h1>Socket.io</h1>
+  <div>
+    <li data-testid="online-user" id="user"></li>
+    <br>
+    <input
+      type="text"
+      data-testid="nickname-box"
+      id="nick-input"
+      placeholder="insert your name"
+    >
+    <button data-testid="nickname-button" id="nick-button">Salvar</button>  
+  </div>
+  <div>
+    <ul id="chat-box"></ul>
+  </div>
+  <div>
+    <input
+      type="text"
+      data-testid="message-box"
+      id="message-box"
+      placeholder="insert your message"
+    >
+    <button 
+    data-testid="send-button" id="send-button">Enviar</button>
+  </div>
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script >
+  const geraStringAleatoria = (tamanho) => {
+  let stringAleatoria = '';
+  const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < tamanho; i++) {
+      stringAleatoria += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+  }
+  return stringAleatoria;
+};
+// https://www.webtutorial.com.br/funcao-para-gerar-uma-string-aleatoria-random-com-caracteres-especificos-em-javascript/
+
+const socket = window.io();
+
+const user = document.querySelector('#user');
+
+const nickName = geraStringAleatoria(16);
+
+user.innerHTML = nickName;
+
+const nickInput = document.querySelector('#nick-input');
+const nickButton = document.querySelector('#nick-button');
+
+// altera o token para o valor da caixa input  ao clicar
+nickButton.addEventListener('click', () => {
+  console.log(nickName);
+  const nameUser = nickInput.value;
+  nickInput.value = '';
+  user.innerHTML = nameUser;
+});
+
+const send = document.querySelector('#send-button');
+const messageInput = document.querySelector('#message-box');
+
+// se houver um click se emite o socket  que tem o valor nickname por meio da "call" message 
+send.addEventListener('click', () => {
+  const chatMessage = messageInput.value;
+  const nickname = user.innerHTML;
+  socket.emit('message', { chatMessage, nickname });
+  messageInput.value = '';
+});
+
+const chat = document.querySelector('#chat-box');
+// recebe a call e adiciona uma LI na UL com atributos data-test-=I=id message
+socket.on('message', (message) => {
+  const li = document.createElement('li');
+  li.innerHTML = message;
+  li.setAttribute('data-testid', 'message');
+  chat.appendChild(li);
+});
+
+</script>
+</html>

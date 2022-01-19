@@ -17,8 +17,8 @@ app.set('view engine', 'ejs');
 
 app.set('views', './views');
 
-require('./sockets/msgChat')(io);
-
 app.get('/', controllerChat);
+
+require('./sockets/msgChat')(io);
 
 httpServer.listen(3000, () => console.log('listening on port 3000'));

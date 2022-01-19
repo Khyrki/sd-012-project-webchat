@@ -34,8 +34,8 @@ const emitMessageToAll = ({ nickname, chatMessage }) => {
 
   const message = `${fullDate} - ${nickname}: ${chatMessage}`;
 
-  usersInfo.forEach((client) => {
-    client.socket.emit('message', message);
+  connectedSockets.forEach((client) => {
+    client.emit('message', message);
   });
 };
 

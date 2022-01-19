@@ -10,4 +10,10 @@ module.exports = (io) => io.on('connection', (socket) => {
     const date = new Date().toLocaleString().replace('/', '-');
     io.emit('message', `${date.replace('/', '-')} ${nickname}: ${chatMessage}`);
   });
+
+  socket.on('updateNick', (newNick, old) => {
+   const index = nicks.findIndex((nick) => nick === old);
+   nicks[index] = newNick;
+   io.emit('usersList', nicks);
+  });
 });

@@ -18,9 +18,9 @@
   <body>
     <ul id="messages"></ul>
     <form id="form" action="">
-      <input id="userNickName" autocomplete="off"/>
+      <input id="userNickNameInput" data-testid="nickname-box" autocomplete="off"/>
       <p data-testid="online-user" id="nameUser"></p>
-      <button>nick Name</button>
+      <button data-testid="nickname-button" onclick="alterarName()" >nick Name</button>
       <input id="messageUser" data-testid="message-box" autocomplete="off" />
       <button data-testid="send-button">Send</button>
     </form>
@@ -32,7 +32,7 @@
     let messages = document.getElementById('messages');
     let form = document.getElementById('form');
     let messageUser = document.getElementById('messageUser');
-    let userNickName = document.getElementById('userNickName');
+    let userNickNameInput = document.getElementById('userNickNameInput');
     let nameUser = document.getElementById('nameUser');
 
     function geraStringAleatoria() {
@@ -46,16 +46,19 @@
 }
     window.onload = function(){
       const stringAleatoria = geraStringAleatoria();
-      userNickName.value = stringAleatoria;
+      userNickNameInput.value = stringAleatoria;
       nameUser.innerText = stringAleatoria;
 }
+    function alterarName() {
+      nameUser.innerText = userNickNameInput.value;
+    }
   
     form.addEventListener('submit', function(e) {
       e.preventDefault();
-      if (messageUser.value && userNickName.value) {
+      if (messageUser.value && userNickNameInput.value) {
         const userMessage = {
             chatMessage: messageUser.value,
-            nickname: userNickName.value
+            nickname: userNickNameInput.value
         }
         socket.emit('message', userMessage);
         messageUser.value = '';

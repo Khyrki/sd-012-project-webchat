@@ -60,7 +60,6 @@ const createMessage = (messagesArray) => {
 };
 
 const defineActualUserNamer = (userName) => {
-  console.log(userName);
   const messageLabel = document.querySelector('#userName');
 
   messageLabel.innerText = userName;

@@ -1,4 +1,6 @@
 const socket = window.io('http://localhost:3000');
+let socketId = '';
+
 const nicknameInput = document.getElementById('nickname');
 const saveNicknameBtn = document.getElementById('save-nickname');
 const userMessageElem = document.getElementById('user-message');
@@ -58,21 +60,28 @@ const createNewMessage = (data) => {
 
 const getUsers = (users) => {
   const oldUsers = document.querySelectorAll('.user-online-name');
-    
+
   if (oldUsers.length !== 0) {
     oldUsers.forEach((oldUser) => {
       usersElement.removeChild(oldUser);
     });
   }
 
+  const myUser = users.find((user) => user.socketId === socketId);
+  const myUserIndex = users.indexOf(myUser);
+  users.splice(myUserIndex, 1);
+  users.unshift(myUser);
+
   users.forEach((user) => {
     const userElem = document.createElement('p');
-    userElem.innerHTML = user;
+    userElem.innerHTML = user.nickname;
     userElem.classList.add('user-online-name');
     userElem.dataset.testid = 'online-user';
     usersElement.appendChild(userElem);
   });
 };
-
+socket.on('connect', () => {
+  socketId = socket.id;
+});
 socket.on('message', createNewMessage);
 socket.on('users', getUsers);

@@ -26,24 +26,15 @@ const { create } = require('./models/chat');
 
 app.use('/', chatPageController);
 
-const connectedClients = [];
-let connectedNicknames = [];
+const usersInfo = [];
 
 const emitMessageToAll = ({ nickname, chatMessage }) => {
   const fullDate = getFullDate();
 
   const message = `${fullDate} - ${nickname}: ${chatMessage}`;
 
-  connectedClients.forEach((client) => {
-    client.emit('message', message);
-  });
-};
-
-const updateUsers = (users) => {
-  const nicknames = users.map((connected) => connected.nickname);
-
-  connectedClients.forEach((client) => {
-    client.emit('users', nicknames);
+  usersInfo.forEach((client) => {
+    client.socket.emit('message', message);
   });
 };
 
@@ -61,38 +52,37 @@ const saveMessageToHistory = async ({ chatMessage, nickname }) => {
   return messageSaved;
 };
 
-const removeUsers = (socket) => {
-  const remainingUsers = connectedNicknames.filter((connected) => connected.socketId !== socket.id);
+const sendUserList = () => {
+  io.emit('users', usersInfo);
+};
 
-  connectedNicknames = remainingUsers;
-  updateUsers(remainingUsers);
+const onDisconnect = (socket) => {
+  const user = usersInfo.find((userInfo) => userInfo.socketId === socket.id);
+  const userIndex = usersInfo.indexOf(user);
+  usersInfo.splice(userIndex, 1);
+
+  sendUserList();
 };
 
 io.on('connection', (socket) => {
-  connectedClients.push(socket);
-
   socket.on('message', (data) => {
     saveMessageToHistory(data);
-
     emitMessageToAll(data);
   });
 
   socket.on('userConnected', (nickname) => {
-    connectedNicknames.push({ socketId: socket.id, nickname });
-    updateUsers(connectedNicknames);
+    const newUser = { socketId: socket.id, nickname };
+    usersInfo.push(newUser);   
+    sendUserList();
   });
 
   socket.on('changeNickname', (newNickname) => {
-    const user = connectedNicknames.find((connected) => connected.socketId === socket.id);
-    const indexOfUser = connectedNicknames.indexOf(user);
-    const newUsers = connectedNicknames.filter((connected) => connected.socketId !== socket.id);
-    newUsers.splice(indexOfUser, 0, { socketId: socket.id, nickname: newNickname });
-    connectedNicknames = newUsers;
     
-    updateUsers(newUsers);
   });
 
-  socket.on('disconnect', () => removeUsers(socket));
+  socket.on('disconnect', () => {
+    onDisconnect(socket);
+  });
 });
 
 http.listen(PORT, () => {

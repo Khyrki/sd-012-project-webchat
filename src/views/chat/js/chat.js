@@ -19,11 +19,24 @@ userBox.addEventListener('submit', (e) => {
   return false;
 });
 
+const dateFormat = (date) => {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const splitedDate = date.split(' ');
+  const formatedDate = `
+  ${splitedDate[2]}-${months.indexOf(splitedDate[1])}-${splitedDate[3]} ${splitedDate[4]}
+  `;
+
+  return formatedDate;
+};
+
 const createMessage = (messageInfo) => {
   const nickName = sessionStorage.getItem(messageInfo.id);
   const messagesUl = document.querySelector('.messages');
   const li = document.createElement('li');
-  li.innerText = `${Date.now()} - ${nickName}: ${messageInfo.message}`;
+  const date = `${new Date()}`;
+  console.log(new Date(), date);
+  li.innerText = `${dateFormat(date)} - ${nickName}: ${messageInfo.message}`;
   li.setAttribute('data-testid', 'message');
   messagesUl.appendChild(li);
 };

@@ -11,7 +11,6 @@ const io = require('socket.io')(http, {
   },
 });
 const chatModel = require('./models/chat');
-const userModel = require('./models/user');
 
 app.use(cors());
 app.use(express.static(`${__dirname}/views`));
@@ -35,29 +34,7 @@ const formatMessage = (chatMessage, nickname) => {
   return strMessage;
 };
 
-const removeAndUpdate = async (id) => {
-  await userModel.remove(id);
-    const users = await userModel.getAll();
-    io.emit('login', users);
-};
-
-const formatFirst = (nickname, users, socket) => {
-    socket.broadcast.emit('login', users);
-    users.pop();
-    users.unshift({ nickname });
-    // console.log(nickname, usersFirst, users);
-    socket.emit('login', users);
-};
-
-const changeNickname = async (nickname, socket) => {
-    await userModel.update(socket.id, nickname);
-    const users = await userModel.getAll();
-    socket.broadcast.emit('changeNickname', { users, currentUser: nickname });
-    users.pop();
-    users.unshift({ nickname });
-    console.log(users);
-    socket.emit('changeNickname', { users, currentUser: nickname });
-};
+let users = [];
 
 io.on('connection', (socket) => {
   console.log(`Usuário conectado. ID: ${socket.id}`);
@@ -69,15 +46,19 @@ io.on('connection', (socket) => {
     chatModel.create({ chatMessage, nickname, full: formatMessage(chatMessage, nickname) });
   });
 
-  socket.on('changeNickname', async (nickname) => changeNickname(nickname, socket));
+  socket.on('changeNickname', (nickname) => {
+    users = users.filter((user) => user.id !== socket.id);
+    users.push({ nickname, id: socket.id });
 
-  socket.on('login', async ({ nickname }) => {
-    await userModel.create({ nickname, _id: socket.id });
-    const users = await userModel.getAll();
-    formatFirst(nickname, users, socket);
+    io.emit('login', users);
   });
 
-  socket.on('disconnect', async () => removeAndUpdate(socket.id));
+  socket.on('disconnect', () => {
+    console.log(`User ${socket.id} disconnected`);
+    users = users.filter((user) => user.id !== socket.id);
+
+    io.emit('login', users);
+  });
 });
 
 app.get('/', async (_req, res, _next) => {

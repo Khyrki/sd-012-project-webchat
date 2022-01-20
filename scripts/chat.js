@@ -3,12 +3,14 @@ const socket = window.io();
 const form = document.querySelector('form');
 const btnNick = document.querySelector('#btnNick');
 const input = document.querySelector('#inputMessage');
+const userUl = document.querySelector('#userList');
+
 let nickname = '';
 
 btnNick.addEventListener('click', () => {
   const inputNick = document.querySelector('#inputNick');
   nickname = inputNick.value;
-  console.log('NickConsole', nickname);
+  socket.emit('updateNickname', { nickname, id: socket.id });
   return false;
 });
 
@@ -29,14 +31,21 @@ const createMessage = (msg) => {
   messageUl.appendChild(li);
 };
 
-const createNickname = (id) => {
-  const trueId = id.slice(0, 16);
-  const userUl = document.querySelector('#userList');
+const createNickname = (nick) => {
   const li = document.createElement('li');
   li.setAttribute('data-testid', 'online-user');
-  li.innerText = trueId;
+  li.innerText = nick;
   userUl.appendChild(li);
 };
 
-socket.on('init', (id) => createNickname(id));
+const updateUserList = (listUser) => {
+  userUl.innerHTML = '';
+  if (nickname) createNickname(nickname);
+  listUser.forEach((e) => {
+  if (e.nick !== nickname) createNickname(e.nick);
+  });
+};
+
+socket.on('init', (nick) => { nickname = nick; });
 socket.on('message', (msg) => createMessage(msg));
+socket.on('listUser', (userList) => updateUserList(userList));

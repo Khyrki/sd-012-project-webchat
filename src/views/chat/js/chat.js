@@ -1,12 +1,21 @@
 const socket = window.io();
 
-const form = document.querySelector('form');
-const inputMessage = document.querySelector('#messageInput');
+const userBox = document.querySelector('.nickBox');
+const userNick = document.querySelector('.nickInput');
+const messageBox = document.querySelector('.messageBox');
+const inputMessage = document.querySelector('.messageInput');
 
-form.addEventListener('submit', (e) => {
+messageBox.addEventListener('submit', (e) => {
   e.preventDefault();
   socket.emit('clientMessage', inputMessage.value);
   inputMessage.value = '';
+  return false;
+});
+
+userBox.addEventListener('submit', (e) => {
+  e.preventDefault();
+  socket.emit('clientUser', userNick.value);
+  userNick.value = '';
   return false;
 });
 
@@ -17,7 +26,15 @@ const createMessage = (message) => {
   messagesUl.appendChild(li);
 };
 
+const createUser = (nickname) => {
+  const messagesUl = document.querySelector('.users');
+  const li = document.createElement('li');
+  li.innerText = nickname;
+  messagesUl.appendChild(li);
+};
+
 socket.on('serverMessage', (message) => createMessage(message));
+socket.on('createUser', (nickname) => createUser(nickname));
 
 window.onbeforeunload = (_event) => {
   socket.disconnect();

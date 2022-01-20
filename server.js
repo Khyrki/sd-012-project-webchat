@@ -20,6 +20,7 @@ const io = require('socket.io')(http, {
     methods: ['GET', 'POST'],
   }, 
 });
+const getChat = require('./src/controllers/getChat');
   
 app.use(express.static(`${__dirname}/public`));
 
@@ -28,8 +29,8 @@ app.set('views', './src/views');
 
 require('./src/socket')(io);
 
-const router = require('./src/routers');
+// const router = require('./src/routers');
 
-app.use('/', router);
+app.get('/', getChat);
 
 http.listen(PORT, () => console.log(`server rodando na porta ${PORT}`));

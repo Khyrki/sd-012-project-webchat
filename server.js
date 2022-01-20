@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -14,6 +15,8 @@ const io = require('socket.io')(socketIoServer, {
   },
 });
 
+const msgModel = require('./models/messages');
+
 require('./sockets/chat')(io);
 
 app.set('view engine', 'ejs');
@@ -22,8 +25,9 @@ app.set('views', './views');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/', (_req, res) => {
-    res.render('chat', { messageHistory: [] });
+app.get('/', async (_req, res) => {
+    const messageHistory = await msgModel.findAll();
+    res.render('chat', { messageHistory });
 });
 
 socketIoServer.listen(

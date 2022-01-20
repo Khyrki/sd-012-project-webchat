@@ -72,7 +72,6 @@
         });
         
         socket.on('onlineUsers', (onlineUsers) => {
-            // const usersUL = document.getElementById('users-ul');
             document.getElementById('users-ul').innerHTML = '';
             const filteredUsers = onlineUsers.filter((user) => user.nickname !== nickname);
             filteredUsers.forEach(({ nickname }) => {

@@ -10,7 +10,11 @@
 <body>
     <header>
         <h1>WebChat</h1>
-        <span id="online-user" data-testid="online-user">Default</span>
+        <span>Nickname: </span> <span id="online-user" data-testid="online-user">Default</span>
+        <form id="nickname-form">
+            <input id="nickname-box" data-testid="nickname-box" />
+            <button id="nickname-button" data-testid="nickname-button">Update</button>
+        </form>
     </header>
 
     <ul id="messages-ul">
@@ -24,10 +28,6 @@
         <button id="send-button" data-testid="send-button">Send</button>
     </form>
 
-    <form id="nickname-form">
-        <input id="nickname-box" data-testid="nickname-box" />
-        <button id="nickname-button" data-testid="nickname-button">Update</button>
-    </form>
 
     <script>
         const socket = io('http://localhost:3000');

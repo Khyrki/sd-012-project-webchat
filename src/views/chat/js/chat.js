@@ -19,22 +19,41 @@ userBox.addEventListener('submit', (e) => {
   return false;
 });
 
-const createMessage = (message) => {
+const createMessage = (messageInfo) => {
+  const nickName = sessionStorage.getItem(messageInfo.id);
   const messagesUl = document.querySelector('.messages');
   const li = document.createElement('li');
-  li.innerText = message;
+  li.innerText = `${Date.now()} - ${nickName}: ${messageInfo.message}`;
+  li['data-testid'] = 'message';
   messagesUl.appendChild(li);
 };
 
-const createUser = (nickname) => {
+const deleteUser = (id) => {
   const messagesUl = document.querySelector('.users');
+  const user = document.querySelector(`#${id}`);
+  messagesUl.removeChild(user);
+};
+
+const createUser = (nicknameInfo) => {
+  sessionStorage.setItem(nicknameInfo.id, nicknameInfo.nickname);
+  const messagesUl = document.querySelector('.users');
+  const user = document.querySelector(`#${nicknameInfo.id}`);
   const li = document.createElement('li');
-  li.innerText = nickname;
+  li.innerText = nicknameInfo.nickname;
+  li.setAttribute('data-testid', 'online-user');
+  li.setAttribute('id', nicknameInfo.id);
+  if (user) deleteUser(nicknameInfo.id);
   messagesUl.appendChild(li);
 };
 
-socket.on('serverMessage', (message) => createMessage(message));
-socket.on('createUser', (nickname) => createUser(nickname));
+socket.on('serverMessage', (messageInfo) => createMessage(messageInfo));
+socket.on('createUser', (nicknameInfo) => createUser(nicknameInfo));
+socket.on('deleteUser', (id) => {
+  console.log(id);
+  deleteUser(id);
+});
+
+socket.emit('joinRoom');
 
 window.onbeforeunload = (_event) => {
   socket.disconnect();

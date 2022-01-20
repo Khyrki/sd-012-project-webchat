@@ -1,11 +1,20 @@
+const nameGenerator = require('../helpers/nameGenerator');
+
 module.exports = (io) => io.on('connection', (socket) => {
+  const { id } = socket;
+  socket.on('joinRoom', () => {
+    const nickname = nameGenerator();
+    io.emit('createUser', { id, nickname });
+  });
   socket.on('clientMessage', (message) => {
-    io.emit('serverMessage', message);
+    io.emit('serverMessage', { id, message });
   });
   socket.on('clientUser', (nickname) => {
-    io.emit('createUser', nickname);
+    io.emit('createUser', { id, nickname });
   });
   socket.on('disconnect', () => {
-    socket.broadcast.emit('serverMessage', `${socket.id} acabou de se desconectar! :(`);
+    const message = 'acabou de desconectar.';
+    socket.broadcast.emit('serverMessage', { id, message });
+    io.emit('deleteUser', { id });
   });
 });

@@ -4,10 +4,15 @@
   <title>chat</title>
 </head>
 <body>
-  <h1 id="user"> user </h1>
-</body>
+  
+<ul id="message">
+  <form id="formMessage" action="">
+    <input id="messageInput" autocomplete="off" />
+    <button type="submit" id="btn-send">send</button>
+  </form>
+</ul>
+
 <script src="/socket.io/socket.io.js"></script>
-<script>
-  const socket = io();
-</script>
+<script src="./js/chat.js"></script>
+</body>
 </html>

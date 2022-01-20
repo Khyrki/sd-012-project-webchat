@@ -2,7 +2,6 @@ const socket = window.io();
 
 const dataId = 'data-testid';
 
-// const formMessage = document.querySelector('.form-message');
 const inputMessage = document.querySelector('.message-box');
 const sendButton = document.querySelector('.send-button');
 const nicknameInput = document.querySelector('.nickname-box');

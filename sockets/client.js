@@ -16,8 +16,6 @@ module.exports = (io) => io.on('connection', (socket) => {
   });
 
   socket.on('updateNickname', (nickname) => {
-    // clients.splice(clients.indexOf(clients.find((client) => client.id === socket.id)), 1);
-    // clients.push({ id: socket.id, nickname });
     const updatedClient = clients.find((client) => client.id === socket.id);
     updatedClient.nickname = nickname;
     io.emit('online', clients);

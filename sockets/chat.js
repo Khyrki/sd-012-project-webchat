@@ -5,18 +5,23 @@ const { newMessage, getAll } = require('../controllers/chat');
 
 let nicknames = [];
 
-const messageSocket = (socket, randomNickname, io) => {
-  socket.on('message', async ({ nickname = randomNickname, chatMessage }) => {
-    const { data, hour } = getTime();
-    io.emit('message', `${data} ${hour} - ${nickname}: ${chatMessage}`);
-    await newMessage({ timestamp: `${data} ${hour}`, nickname, chatMessage });
-  });
+const newMessageHandler = async (io, nickname, chatMessage) => {
+  const { data, hour } = getTime();
+  io.emit('message', `${data} ${hour} - ${nickname}: ${chatMessage}`);
+  await newMessage({ timestamp: `${data} ${hour}`, nickname, chatMessage });
 };
 
-const updateMessages = (messages, io) => {
+const sendHistoryMessages = (io, messages) => {
   messages.forEach((
     { timestamp, nickname, message: chatMessage },
   ) => io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`));
+};
+
+const changeNicknameHandler = (io, newNickname, randomNickname) => {
+  const index = nicknames.indexOf(randomNickname);
+  nicknames[index] = newNickname;
+  io.emit('userConnection', nicknames);
+  return newNickname;
 };
 
 module.exports = (io) => io.on('connection', async (socket) => {
@@ -29,15 +34,14 @@ module.exports = (io) => io.on('connection', async (socket) => {
   const socketNicknames = nicknames.reverse();
   socket.emit('userConnection', socketNicknames);
 
-  updateMessages(messages, io);
+  sendHistoryMessages(io, messages);
   
-  messageSocket(socket, randomNickname, io);
+  socket.on('message', async (
+    { nickname = randomNickname, chatMessage },
+  ) => newMessageHandler(io, nickname, chatMessage));
 
   socket.on('changeNickname', (newNickname) => {
-    const index = nicknames.indexOf(randomNickname);
-    nicknames[index] = newNickname;
-    randomNickname = newNickname;
-    io.emit('userConnection', nicknames);
+    randomNickname = changeNicknameHandler(io, newNickname, randomNickname);
   });
 
   socket.on('disconnect', () => {

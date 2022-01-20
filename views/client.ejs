@@ -9,15 +9,15 @@
 </head>
 <body>
   <form id="nicknameForm">
-    <input id="userNickname" type="text" placeholder="Insira seu nickname"/>
-    <button id="btnNickname">Salvar</button>
+    <input id="userNickname" data-testid="nickname-box" type="text" placeholder="Insira seu nickname"/>
+    <button id="btnNickname" data-testid="nickname-button">Salvar</button>
   </form>
   <div>
-    <ul id="nicknames"></ul>
+    <ul id="nicknames"><li data-testid="online-user"><%= nickname %></li></ul>
   </div>
   <form id="messageForm">
-    <input id="messageUser" type="text" placeholder="Digite uma nova mensagem aqui..."/>
-    <button>Enviar</button>
+    <input id="messageUser" data-testid="message-box" type="text" placeholder="Digite uma nova mensagem aqui..."/>
+    <button data-testid="send-button">Enviar</button>
   </form>
   <div id="messages">
     <ul></ul>
@@ -29,10 +29,12 @@
 
       const formNickname = document.querySelector('#nicknameForm');
       const userNickname = document.querySelector('#userNickname');
+      let nickname;
 
       formNickname.addEventListener('submit', (e) => {
         e.preventDefault();
-        socket.emit('nickname', userNickname.value); // enviar o nome para o servidor. ex: jonas
+        nickname = userNickname.value;
+        socket.emit('nickname', userNickname.value || socket.id.substring(0, 16)); // enviar o nome para o servidor. ex: jonas
         userNickname.value = '';
         return false;
       })
@@ -40,22 +42,24 @@
       const createNickName = (nickname) => {
         const nicknameUl = document.querySelector('#nicknames');
         const li = document.createElement('li');
+        li.setAttribute('data-testid', 'online-user');
         li.innerText = nickname;
         nicknameUl.appendChild(li);
       }
 
       formMessage.addEventListener('submit', (e) => {
         e.preventDefault();
-        const nick = socket.id.substring(0, 16);
-        socket.emit('message', { chatMessage:userMessage.value, nickname: nick }); // aqui ele envia a mensagem da caixa de dialogo para o servidor.
+        const nick = nickname || socket.id.substring(0, 16);
+        socket.emit('message', { chatMessage: userMessage.value, nickname: nick }); // aqui ele envia a mensagem da caixa de dialogo para o servidor.
         userMessage.value = '';
         return false
       })
 
       const createMessage = (message) => {
+        console.log(message);
         const messageUl = document.querySelector('#messages');
         const li = document.createElement('li');
-        console.log(message)
+        li.setAttribute('data-testid', 'message');
         li.innerText = message
         messageUl.appendChild(li);
       }
@@ -63,9 +67,9 @@
       socket.on('serverNickname', ({ nickname }) => createNickName(nickname));
       socket.on('message', (message) => createMessage(message)); // e aqui ele escuta a resposta do servidor da msg da caixa de dialago.
 
-      // window.onbeforeunload = () => {
-      //   socket.disconnect();
-      // }; 
+      window.onbeforeunload = () => {
+        socket.disconnect();
+      }; 
     </script>
   </div>
 </body>

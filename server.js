@@ -14,12 +14,16 @@ const PORT = process.env.PORT || 3000;
 const io = require('socket.io')(server, {
   cros: {
     origin: `http//localhost:${PORT}`,
+
     mthods: ['GET', 'POST'],
   },
 });
 
+const random = require('./helpers/random');
+
 io.on('connection', (socket) => {
   console.log(`Feita a conexão! Novo usuario conectado. ${socket.id}`);
+  io.emit('nickname', socket.id.substring(0, 16));
 
   socket.on('nickname', (name) => { // escuta jonas 
     io.emit('serverNickname', { nickname: name }); // envia jonas para front
@@ -30,13 +34,17 @@ io.on('connection', (socket) => {
     const timestamp = moment().format('DD-MM-yyyy HH:mm:ss A');
     
     io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`); // ele envia a msg para o front
-  }); 
+  });
+  
+  socket.on('disconnect', () => {
+    console.log('Usuário desconectou!');
+  });
 });
 
 app.use(cors());
 
 app.get('/', (req, res) => {
-  res.render('client');
+  res.render('client', { nickname: random(16) });
 });
 
 server.listen(PORT, () => console.log(`Ouvindo Socket.io server na porta ${PORT}!`));

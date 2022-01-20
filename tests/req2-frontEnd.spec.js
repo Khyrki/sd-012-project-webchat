@@ -19,10 +19,10 @@ describe('2 - Crie um frontend para que as pessoas interajam com o chat', () => 
   let page;
 
   beforeEach(async (done) => {
-    browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage', '--window-size=1920,1080'], headless: true });
-    page = await browser.newPage();
-    await page.goto(BASE_URL);
-    done();
+      browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage', '--window-size=1920,1080'], headless: true });
+      page = await browser.newPage();
+      await page.goto(BASE_URL);
+      done();
   });
 
   afterEach(async (done) => {

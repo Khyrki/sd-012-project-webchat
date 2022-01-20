@@ -32,12 +32,6 @@ const dateFormat = (date) => {
   return formatedDate;
 };
 
-const saveMessage = (message, nickname, timestamp) => {
-  socket.emit('saveMessage', { message, nickname, timestamp });
-  // console.log(message, nickname, timestamp);
-  return false;
-};
-
 const loadMessages = (messageInfo) => {
   const { nickname, message, timestamp } = messageInfo;
   const messagesUl = document.querySelector('.messages');
@@ -48,13 +42,13 @@ const loadMessages = (messageInfo) => {
 };
 
 const createMessage = (messageInfo) => {
-  const nickName = sessionStorage.getItem(messageInfo.id);
+  const nickname = sessionStorage.getItem(messageInfo.id);
   const { message } = messageInfo;
   const messagesUl = document.querySelector('.messages');
   const li = document.createElement('li');
-  const date = dateFormat(`${new Date()}`);
-  saveMessage(message, nickName, date);
-  li.innerText = `${date} - ${nickName}: ${message}`;
+  const timestamp = dateFormat(`${new Date()}`);
+  socket.emit('saveMessage', { nickname, timestamp, message });
+  li.innerText = `${timestamp} - ${nickname}: ${message}`;
   li.setAttribute(dataTestId, 'message');
   messagesUl.appendChild(li);
 };

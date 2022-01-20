@@ -20,6 +20,7 @@ app.set('view engine', 'ejs');
 app.set('views', './src/views');
 
 require('./src/sockets/chat')(io);
+require('./src/sockets/user')(io);
 
 app.get('/', chat);
 

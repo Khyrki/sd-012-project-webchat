@@ -6,7 +6,10 @@ const messageInput = document.querySelector('#messageInput');
 
 form.addEventListener('submit', (event) => {
   event.preventDefault();
-  socket.emit('message', messageInput.value);
+  socket.emit('message', {
+    nickname: 'Martin',
+    chatMessage: messageInput.value,
+  });
   messageInput.value = '';
   return false;
 });

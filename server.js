@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 
 const app = express();
 const http = require('http').createServer(app);
@@ -9,21 +10,26 @@ const { PORT = 3000 } = process.env;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use('/views', express.static(path.join(__dirname, 'src', 'views')));
+app.use('/public', express.static(path.join(__dirname, 'src', 'public')));
+
 const io = require('socket.io')(http, {
   cors: {
     origin: `http://localhost:${PORT}`,
     methods: ['GET', 'POST'],
-  } });
-
-  app.use(express.static(`${__dirname}/public`));
+  }, 
+});
+  
+app.use(express.static(`${__dirname}/public`));
 
 app.set('view engine', 'ejs');
-app.set('views', './views');
+app.set('views', './src/views');
 
-require('./socket')(io);
+require('./src/socket')(io);
 
-app.get('/', (req, res) => {
-  res.send('');
-});
+const router = require('./src/routers');
+
+app.use('/', router);
 
 http.listen(PORT, () => console.log(`server rodando na porta ${PORT}`));

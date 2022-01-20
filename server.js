@@ -6,7 +6,7 @@ app.use(express.static(`${__dirname}/view/chat`));
 const http = require('http').createServer(app);
 const { Server } = require('socket.io');
 
-const { PORT } = process.env;
+const PORT = process.env.PORT || 3000;
 const io = new Server(http, {
   cors: {
     origin: 'http://localhost:3000',

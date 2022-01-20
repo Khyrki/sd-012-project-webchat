@@ -9,23 +9,28 @@ const createMessage = (message) => {
   messageList.appendChild(messageLi);
 };
 
-const createNickname = (nickname) => {
+const createNickname = ({ username, id }) => {
   const nicknameList = document.querySelector('#nickname-list');
   const nicknameLi = document.createElement('li');
 
   nicknameLi.setAttribute('data-testid', 'online-user');
-  nicknameLi.setAttribute('id', 'online-user');
+  nicknameLi.setAttribute('id', id);
   nicknameLi.setAttribute('class', 'user');
-  nicknameLi.innerText = nickname;
+  nicknameLi.innerText = username;
 
   nicknameList.appendChild(nicknameLi);
 };
 
-const changeNickname = ({ newName, currentName }) => {
-  const usersLi = document.querySelectorAll('.user');
-  const nicknameLi = [...usersLi].find((li) => li.innerText === currentName);
+const changeNickname = ({ newName, id }) => {
+  const li = document.querySelector(`#${id}`);
 
-  nicknameLi.innerText = newName;
+  li.innerText = newName;
+};
+
+const removeNickname = (id) => {
+  const li = document.querySelector(`#${id}`);
+
+  li.remove();
 };
 
 const nicknameForm = document.querySelector('#nickname-form');
@@ -36,7 +41,7 @@ const messageInput = document.querySelector('#message-input');
 const socket = window.io();
 
 messageForm.addEventListener('submit', (event) => {
-  const onlineUser = document.querySelector('#online-user');
+  const onlineUser = document.querySelector('.user');
 
   const chatMessage = messageInput.value;
   const nickname = onlineUser.innerText;
@@ -49,26 +54,35 @@ messageForm.addEventListener('submit', (event) => {
 });
 
 nicknameForm.addEventListener('submit', (event) => {
-  const onlineUser = document.querySelector('#online-user');
-
   const newName = nicknameInput.value;
-  const currentName = onlineUser.innerText;
 
   event.preventDefault();
 
-  socket.emit('change-name', { newName, currentName });
+  socket.emit('change-name', newName);
 
   nicknameInput.value = '';
 });
 
-socket.on('connect-user', (nickname) => {
-  createNickname(nickname);
+socket.on('connect-user', ({ username, id }) => {
+  createNickname({ username, id });
+});
+
+socket.on('history-users', (users) => {
+  users.forEach(createNickname);
 });
 
 socket.on('message', (message) => {
   createMessage(message);
 });
 
-socket.on('change-name', ({ newName, currentName }) => {
-  changeNickname({ newName, currentName });
+socket.on('change-name', ({ newName, id }) => {
+  changeNickname({ newName, id });
 });
+
+socket.on('disconnect-user', (user) => {
+  removeNickname(user);
+});
+
+window.onbeforeunload = () => {
+  socket.disconnect();
+};

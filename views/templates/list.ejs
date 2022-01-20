@@ -1,0 +1,15 @@
+  <div>
+    <ul class="msg">
+      <% messages.forEach(({ message: textMessage, nickname, timestamp }) => { %>
+        <li data-testid="message">
+          <%= `${timestamp} - ${nickname}: ${textMessage}` %>
+        </li>
+      <% }) %> 
+    </ul>
+  </div>
+</div>
+</section>
+
+<script src="scripts/index.js"></script>
+</body>
+</html>

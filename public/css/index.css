@@ -1,0 +1,53 @@
+body {
+  background-color: #d8dbd5;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif ;
+}
+
+header {
+  background-color: #009688;
+  text-align: center;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.5em;
+  height: 200px;
+}
+
+section {
+  width: 90%;
+  margin: -100px auto;
+  border: 1px solid lightgrey;
+  box-shadow: 3px 2px 2px #fff;
+  height: 40em;
+}
+
+form {
+  display: flex;
+  background-color: #ededed;
+  align-items: flex-end;
+}
+
+.nickname {
+  width: 30%;
+  margin: 0 10px 10px 0;
+}
+
+.nickname input, button {
+  font-size: 16px;
+}
+
+.message {
+  width: 65%;
+}
+
+.message input, button {
+  font-size: 16px;
+}
+
+.message input {
+  margin: 0 30px 10px 0;
+  width: 70%
+}
+
+.main {
+  display: flex;
+}

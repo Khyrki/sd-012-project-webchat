@@ -1,5 +1,5 @@
 const socket = window.io();
-const userOnline = document.querySelector('[data-testid="online-user"]');
+const userOnline = document.querySelector('[data-testid="user"]');
 const nickNameBox = document.querySelector('[data-testid="nickname-box"]');
 const nickNameBtn = document.querySelector('[data-testid="nickname-button"]');
 const sendMessageBtn = document.querySelector('[data-testid="send-button"]');
@@ -16,6 +16,7 @@ socket.on('userList', (listJson) => {
   userList.innerHTML = '';
   list.forEach((name) => {
     const li = document.createElement('li');
+    li.setAttribute('data-testid', 'online-user');
     li.innerHTML = name;
     userList.appendChild(li);
   });

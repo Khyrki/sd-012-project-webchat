@@ -1,6 +1,6 @@
 const connection = require('./connection');
 
-const getMessages = async () => {
+const getAllMessages = async () => {
   const db = await connection();
   const findMessages = await db.collection('messages').find().toArray();
 
@@ -15,12 +15,12 @@ const insertMessage = async ({ chatMessage, nickname, timestamp }) => {
       nickname,
       timestamp,
     },
-    );
+  );
 
   return setMessages;
 };
 
 module.exports = {
-  getMessages,
+  getAllMessages,
   insertMessage,
 };

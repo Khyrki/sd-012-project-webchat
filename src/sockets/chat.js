@@ -1,5 +1,3 @@
-const crypto = require('crypto');
-
 const { createMessages, getMessages } = require('../../models/messages');
 
 module.exports = async (io) => {
@@ -14,10 +12,6 @@ module.exports = async (io) => {
       io.emit('message', msg);
   
       await createMessages(message.chatMessage, message.nickname, date);
-    });
-
-    socket.on('user', () => {
-      io.emit('user', crypto.randomBytes(8).toString('hex'));
     });
 
     socket.on('messagesHistory', async () => {

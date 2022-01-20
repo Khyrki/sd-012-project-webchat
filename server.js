@@ -21,6 +21,7 @@ const io = socketIo(httpServer, {
 app.use(express.static(path.join(__dirname, './public')));
 
 require('./src/sockets/chat')(io);
+require('./src/sockets/users')(io);
 
 app.get('/', (_req, res) => {
   res.sendFile(path.resolve(__dirname, './public/index.html'));

@@ -6,7 +6,7 @@ const http = require('http').createServer(app);
 
 require('dotenv').config();
 
-const PORT = process.env.PORT || 3000;
+const { PORT = 3000 } = process.env;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -31,5 +31,11 @@ require('./src/socket')(io);
 const router = require('./src/routers');
 
 app.use('/', router);
+
+// Não remover esse end-point, ele é necessário para o avaliador
+app.get('/', (request, response) => {
+  response.send();
+});
+// Não remover esse end-point, ele é necessário para o avaliador
 
 http.listen(PORT, () => console.log(`server rodando na porta ${PORT}`));

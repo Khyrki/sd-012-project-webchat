@@ -22,9 +22,6 @@ module.exports = (io) => io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    // const client = clients.findIndex((user) => user.id === socket.id);
-    // clients.splice(client, 1);
-    // io.emit('online', clients);
     clients.splice(clients.indexOf(clients.find((client) => client.id === socket.id)), 1);
     io.emit('online', clients);
   });

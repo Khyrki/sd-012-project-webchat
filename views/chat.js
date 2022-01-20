@@ -15,7 +15,7 @@ const randomName = Math.random().toString(10).substr(2, 16);
 
 const sessionUser = sessionStorage.getItem('nickname') || randomName;
 onlineUser.innerHTML = sessionUser;
-socket.emit('create', onlineUser.innerHTML);
+socket.emit('create', sessionUser);
 
 sendButton.addEventListener('click', () => {
   socket.emit('message', { chatMessage: inputMessage.value, nickname: onlineUser.innerHTML });
@@ -24,29 +24,10 @@ sendButton.addEventListener('click', () => {
 
 nicknameButton.addEventListener('click', () => {
   const newNickname = nicknameInput.value;
-  console.log('oi');
   nicknameInput.value = '';
   onlineUser.innerHTML = newNickname;
   sessionStorage.setItem('nickname', newNickname);
   socket.emit('updateNickname', newNickname);
-});
-
-socket.on('online', (list) => {
-  // onlineUsers.innerHTML = '';
-  // const givenUser = sessionStorage.getItem('nickname');
-  // const li = document.createElement('li');
-  // li.setAttribute(dataId, 'online-user');
-  // li.innerText = givenUser;
-  // onlineUsers.appendChild(li);
-
-  list.forEach((user) => {
-    // Basiado em https://github.com/tryber/sd-012-project-webchat/pull/1/commits/c3c35f5245126f97a31f415a96a4c48c4898c42f
-    if (user.nickname === sessionUser) console.log('igual');
-    const liEl = document.createElement('li');
-    liEl.setAttribute(dataId, 'online-user');
-    liEl.innerText = user.nickname;
-    onlineUsers.appendChild(liEl);
-  });
 });
 
 function messageCreation(message) {
@@ -59,4 +40,24 @@ function messageCreation(message) {
 
 socket.on('message', (message) => messageCreation(message));
 
-window.onbeforeunload = (_e) => socket.disconnect();
+socket.on('online', (list) => {
+  // onlineUsers.innerHTML = '';
+  // const givenUser = sessionStorage.getItem('nickname');
+  // const li = document.createElement('li');
+  // li.setAttribute(dataId, 'online-user');
+  // li.innerText = givenUser;
+  // onlineUsers.appendChild(li);
+
+  list.forEach((user) => {
+    // Basiado em https://github.com/tryber/sd-012-project-webchat/pull/1/commits/c3c35f5245126f97a31f415a96a4c48c4898c42f
+    if (user.nickname === sessionUser) return null;
+    const liEl = document.createElement('li');
+    liEl.setAttribute(dataId, 'online-user');
+    liEl.innerText = user.nickname;
+    onlineUsers.appendChild(liEl);
+  });
+});
+
+window.onbeforeunload = () => {
+  socket.disconnect();
+};

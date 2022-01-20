@@ -24,7 +24,7 @@ const createMessage = (messageInfo) => {
   const messagesUl = document.querySelector('.messages');
   const li = document.createElement('li');
   li.innerText = `${Date.now()} - ${nickName}: ${messageInfo.message}`;
-  li['data-testid'] = 'message';
+  li.setAttribute('data-testid', 'message');
   messagesUl.appendChild(li);
 };
 

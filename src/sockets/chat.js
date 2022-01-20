@@ -1,7 +1,9 @@
+const randomNick = require('../helpers/randomNick');
+
 module.exports = (io) => io.on('connection', (socket) => {
   const { id } = socket;
   socket.on('joinRoom', () => {
-    const nickname = id;
+    const nickname = randomNick(16);
     io.emit('createUser', { id, nickname });
   });
   socket.on('clientMessage', (message) => {

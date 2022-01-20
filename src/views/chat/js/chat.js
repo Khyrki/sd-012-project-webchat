@@ -35,7 +35,6 @@ const createMessage = (messageInfo) => {
   const messagesUl = document.querySelector('.messages');
   const li = document.createElement('li');
   const date = `${new Date()}`;
-  console.log(new Date(), date);
   li.innerText = `${dateFormat(date)} - ${nickName}: ${messageInfo.message}`;
   li.setAttribute('data-testid', 'message');
   messagesUl.appendChild(li);

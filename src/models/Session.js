@@ -13,8 +13,9 @@ class Session {
   }
 
   changeName(oldName, newName) {
-    const position = this.list.map(({ nick }) => nick).indexOf(oldName);
-    this.list[position].nick = newName;
+    this.list = this.list.map((user) => (
+      user.nick === oldName ? { ...user, nick: newName } : user
+    ));
   }
 
   removeUser(userId) {

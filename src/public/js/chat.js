@@ -27,15 +27,26 @@ const createMessage = (message) => {
   messageUl.appendChild(li);
 };
 
-const randomUser = (user) => {
+// altera nickname e lista usuário
+const createUser = (user) => {
   nickname = user;
+  socket.emit('usersOnCli');
+};
+
+const renderUsersOnline = (user) => {
   const li = document.createElement('li');
-  li.innerText = user;
+  li.innerText = user.nickname;
   console.log(li);
   li.setAttribute('data-testid', 'online-user');
   usersUl.appendChild(li);
 };
 
+const getUsersOnline = (users) => {
+  usersUl.innerHTML = '';
+  users.forEach((u) => renderUsersOnline(u));
+};
+
 // escuta msg do server
 socket.on('message', (message) => createMessage(message));
-socket.on('randomUser', (user) => randomUser(user));
+socket.on('randomUser', (user) => createUser(user));
+socket.on('usersOnServ', (users) => getUsersOnline(users));

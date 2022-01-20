@@ -1,5 +1,5 @@
 module.exports = (io) => io.on('connection', (socket) => {
-  socket.emit('serverMessage', 'teststtststs');
+  socket.emit('init', socket.id);
   console.log(`Usuário conectado. ID: ${socket.id} `);
   socket.on('message', ({ nickname, chatMessage }) => {
     const time = new Date();

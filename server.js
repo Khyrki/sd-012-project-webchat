@@ -17,7 +17,7 @@ const io = require('socket.io')(http, {
 require('./sockets/chat')(io);
 
 app.get('/', (req, res) => {
-  res.render(`${__dirname}/views/chat`);
+  res.render('chat', { nickname: 'um nome legal' });
 });
 
 http.listen(3000, () => {

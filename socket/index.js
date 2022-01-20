@@ -6,7 +6,6 @@ const handleSocket = require('../controllers/handleSocket');
 module.exports = (io) => {
   io.on('connection', (socket) => {
     handleSocket(socket, io);
-    console.log(users);
 
     socket.on('upNickName', (nickName) => {
       socket.emit('getNickName', nickName);
@@ -18,6 +17,11 @@ module.exports = (io) => {
       const date = getDate();
       newMsg({ message: chatMessage, nickname, timestamp: date });
       io.emit('message', `${date} - ${nickname}: ${chatMessage}`);
+    });
+
+    socket.on('disconnect', () => {
+      delete users[socket.id];
+      io.emit('onlineUsers', users);
     });
   });
 };

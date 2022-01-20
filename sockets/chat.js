@@ -1,9 +1,18 @@
 const moment = require('moment');
+const createMessage = require('../models/createMessage');
 
 module.exports = (io) => io.on('connection', (socket) => {
-  socket.on('message', ({ chatMessage, nickname }) => {
-    const dateStringWithTime = moment().format('DD-MM-YYYY HH:MM:SS A');
+  socket.on('message', async ({ chatMessage, nickname }) => {
+    const timestamp = moment().format('DD-MM-YYYY HH:MM:SS A');
 
-    io.emit('message', `${dateStringWithTime} - ${nickname}: ${chatMessage}`);
+    const info = {
+      message: chatMessage,
+      nickname,
+      timestamp,
+    };
+    
+    await createMessage(info);
+    
+    io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
   });
 });

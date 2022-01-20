@@ -10,6 +10,8 @@ const io = require('socket.io')(http, {
   },
 });
 
+const getAllMessages = require('./models/getAllMessages');
+
 require('./sockets/chat')(io);
 
 app.set('view engine', 'ejs');
@@ -18,8 +20,10 @@ app.set('views', './views');
 
 app.use(express.static(`${__dirname}/views`));
 
-app.get('/', (_req, res) => {
-  res.render('index', {});
+app.get('/', async (_req, res) => {
+  const messages = await getAllMessages();
+
+  res.render('index', { messages });
 });
 
 http.listen(3000, () => {

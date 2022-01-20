@@ -4,6 +4,7 @@ const { Server } = require('socket.io');
 const path = require('path');
 const cors = require('cors');
 const messagesSocket = require('./sockets/messages');
+const usersSocket = require('./sockets/users');
 const { getAllMessages } = require('./models');
 
 const app = express();
@@ -29,5 +30,6 @@ app.get('/', async (_req, res) => {
 });
 
 messagesSocket(io);
+usersSocket(io);
 
 httpServer.listen(3000);

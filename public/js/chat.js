@@ -6,9 +6,16 @@ const messageBox = document.getElementById('messageBox');
 // const sendButton = document.getElementById('sendButton');
 const messageForm = document.getElementById('messageForm');
 const nicknameForm = document.getElementById('nicknameForm');
+const usersUl = document.getElementById('onlineUsers');
 
 const setNickname = (nickname) => {
   nicknameDisplayer.innerText = nickname;
+};
+
+const removeAllChildNodes = (parent) => {
+  while (parent.firstChild) {
+    parent.removeChild(parent.firstChild);
+  }
 };
 
 nicknameForm.addEventListener('submit', (e) => {
@@ -30,15 +37,13 @@ messageForm.addEventListener('submit', (e) => {
 });
 
 socket.on('newConnection', (socketId) => {
-  const sixteenCarachNick = socketId.substring(0, 16);
-
-  if (sessionStorage.getItem(sixteenCarachNick)) {
-    return setNickname(sessionStorage.getItem(sixteenCarachNick));
+  if (sessionStorage.getItem(socketId)) {
+    return setNickname(sessionStorage.getItem(socketId));
   }
 
-  sessionStorage.setItem(sixteenCarachNick, sixteenCarachNick);
+  sessionStorage.setItem(socketId, socketId);
 
-  setNickname(sixteenCarachNick);
+  setNickname(socketId);
 });
 
 socket.on('message', (message) => {
@@ -47,4 +52,18 @@ socket.on('message', (message) => {
   li.innerText = message;
   li.setAttribute('data-testid', 'message');
   messagesUl.appendChild(li);
+});
+
+socket.on('usersOnline', (users) => {
+  removeAllChildNodes(usersUl);
+  const li = document.createElement('li');
+  li.innerText = nicknameDisplayer.innerText;
+  usersUl.appendChild(li);
+  users.forEach((user) => {
+    if (user === nicknameDisplayer.innerText) return;
+    const lis = document.createElement('li');
+    lis.innerText = user;
+    lis.setAttribute('data-testid', 'online-user');
+    usersUl.appendChild(lis);
+  });
 });

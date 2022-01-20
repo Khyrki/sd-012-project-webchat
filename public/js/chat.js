@@ -20,11 +20,11 @@ const removeAllChildNodes = (parent) => {
 
 nicknameForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  const key = nicknameDisplayer.innerText;
-  const userNickname = nicknameInput.value;
-  sessionStorage.setItem(key, userNickname);
-  setNickname(sessionStorage.getItem(key));
-  socket.emit('updateUserNickname', { key, userNickname });
+  const currentNickname = nicknameDisplayer.innerText;
+  const newNickname = nicknameInput.value;
+  sessionStorage.setItem(currentNickname, newNickname);
+  setNickname(sessionStorage.getItem(currentNickname));
+  socket.emit('updateUserNickname', { currentNickname, newNickname });
   nicknameInput.value = '';
 });
 
@@ -60,10 +60,16 @@ socket.on('usersOnline', (users) => {
   const li = document.createElement('li');
   li.innerText = nicknameDisplayer.innerText;
   usersUl.appendChild(li);
-  users.forEach((user) => {
-    if (user === nicknameDisplayer.innerText) return;
+  const currentNicknameDisplayed = nicknameDisplayer.innerText;
+  users.forEach(({ id, name }) => {
+    console.log(id, name, currentNicknameDisplayed);
+    if (id === currentNicknameDisplayed || name === currentNicknameDisplayed) return;
     const lis = document.createElement('li');
-    lis.innerText = user;
+    if (name) {
+      lis.innerText = name;
+    } else {
+      lis.innerText = id;
+    }
     lis.setAttribute('data-testid', 'online-user');
     usersUl.appendChild(lis);
   });

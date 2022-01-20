@@ -6,7 +6,7 @@ const http = require('http').createServer(app);
 
 require('dotenv').config();
 
-const { PORT = 3000 } = process.env;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -20,7 +20,6 @@ const io = require('socket.io')(http, {
     methods: ['GET', 'POST'],
   }, 
 });
-const getChat = require('./src/controllers/getChat');
   
 app.use(express.static(`${__dirname}/public`));
 
@@ -29,8 +28,8 @@ app.set('views', './src/views');
 
 require('./src/socket')(io);
 
-// const router = require('./src/routers');
+const router = require('./src/routers');
 
-app.get('/', getChat);
+app.use('/', router);
 
 http.listen(PORT, () => console.log(`server rodando na porta ${PORT}`));

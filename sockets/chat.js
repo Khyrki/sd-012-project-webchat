@@ -27,8 +27,14 @@ async function handleMessageHistory(io, socket) {
 }
 
 module.exports = (io) => io.on('connection', (socket) => {
+  io.emit('renderUserList', userList);
   socket.emit('generateNickname', socket.id.slice(0, -4));
   handleMessageHistory(io, socket);
   handleMessage(io, socket);
   handleNicknameChange(io, socket);
+
+  socket.on('disconnect', () => {
+    userList = userList.filter((user) => (user.id !== socket.id));
+    io.emit('renderUserList', userList);
+  });
 });

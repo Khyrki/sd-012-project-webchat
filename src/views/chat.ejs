@@ -8,7 +8,7 @@
 </head>
 <body>
   <div id="room-container">
-    <div id="message">
+    <div id="user-container">
       <p data-testid="online-user"></p>
       <form action="" id="user">
         <input data-testid="nickname-box" type="text" placeholder="Insira seu nickname">
@@ -17,7 +17,11 @@
       <ul id="user-list"></ul>
     </div>
     <div id="messages-container">
-      <ul id="message-list"></ul>
+      <ul id="message-list">
+        <% messages.forEach(({ message, nickname, timestamp }) => { %>
+          <li data-testid="message"><%= `${timestamp} - ${nickname} ${message}` %></li>
+        <% }) %>
+      </ul>
     </div>
     </div>
   <form id="message-container">

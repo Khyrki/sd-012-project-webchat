@@ -5,7 +5,7 @@ const nickNameBtn = document.querySelector('[data-testid="nickname-button"]');
 const sendMessageBtn = document.querySelector('[data-testid="send-button"]');
 const messageBox = document.querySelector('[data-testid="message-box"]');
 const userList = document.getElementById('user-list');
-const messageList = document.getElementById('message');
+const messageList = document.getElementById('message-list');
 
 socket.on('nickname', (nickname) => {
   userOnline.innerHTML = nickname;

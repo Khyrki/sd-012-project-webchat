@@ -6,7 +6,7 @@ const messageInput = document.querySelector('#messageInput');
 
 form.addEventListener('submit', (event) => {
   event.preventDefault();
-  socket.emit('clientMessage', messageInput.value);
+  socket.emit('message', messageInput.value);
   messageInput.value = '';
   return false;
 });
@@ -16,5 +16,5 @@ const createMessage = (message) => {
   li.innerText = message;
   ul.appendChild(li);
 };
-
-socket.on('serverMessage', (message) => createMessage(message));
+socket.on('welcome', (message) => createMessage(message));
+socket.on('message', (message) => createMessage(message));

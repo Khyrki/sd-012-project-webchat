@@ -26,7 +26,6 @@ module.exports = (io) => {
     messages.forEach(({ chatMessage, nickname, time }) => {
       socket.emit('messageHistory', `${time} ${nickname}: ${chatMessage}`);
     });
-    console.log(participants);
     io.emit('participantChange', participants);
     socket.on('disconnect', () => {
       removeParticipant(socket.id);

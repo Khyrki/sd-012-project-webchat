@@ -1,6 +1,12 @@
 const socket = window.io();
 const datatestid = 'data-testid';
 
+const generateRandomNickname = () => {
+  const randomNick = Array.from(Array(16), 
+    () => Math.floor(Math.random() * 36).toString(36)).join('');
+  return randomNick;
+};
+
 const createMessage = () => {
   const nickName = document.querySelector('#nickName').innerText;
   const messageInput = document.querySelector('#message-box');
@@ -19,6 +25,8 @@ const changeNickname = (newNick) => {
   const nickname = document.querySelector('#nickName');
   nickname.innerText = newNick;
 };
+
+changeNickname(generateRandomNickname());
 
 const changeOnlineUsers = (participants) => {
   const onlineUsers = document.querySelector('#onlineUsers');

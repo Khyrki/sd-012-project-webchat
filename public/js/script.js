@@ -78,7 +78,6 @@ const renderPastMessages = (messagesArray) => {
 };
 
 socket.on('message', (message) => createMessage(message));
-// socket.on('systemMessage', (systemMessage) => createSystemMessage(systemMessage));
 socket.on('userName', (userName) => defineActualUserNamer(userName));
 socket.on('onlineUsersList', (nickNameArray) => createNicknameList(nickNameArray));
 socket.on('pastMessages', (messagesArray) => renderPastMessages(messagesArray));

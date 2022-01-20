@@ -20,7 +20,11 @@
     <button data-testid="nickname-button" id="nick-button">Salvar</button>  
   </div>
   <div>
-    <ul id="chat-box"></ul>
+    <ul id="chat-box">
+      <% getAllMessages.forEach((message) => { %>
+        <li data-testid="message"><%= `${message.timestamp}: ${message.nickname} => ${message.message}` %></li>
+      <% }) %>
+    </ul>
   </div>
   <div>
     <input

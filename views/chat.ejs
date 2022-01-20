@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
   <title>WebChat</title>
 </head>
 <body>
@@ -15,74 +14,21 @@
             <button id="nickname-button" data-testid="nickname-button">Update</button>
         </form>
     </header>
-    <ul>
-        <li id = "current-user" data-testid="online-user"></li>
-    </ul>
+    <span id = "current-user" data-testid="online-user"></span>
     <ul id="users-ul"></ul>
-
-    <ul id="messages-ul">
-        <% messageHistory.forEach(message => { %>
-        <li data-testid="message"><%= message %></li>
-        <% }) %>
-    </ul>
-
+    
     <form id="message-form">
         <input type="text" id="message-box" data-testid="message-box" />
         <button id="send-button" data-testid="send-button">Send</button>
     </form>
-
-
-    <script>
-        const socket = io('http://localhost:3000');
-        const messageForm = document.getElementById('message-form');
-        const messageBox = document.getElementById('message-box');
-        const nicknameForm = document.getElementById('nickname-form');
-        const nicknameBox = document.getElementById('nickname-box');
-        const currentUser = document.getElementById('current-user');
+    
+    <ul id="messages-ul">
+        <% messageHistory.forEach(message => { %>
+            <li data-testid="message"><%= message %></li>
+        <% }) %>
+    </ul>
         
-        let nickname = '';
-        
-        socket.on('connect', () => {
-            nickname = socket.id.substring(0, 16);
-            currentUser.innerText = nickname;
-            socket.emit('newUser', { id: socket.id, nickname }) 
-        })
-        
-        messageForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            socket.emit('message', { nickname, chatMessage: messageBox.value });
-            messageBox.value='';
-            return false;
-        })
-        
-        nicknameForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            nickname = nicknameBox.value;
-            socket.emit('changeNick', { nickname });
-            currentUser.innerText = nickname;
-            nicknameBox.value='';
-            return false;
-        })
-        
-        socket.on('message', (message) => {
-            const li = document.createElement('li');
-            li.innerText = message;
-            li.setAttribute('data-testid', 'message');
-            document.getElementById('messages-ul').appendChild(li);
-        });
-        
-        socket.on('onlineUsers', (onlineUsers) => {
-            document.getElementById('users-ul').innerHTML = '';
-            const filteredUsers = onlineUsers.filter((user) => user.nickname !== nickname);
-            filteredUsers.forEach(({ nickname }) => {
-                const li = document.createElement('li');
-                li.innerText = nickname;
-                li.setAttribute('data-testid', 'online-user');
-                document.getElementById('users-ul').appendChild(li);
-            })
-        })
-
-
-    </script>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script src="chat.js"></script>
 </body>
 </html>

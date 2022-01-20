@@ -15,7 +15,7 @@ const io = require('socket.io')(socketIoServer, {
   },
 });
 
-const msgModel = require('./models/messages');
+const controller = require('./controllers/chat');
 
 require('./sockets/chat')(io);
 
@@ -24,11 +24,9 @@ app.set('views', './views');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(`${__dirname}/public`));
 
-app.get('/', async (_req, res) => {
-    const messageHistory = await msgModel.findAll();
-    res.render('chat', { messageHistory });
-});
+app.get('/', controller);
 
 socketIoServer.listen(
   PORT, console.log(`Socket.io Server listening on port ${PORT}!`),

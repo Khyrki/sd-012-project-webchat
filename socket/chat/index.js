@@ -32,6 +32,5 @@ module.exports = (io) => {
       removeParticipant(socket.id);
       io.emit('participantChange', participants);
     });
-    // disconnect(io, socket, removeParticipant, participants);
   });
 };

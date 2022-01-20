@@ -14,6 +14,11 @@ const newUser = (name) => {
   users.appendChild(li);
 };
 
+const clearUsers = () => {
+  const users = document.querySelector('#users');
+  users.innerHTML = '';
+};
+
 const newMessage = (_newMessage) => {
   const messages = document.querySelector('#messages');
   const li = document.createElement('li');
@@ -25,16 +30,21 @@ const newMessage = (_newMessage) => {
 nicknameButton.addEventListener('click', (e) => {
   e.preventDefault();
   socket.emit('changeNickname', nicknameBox.value);
+  nicknameBox.value = '';
 });
 
 sendButton.addEventListener('click', (e) => {
   e.preventDefault();
   socket.emit('message', { chatMessage: message.value });
+  message.value = '';
 });
 
 socket.on('connection', (messages) => messages.forEach((_message) => newMessage(_message)));
 
-socket.on('userConnection', (nicknames) => nicknames.forEach((nickname) => newUser(nickname)));
+socket.on('userConnection', (nicknames) => {
+  clearUsers();
+  nicknames.forEach((nickname) => newUser(nickname));
+});
 
 socket.on('message', (receivedMessage) => newMessage(receivedMessage));
 

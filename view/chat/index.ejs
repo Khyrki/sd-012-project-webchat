@@ -6,31 +6,31 @@
 </head>
 <body>
   <main>
-    <section id="app-container">
-      <aside id="users">
-        <div id="nickname-container">
-          <label for="input-nickname" id="label-nickname">
-            <input type="text" id="input-nickname" placeholder="Insira seu nickname" />
+    <section class="app-container">
+      <aside class="users">
+        <div class="nickname-container">
+          <label for="input-nickname" class="label-nickname">
+            <input type="text" class="input-nickname" id="input-nickname" placeholder="Insira seu nickname" />
           </label>
-          <button type="button" id="save-nick">Salvar</button>
+          <button type="button" class="save-nick">Salvar</button>
         </div>
-        <section id="users-container">
-          <ul id="users-list">
+        <section class="users-container">
+          <ul class="users-list">
             <li>Usuário 1</li>
           </ul>
         </section>
       </aside>
-      <section id="messages-container">
-        <ul id="message-list">
+      <section class="messages-container">
+        <ul class="message-list">
           <li>Menssagem 1</li>
         </ul>
       </section>
     </section>
-    <form id="submit-message-container">
-      <label for="submit-input" id="submit-label">
-      <input type="text" id="submit-input" placeholder="Digite sua menssagem...">
+    <form class="submit-message-container">
+      <label for="submit-input" class="submit-label">
+      <input type="text" class="submit-input" id="submit-input" placeholder="Digite sua menssagem...">
     </label>
-    <button type="button" id="submit-btn">Enviar</button>
+    <button type="button" class="submit-btn">Enviar</button>
     </form>
   </main>
   <script src="/socket.io/socket.io.js"></script>

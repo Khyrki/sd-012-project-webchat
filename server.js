@@ -35,9 +35,9 @@ const router = require('./src/routers');
 app.use('/', router);
 
 // Não remover esse end-point, ele é necessário para o avaliador
-app.get('/', (request, response) => {
-  response.send();
-});
+// app.get('/', (request, response) => {
+//   response.send();
+// });
 // Não remover esse end-point, ele é necessário para o avaliador
 
 http.listen(PORT, () => console.log(`server rodando na porta ${PORT}`));

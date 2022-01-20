@@ -1,6 +1,7 @@
 class Session {
   constructor() {
     this.list = [];
+    this.changeName = this.changeName.bind(this);
   }
 
   addUser(user) {

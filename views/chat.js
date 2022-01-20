@@ -17,17 +17,17 @@ const sessionUser = sessionStorage.getItem('nickname') || randomName;
 onlineUser.innerHTML = sessionUser;
 socket.emit('create', sessionUser);
 
-sendButton.addEventListener('click', () => {
-  socket.emit('message', { chatMessage: inputMessage.value, nickname: onlineUser.innerHTML });
-  inputMessage.value = '';
-});
-
 nicknameButton.addEventListener('click', () => {
   const newNickname = nicknameInput.value;
   nicknameInput.value = '';
   onlineUser.innerHTML = newNickname;
   sessionStorage.setItem('nickname', newNickname);
   socket.emit('updateNickname', newNickname);
+});
+
+sendButton.addEventListener('click', () => {
+  socket.emit('message', { chatMessage: inputMessage.value, nickname: onlineUser.innerHTML });
+  inputMessage.value = '';
 });
 
 function messageCreation(message) {
@@ -41,19 +41,15 @@ function messageCreation(message) {
 socket.on('message', (message) => messageCreation(message));
 
 socket.on('online', (list) => {
-  // onlineUsers.innerHTML = '';
-  // const givenUser = sessionStorage.getItem('nickname');
-  // const li = document.createElement('li');
-  // li.setAttribute(dataId, 'online-user');
-  // li.innerText = givenUser;
-  // onlineUsers.appendChild(li);
+  onlineUsers.innerHTML = '';
 
   list.forEach((user) => {
-    // Basiado em https://github.com/tryber/sd-012-project-webchat/pull/1/commits/c3c35f5245126f97a31f415a96a4c48c4898c42f
-    if (user.nickname === sessionUser) return null;
+    // Baseado em https://github.com/tryber/sd-012-project-webchat/pull/1/commits/c3c35f5245126f97a31f415a96a4c48c4898c42f
+    const currentUser = onlineUser.innerHTML;
+    if (currentUser === user.nickname) return;
     const liEl = document.createElement('li');
+    liEl.innerHTML = user.nickname;
     liEl.setAttribute(dataId, 'online-user');
-    liEl.innerText = user.nickname;
     onlineUsers.appendChild(liEl);
   });
 });

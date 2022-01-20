@@ -10,14 +10,16 @@ module.exports = (io) => io.on('connection', (socket) => {
     io.emit('message', `${date} - ${nickname}: ${chatMessage}`);
   });
 
-  socket.on('updateNickname', (nickname) => {
-    clients.splice(clients.indexOf(clients.find((client) => client.id === socket.id)), 1);
+  socket.on('create', (nickname) => {
     clients.push({ id: socket.id, nickname });
     io.emit('online', clients);
   });
 
-  socket.on('create', (nickname) => {
-    clients.push({ id: socket.id, nickname });
+  socket.on('updateNickname', (nickname) => {
+    // clients.splice(clients.indexOf(clients.find((client) => client.id === socket.id)), 1);
+    // clients.push({ id: socket.id, nickname });
+    const updatedClient = clients.find((client) => client.id === socket.id);
+    updatedClient.nickname = nickname;
     io.emit('online', clients);
   });
 

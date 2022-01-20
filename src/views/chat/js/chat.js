@@ -1,5 +1,7 @@
 const socket = window.io();
 
+const dataTestId = 'data-testid';
+
 const userBox = document.querySelector('.nickBox');
 const userNick = document.querySelector('.nickInput');
 const messageBox = document.querySelector('.messageBox');
@@ -30,40 +32,56 @@ const dateFormat = (date) => {
   return formatedDate;
 };
 
-const createMessage = (messageInfo) => {
-  const nickName = sessionStorage.getItem(messageInfo.id);
+const saveMessage = (message, nickname, timestamp) => {
+  socket.emit('saveMessage', { message, nickname, timestamp });
+  // console.log(message, nickname, timestamp);
+  return false;
+};
+
+const loadMessages = (messageInfo) => {
+  const { nickname, message, timestamp } = messageInfo;
   const messagesUl = document.querySelector('.messages');
   const li = document.createElement('li');
-  const date = `${new Date()}`;
-  li.innerText = `${dateFormat(date)} - ${nickName}: ${messageInfo.message}`;
-  li.setAttribute('data-testid', 'message');
+  li.innerText = `${timestamp} - ${nickname}: ${message}`;
+  li.setAttribute(dataTestId, 'message');
+  messagesUl.appendChild(li);
+};
+
+const createMessage = (messageInfo) => {
+  const nickName = sessionStorage.getItem(messageInfo.id);
+  const { message } = messageInfo;
+  const messagesUl = document.querySelector('.messages');
+  const li = document.createElement('li');
+  const date = dateFormat(`${new Date()}`);
+  saveMessage(message, nickName, date);
+  li.innerText = `${date} - ${nickName}: ${message}`;
+  li.setAttribute(dataTestId, 'message');
   messagesUl.appendChild(li);
 };
 
 const deleteUser = (id) => {
   const messagesUl = document.querySelector('.users');
-  const user = document.querySelector(`#${id}`);
+  const user = document.getElementById(id);
+  if (!user) return false;
   messagesUl.removeChild(user);
 };
 
 const createUser = (nicknameInfo) => {
   sessionStorage.setItem(nicknameInfo.id, nicknameInfo.nickname);
   const messagesUl = document.querySelector('.users');
-  const user = document.querySelector(`#${nicknameInfo.id}`);
+  const user = document.getElementById(nicknameInfo.id);
+  if (user) deleteUser(nicknameInfo.id);
   const li = document.createElement('li');
   li.innerText = nicknameInfo.nickname;
-  li.setAttribute('data-testid', 'online-user');
+  li.setAttribute(dataTestId, 'online-user');
   li.setAttribute('id', nicknameInfo.id);
-  if (user) deleteUser(nicknameInfo.id);
   messagesUl.appendChild(li);
 };
 
+socket.on('loadMessages', (messageInfo) => loadMessages(messageInfo));
 socket.on('serverMessage', (messageInfo) => createMessage(messageInfo));
 socket.on('createUser', (nicknameInfo) => createUser(nicknameInfo));
-socket.on('deleteUser', (id) => {
-  console.log(id);
-  deleteUser(id);
-});
+socket.on('deleteUser', (id) => deleteUser(id));
 
 socket.emit('joinRoom');
 

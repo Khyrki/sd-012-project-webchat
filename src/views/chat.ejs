@@ -9,12 +9,13 @@
 <body>
   <div id="room-container">
     <div id="user-container">
-      <p data-testid="user"></p>
-      <form action="" id="user">
+      <form action="">
         <input data-testid="nickname-box" type="text" placeholder="Insira seu nickname">
         <button data-testid="nickname-button" type="button">Salvar</button>
       </form>
-      <ul id="user-list"></ul>
+      <ul id="user-list">
+        <li id="user" data-testid="online-user"></li>
+      </ul>
     </div>
     <div id="messages-container">
       <ul id="message-list">

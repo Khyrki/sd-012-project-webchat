@@ -1,5 +1,5 @@
 const socket = window.io();
-const userOnline = document.querySelector('[data-testid="user"]');
+const userOnline = document.getElementById('user');
 const nickNameBox = document.querySelector('[data-testid="nickname-box"]');
 const nickNameBtn = document.querySelector('[data-testid="nickname-button"]');
 const sendMessageBtn = document.querySelector('[data-testid="send-button"]');
@@ -14,12 +14,14 @@ socket.on('nickname', (nickname) => {
 socket.on('userList', (listJson) => {
   const list = JSON.parse(listJson);
   userList.innerHTML = '';
-  list.forEach((name) => {
-    const li = document.createElement('li');
-    li.setAttribute('data-testid', 'online-user');
-    li.innerHTML = name;
-    userList.appendChild(li);
-  });
+  userList.appendChild(userOnline);
+  list.filter((name) => name !== userOnline.innerHTML)
+    .forEach((name) => {
+      const li = document.createElement('li');
+      li.setAttribute('data-testid', 'online-user');
+      li.innerHTML = name;
+      userList.appendChild(li);
+    });
 });
 
 socket.on('message', (message) => {

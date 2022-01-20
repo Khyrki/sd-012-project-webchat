@@ -9,7 +9,20 @@ const messages = (socket, io) => {
   });
 };
 
+// const randomUser = (socket, io) => {
+//   const { id } = socket;
+//   console.log(`Usuário conectado ID: ${id}`);
+//   const formatUser = `Gost-${id.slice(9)}`;
+//   console.log(formatUser);
+//   io.emit('randomUser', formatUser);
+// };
+
 module.exports = (io) => io.on('connection', (socket) => {
-  console.log(`Usuário conectado ID: ${socket.id}`);
+  const { id } = socket;
+  console.log(`Usuário conectado ID: ${id}`);
+  const formatUser = `Gost-${id.slice(9)}`;
+  console.log(formatUser);
+  io.emit('randomUser', formatUser);
+  // randomUser(socket, io);
   messages(socket, io);
 });

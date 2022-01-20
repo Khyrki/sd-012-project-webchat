@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO - trybe</title>
+  </head>
+  <body>
+    <ul id="messages">
+      <% messages.forEach(({message, nickname, timestamp}) => { %>
+        <li data-testid="message">
+          <p data-testid="online-user">
+            <%= `${timestamp} ${nickname}: ${message}`%>
+          </p> 
+        </li>
+      <% }) %>
+    </ul>
+    <form action="">
+      <input
+        id="messageInput"
+        data-testid="message-box"/>
+      <button data-testid="send-button">
+        Send
+      </button>
+    </form>
+    <input
+      id="nickname-input"
+      data-testid="nickname-box"
+    />
+    <button
+      data-testid="nickname-button"
+      id="nickname-button"
+    >
+      CHANGE YOUR NICK
+    </button>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/chat.js"></script>
+  </body>
+</html>

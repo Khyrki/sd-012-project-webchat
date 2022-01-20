@@ -4,6 +4,7 @@ const path = require('path');
 const { Server } = require('socket.io');
 const RootController = require('./controllers');
 const Models = require('./models');
+const ServerState = require('./ServerState');
 const RootSocket = require('./sockets');
 const Views = require('./views');
 require('dotenv').config();
@@ -19,6 +20,9 @@ const io = new Server(server, {
   },
 });
 
+// state;
+const serverState = new ServerState();
+
 // views;
 const views = new Views();
 
@@ -26,7 +30,7 @@ const views = new Views();
 const models = new Models();
 
 // sockets;
-const sockets = new RootSocket(io, models.map);
+const sockets = new RootSocket(io, models.map, serverState);
 sockets.execute();
 
 // settings;

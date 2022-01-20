@@ -1,11 +1,14 @@
 const moment = require('moment');
 
+const chat = require('../models/chat');
+
 let userList = [];
 
 function handleMessage(io, socket) {
   socket.on('message', ({ chatMessage, nickname }) => {
     const dateAndTime = moment().format('DD-MM-yyyy  HH:mm:ss');
     const detailedMessage = `${dateAndTime} - ${nickname}: ${chatMessage}`;
+    chat.createMessage({ message: chatMessage, nickname, timestamp: dateAndTime });
     io.emit('message', detailedMessage);
   });
 }
@@ -18,8 +21,14 @@ function handleNicknameChange(io, socket) {
   });
 }
 
+async function handleMessageHistory(io, socket) {
+  const messages = await chat.getAllMessages();
+  socket.emit('messageHistory', messages);
+}
+
 module.exports = (io) => io.on('connection', (socket) => {
   socket.emit('generateNickname', socket.id.slice(0, -4));
+  handleMessageHistory(io, socket);
   handleMessage(io, socket);
   handleNicknameChange(io, socket);
 });

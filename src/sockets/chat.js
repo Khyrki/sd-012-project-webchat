@@ -1,9 +1,7 @@
-const nameGenerator = require('../helpers/nameGenerator');
-
 module.exports = (io) => io.on('connection', (socket) => {
   const { id } = socket;
   socket.on('joinRoom', () => {
-    const nickname = nameGenerator();
+    const nickname = id;
     io.emit('createUser', { id, nickname });
   });
   socket.on('clientMessage', (message) => {

@@ -21,8 +21,8 @@ const connectedInChat = [];
 
 const getDate = () => {
   const time = new Date();
-  const day = time.getDay();
-  const month = time.getMonth();
+  const day = time.getDate();
+  const month = time.getMonth() + 1;
   const year = time.getFullYear();
   return `${day}-${month}-${year} ${time.toLocaleTimeString('en-US')}`;
 };

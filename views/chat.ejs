@@ -8,24 +8,63 @@
   <title>WebChat</title>
 </head>
 <body>
-  <h1>WebChat</h1>
-  <ul id="news">
-    <% news.forEach(notification => { %>
-      <li><%= notification.title %>: <%= notification.message %></li>
-    <% }) %>
-  </ul>
-  <form action="">
-    <input id="messageInput" autocomplete="off" /><button>Send</button>
-  </form>
-  <script>
-    const socket = io('http://localhost:3000');
+    <header>
+        <h1>WebChat</h1>
+        <span id="online-user" data-testid="online-user">Default</span>
+    </header>
 
-    socket.on('message', ({ title, message }) => {
-      const li = document.createElement('li');
-      const liText = document.createTextNode(`${title}: ${message}`);
-      li.appendChild(liText);
-      document.getElementById('news').appendChild(li);
-    });
-  </script>
+    <ul id="messages-ul">
+        <% messageHistory.forEach(message => { %>
+        <li data-testid="message"><%= message %></li>
+        <% }) %>
+    </ul>
+
+    <form id="message-form">
+        <input id="message-box" data-testid="message-box" />
+        <button id="send-button" data-testid="send-button">Send</button>
+    </form>
+
+    <form id="nickname-form">
+        <input id="nickname-box" data-testid="nickname-box" />
+        <button id="nickname-button" data-testid="nickname-button">Update</button>
+    </form>
+
+    <script>
+        const socket = io('http://localhost:3000');
+        const messageForm = document.getElementById('message-form');
+        const messageBox = document.getElementById('message-box');
+        const nicknameForm = document.getElementById('nickname-form');
+        const nicknameBox = document.getElementById('nickname-box');
+        const onlineUser = document.getElementById('online-user');
+
+        let nickname = '';
+
+        messageForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            socket.emit('message', { nickname, chatMessage: messageBox.value });
+            messageBox.value='';
+            return false;
+        })
+
+        nicknameForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            socket.emit('newNick', { newNick: nicknameBox.value });
+            nicknameBox.value='';
+            return false;
+        })
+
+        socket.on('changeNick', (defaultNick) => {
+            nickname = defaultNick;
+            onlineUser.innerText = nickname;
+        });
+
+        socket.on('message', (message) => {
+            const li = document.createElement('li');
+            li.innerText = message;
+            document.getElementById('messages-ul').appendChild(li);
+        });
+
+
+    </script>
 </body>
 </html>

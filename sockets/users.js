@@ -13,4 +13,9 @@ module.exports = (io) => io.on('connection', (socket) => {
     users = users.filter((user) => user !== userId);
     socket.broadcast.emit('usersOnline', users);
   });
+
+  socket.on('updateUserNickname', ({ key, userNickname }) => {
+    users = users.reduce((acc, crr) => (crr === key ? [...acc, userNickname] : [...acc, crr]), []);
+    io.emit('usersOnline', users);
+  });
 });

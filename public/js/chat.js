@@ -24,6 +24,7 @@ nicknameForm.addEventListener('submit', (e) => {
   const userNickname = nicknameInput.value;
   sessionStorage.setItem(key, userNickname);
   setNickname(sessionStorage.getItem(key));
+  socket.emit('updateUserNickname', { key, userNickname });
   nicknameInput.value = '';
 });
 

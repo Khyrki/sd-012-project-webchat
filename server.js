@@ -7,7 +7,6 @@ const socketIo = require('socket.io');
 const { format } = require('date-fns');
 const { insertMessage, getAllMessages } = require('./models/messagesConnect');
 const { geraStringAleatoria } = require('./helpers/helper');
-const { use } = require('express/lib/application');
 
 const io = socketIo(http, {
     cors: {
@@ -41,11 +40,14 @@ io.on('connection', async (socket) => {
     listUser.splice(users, 1);
     io.emit('updateUsers', listUser);
   });
+});
 
+io.on('connection', async (socket) => {
   socket.on('changeNick', (nickname) => {
     listUser.forEach((user) => {
+      const userToEdit = user;
       if (user.id === socket.id) {
-        user.nickname = nickname;
+        userToEdit.nickname = nickname;
       }
     });
     io.emit('updateUsers', listUser);

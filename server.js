@@ -9,20 +9,20 @@ const io = require('socket.io')(http, {
     methods: ['GET', 'POST'],
   } });
 
+const { chat } = require('./src/controllers');
+
 const PORT = process.env.PORT || 3000;
 
 app.use(express.static(`${__dirname}/src/views/chat`));
 
 app.set('view engine', 'ejs');
 
-app.set('views', './views');
+app.set('views', './src/views');
 
 require('./src/sockets/chat')(io);
 // require('./src/sockets/rooms')(io);
 
-app.get('/', (req, res) => {
-  res.render(`${__dirname}/src/views/chat`);
-});
+app.get('/', chat);
 
 http.listen(PORT, () => {
   console.log(`Servidor ouvindo na porta ${PORT}`);

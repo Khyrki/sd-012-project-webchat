@@ -11,7 +11,7 @@ form.addEventListener('submit', (e) => {
 });
 
 const createMessage = (message) => {
-  const messagesUl = document.querySelector('#messages');
+  const messagesUl = document.querySelector('.messages');
   const li = document.createElement('li');
   li.innerText = message;
   messagesUl.appendChild(li);

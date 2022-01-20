@@ -9,15 +9,18 @@ const io = require('socket.io')(http, {
     methods: ['GET'],
   } });
 
-  app.use(express.static(__dirname));
+const { getMessage } = require('./models/servModel');
 
-  app.set('view engine', 'ejs');
-  app.set('views', './views');
+app.use(express.static(__dirname));
+
+app.set('view engine', 'ejs');
+app.set('views', './views');
 
 require('./sockets/chat')(io);
 
-app.get('/', (req, res) => {
-  res.render('chat', { nickname: 'um nome legal' });
+app.get('/', async (_req, res) => {
+  const response = await getMessage();
+  res.render('chat', { messages: response });
 });
 
 http.listen(3000, () => {

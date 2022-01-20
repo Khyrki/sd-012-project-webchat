@@ -13,7 +13,11 @@
       </div>
     </div>
     <div>
-      <ul id="messages"></ul>
+      <ul id="messages">
+      <% messages.forEach((m) => { %>
+        <li data-testid="message"><%= `${m.timestamp} ${m.nickname}: ${m.message}` %></li>
+      <% }) %>
+    </ul>
     </div>
     <div>
       <form action="">

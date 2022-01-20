@@ -1,3 +1,7 @@
+const chat = require('../models/chat');
+
 module.exports = (req, res) => {
-  res.status(200).render('index', {});
+const getAllMessages = chat.getAll();
+
+  res.status(200).render('index', { getAllMessages });
 };

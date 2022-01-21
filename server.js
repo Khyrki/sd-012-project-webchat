@@ -16,6 +16,14 @@ const io = require('socket.io')(http, {
   },
 });
 
+app.set('view engine', 'ejs');
+
+app.set('views', './views');
+
+const getAllMessages = require('./controllers/getMessages');
+
+app.get('/', getAllMessages);
+
 app.use(express.static(`${__dirname}/public`));
 
 require('./sockets/chat')(io);

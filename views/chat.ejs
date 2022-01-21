@@ -21,7 +21,13 @@
     </form>
   </div>
 
-  <ul id="messages"></ul>
+  <ul id="messages">
+    <% messages.forEach(({ timestamp, nickname, message}) => { %>
+
+    <li data-testid="message"> <%= `${timestamp} - ${nickname}: ${message}` %> </li>
+
+    <% }) %>
+  </ul>
 
   <form id="messageForm" action="">
 
@@ -33,6 +39,6 @@
 
   <script src="/socket.io/socket.io.js"></script>
 
-  <script src="./js/chat.js"></script>
+  <script src="../js/chat.js"></script>
 </body>
 </html>

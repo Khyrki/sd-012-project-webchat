@@ -6,6 +6,10 @@ const nickNameInput = document.querySelector('#nickNameInput');
 const messageForm = document.querySelector('#messageForm');
 const messageInput = document.querySelector('#messageInput');
 
+const setSessionStorage = () => {
+  sessionStorage.setItem('nickname', nickNameInput.value);
+};
+
 const receivedNickName = (nickname) => {
   nickNameInnerText.innerText = nickname;
 };
@@ -21,6 +25,7 @@ const eventListener = (where, typeEvent, socketEmitFunction) => {
 
 const socketEmitNickName = () => {
   socket.emit('nickName', nickNameInput.value);
+  setSessionStorage();
   nickNameInput.value = '';
   return false;
 };

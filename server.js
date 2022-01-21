@@ -14,6 +14,8 @@ const io = require('socket.io')(http, {
   },
 });
 
+const getMessages = require('./controllers/getMessages');
+
 require('./sockets/chat')(io);
 
 app.set('view engine', 'ejs');
@@ -23,8 +25,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
-app.get('/', (_req, res) => {
-  res.render('chat');
+app.get('/', async (_req, res) => {
+  const messageHistory = await getMessages();
+  console.log(messageHistory);
+  res.render('chat', { messageHistory });
 });
 
 http.listen(

@@ -11,7 +11,13 @@
   <h1>Usuários</h1>
   <ul id="user-list"></ul>
   <h1>Mensagens</h1>
-  <ul id="message-list"></ul>
+  <ul id="message-list">
+    <% if (messageHistory && messageHistory.length > 0) { %>
+      <%messageHistory.map (({ timestamp, message, nickname }) => {%>
+        <li data-testid="message"><%=`${timestamp} ${nickname}: ${message}` %></li>
+      <%})%>
+    <%} %>
+  </ul>
   <form>
     <label for="nickname">
       Nickname:
@@ -33,7 +39,7 @@
     const socket = io('http://localhost:3000');
 
     const sendButton = document.getElementById('send-button');
-    const form = document.getElementById('message-form');
+    const messageForm = document.getElementById('message-form');
     const messageInput = document.getElementById('message-input');
     const username = document.getElementById('nickname');
     const nameButton = document.getElementById('save-name-btn')
@@ -46,9 +52,10 @@
     nameButton.addEventListener('click', (e) => {
       e.preventDefault();
       sessionStorage.setItem('user', username.value);
+      renderUser(username.value);
     });
     
-    form.addEventListener('submit', (e) => {
+    messageForm.addEventListener('submit', (e) => {
       e.preventDefault();
       socket.emit('message',
       { chatMessage: messageInput.value, nickname: username.value});

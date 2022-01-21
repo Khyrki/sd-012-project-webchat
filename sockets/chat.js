@@ -1,5 +1,6 @@
 const getDateTime = require('../helpers/getDateTime');
 const randomNickname = require('../helpers/randomNickname');
+const saveMessages = require('../models/insertMessages');
 
 module.exports = (io) => {
   io.on('connection', (socket) => {
@@ -9,9 +10,9 @@ module.exports = (io) => {
       console.log(`Um usuário desconectou em ${socket.id}.`);
     });
 
-    socket.on('message', ({ chatMessage, nickname }) => {
+    socket.on('message', async ({ chatMessage, nickname }) => {
       const dateTime = getDateTime();
-
+      await saveMessages(dateTime, chatMessage, nickname);
       const formattedMsg = `${dateTime} ${nickname}: ${chatMessage}`;
       io.emit('message', formattedMsg);
     });

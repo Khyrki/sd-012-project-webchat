@@ -6,11 +6,19 @@ const messageInput = document.querySelector('.submit-input');
 const nickNameInput = document.querySelector('#input-nickname');
 const messageList = document.querySelector('.message-list');
 
-submitButton.addEventListener('click', () => {
+const submitMessage = () => {
   if (messageInput.value !== '') {
     const nickname = sessionStorage.getItem('nickName');
     socket.emit('message', { nickname, chatMessage: messageInput.value });
     messageInput.value = '';
+  }
+};
+
+submitButton.addEventListener('click', () => submitMessage());
+
+messageInput.addEventListener('keyup', (e) => {
+  if (e.keyCode === 13) {
+    submitMessage();
   }
 });
 
@@ -29,9 +37,16 @@ saveNickButton.addEventListener('click', () => {
   }
 });
 
+const generateLi = (content, testid) => {
+  const newLi = document.createElement('li');
+  newLi.setAttribute('data-testid', testid);
+  newLi.innerText = content;
+  return newLi;
+};
+
 const pushMessage = (message) => {
-  const newItem = document.createElement('li');
   const myNickName = sessionStorage.getItem('nickName');
+  const newItem = document.createElement('li');
   if (message.includes(myNickName)) {
     newItem.style.alignSelf = 'flex-end';
     newItem.style.borderRadius = '50px 50px 0 50px';
@@ -43,25 +58,18 @@ const pushMessage = (message) => {
   autoScroll();
 };
 
-const generateLi = (content) => {
-  const newLi = document.createElement('li');
-  newLi.setAttribute('data-testid', 'online-user');
-  newLi.innerText = content;
-  return newLi;
-};
-
 const changeNickName = (nickNames) => {
   const userList = document.querySelector('.users-list');
   userList.innerHTML = '';
   const myUser = nickNames.find(({ id }) => id === socket.id);
-  const myuserLi = generateLi(myUser.nickName);
+  const myuserLi = generateLi(myUser.nickName, 'online-user');
   userList.appendChild(myuserLi);
   nickNames.forEach(({ nickName, id }) => {
     if (id === socket.id) {
       sessionStorage.setItem('nickName', nickName);
       return;
     }
-    const list = generateLi(nickName);
+    const list = generateLi(nickName, 'online-user');
     userList.appendChild(list);
   });
 };

@@ -4,21 +4,24 @@ const nicknameForm = document.querySelector('#nickname-form');
 const nicknameInput = document.querySelector('#nickname-input');
 const messageForm = document.querySelector('#message-form');
 const messageInput = document.querySelector('#message-input');
+const usersUl = document.querySelector('#users');
+let nicknameSupport = '';
 
 nicknameForm.addEventListener('submit', (e) => {
   e.preventDefault();
+  const oldNickname = nicknameForm.previousElementSibling.innerText;
   const newNickname = nicknameInput.value;
-  sessionStorage.setItem(newNickname, newNickname);
-  socket.emit('newNickname', newNickname);
+  sessionStorage.setItem(oldNickname, newNickname);
+  socket.emit('newNickname', { newNickname, oldNickname });
+  nicknameSupport = newNickname;
   nicknameInput.value = '';
   return false;
 });
 
 messageForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  const userLi = document.querySelector('#users').lastChild;
   const chatMessage = messageInput.value;
-  const nickname = sessionStorage.getItem(userLi.innerText);
+  const nickname = nicknameSupport;
   const msgObj = { chatMessage, nickname };
   socket.emit('message', msgObj);
   messageInput.value = '';
@@ -26,42 +29,35 @@ messageForm.addEventListener('submit', (e) => {
 });
 
 const printUser = ((user) => {
-  const usersUl = document.querySelector('#users');
   const li = document.createElement('li');
   li.innerText = user;
   li.setAttribute('data-testid', 'online-user');
+  li.setAttribute('id', user);
   usersUl.appendChild(li);
 });
 
 const printMessages = ((message) => {
-  const usersUl = document.querySelector('#messages');
+  const messagesUl = document.querySelector('#messages');
   const li = document.createElement('li');
   li.innerText = message;
   li.setAttribute('data-testid', 'message');
-  usersUl.appendChild(li);
+  messagesUl.appendChild(li);
 });
 
-const changesNickname = ((newNickname) => {
-  const userLi = document.querySelector('#users').lastElementChild;
-  userLi.innerHTML = newNickname;
-});
-
-function makeId(n) { // stack over flowzada
-  let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  for (let i = 0; i < n; i += 1) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
- }
- return result;
-}
-
-socket.on('online', () => {
-  const id = makeId(16);
+socket.on('online', (id) => {
+  nicknameSupport = id;
   sessionStorage.setItem(id, id);
+  const h1 = document.querySelector('#h1');
+  h1.innerText = id;
   return printUser(id);
 });
 
 socket.on('message', (message) => printMessages(message));
 
-socket.on('new', (newNickname) => changesNickname(newNickname));
+socket.on('listsUsers', (users) => {
+  usersUl.innerHTML = '';
+  printUser(nicknameSupport);
+  users.forEach(({ user }) => {
+    if (user !== nicknameSupport) return printUser(user);
+  });
+});

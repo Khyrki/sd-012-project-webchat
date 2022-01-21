@@ -1,4 +1,5 @@
 const { getAll, create } = require('../models/chat ');
+const dateFormat = require('../helpers/dateFormat');
 
 const chat = (req, res) => res.render('chat');
 
@@ -23,8 +24,16 @@ const saveMessage = async (messageInfo) => {
   }
 };
 
+const formatMessage = (message) => {
+  const { chatMessage, nickname } = message;
+  const timestamp = dateFormat(`${new Date()}`);
+
+  return `${timestamp} - ${nickname}: ${chatMessage}`;
+};
+
 module.exports = {
   chat,
   loadMessages,
   saveMessage,
+  formatMessage,
 };

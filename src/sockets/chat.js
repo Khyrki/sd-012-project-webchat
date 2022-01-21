@@ -1,9 +1,9 @@
-const { saveMessage } = require('../controllers');
+const { saveMessage, formatMessage } = require('../controllers');
 
 module.exports = (io) => io.on('connection', (socket) => {
-  const { id } = socket;
-  socket.on('clientMessage', (message) => {
-    io.emit('serverMessage', { id, message });
+  socket.on('message', (message) => {
+    const rightMessage = formatMessage(message);
+    io.emit('message', rightMessage);
   });
   socket.on('saveMessage', (messageInfo) => {
     saveMessage(messageInfo);

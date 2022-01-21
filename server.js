@@ -5,7 +5,7 @@ const http = require('http').createServer(app);
 // const { urlencoded } = require('body-parser');
 require('dotenv').config();
 
-const { PORT } = process.env;
+const PORT = process.env.PORT || 3000;
 
 // app.use(urlencoded({ extended: true }));
 

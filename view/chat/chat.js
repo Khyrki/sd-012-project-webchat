@@ -8,8 +8,8 @@ const messageList = document.querySelector('.message-list');
 
 submitButton.addEventListener('click', () => {
   if (messageInput.value !== '') {
-    const nickName = sessionStorage.getItem('nickName');
-    socket.emit('message', { nickName, message: messageInput.value });
+    const nickname = sessionStorage.getItem('nickName');
+    socket.emit('message', { nickname, chatMessage: messageInput.value });
     messageInput.value = '';
   }
 });
@@ -43,15 +43,26 @@ const pushMessage = (message) => {
   autoScroll();
 };
 
+const generateLi = (content) => {
+  const newLi = document.createElement('li');
+  newLi.setAttribute('data-testid', 'online-user');
+  newLi.innerText = content;
+  return newLi;
+};
+
 const changeNickName = (nickNames) => {
   const userList = document.querySelector('.users-list');
   userList.innerHTML = '';
+  const myUser = nickNames.find(({ id }) => id === socket.id);
+  const myuserLi = generateLi(myUser.nickName);
+  userList.appendChild(myuserLi);
   nickNames.forEach(({ nickName, id }) => {
-    if (id === socket.id) sessionStorage.setItem('nickName', nickName);
-    const newUser = document.createElement('li');
-    newUser.setAttribute('data-testid', 'online-user');
-    newUser.innerText = nickName;
-    userList.appendChild(newUser);
+    if (id === socket.id) {
+      sessionStorage.setItem('nickName', nickName);
+      return;
+    }
+    const list = generateLi(nickName);
+    userList.appendChild(list);
   });
 };
 

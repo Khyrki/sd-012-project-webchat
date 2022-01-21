@@ -5,23 +5,25 @@
   </head>
   <body>
     <ul id="messages">
-      <% messages.forEach(({message, nickname, timestamp}) => { %>
+      <% messages.forEach(({ message, nickname, timestamp } ) => { %>
+        <% const msg = `${timestamp} ${nickname} ${message}` %> 
         <li data-testid="message">
           <p data-testid="online-user">
-            <%= `${timestamp} ${nickname}: ${message}`%>
+            <%= msg%>
           </p> 
         </li>
       <% }) %>
     </ul>
     <form action="">
       <input
-        id="messageInput"
+        id="message-input"
         data-testid="message-box"/>
       <button data-testid="send-button">
         Send
       </button>
     </form>
-    <input
+    <div>
+      <input
       id="nickname-input"
       data-testid="nickname-box"
     />
@@ -31,6 +33,12 @@
     >
       CHANGE YOUR NICK
     </button>
+    </div>
+    <div>
+      <ul id="users">
+
+      </ul>
+    </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/chat.js"></script>
   </body>

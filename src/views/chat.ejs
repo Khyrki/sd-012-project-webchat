@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebChatzadaDaTraub</title>
+</head>
+
+<body>
+  <header>
+    <h1>Chatzin Bolado</h1>
+  </header>
+
+  <main>
+    <aside class="side-pannel">
+      <section class="nickname-container">
+        <form class="nickname-form">
+          <input type="text" placeholder="Insira seu nickname" data-testid="nickname-box" class="nickname-input" />
+          <button type="submit" data-testid="nickname-button" class="nickname-btn">Salvar</button>
+        </form>
+      </section>
+
+      <section class="user-pannel">
+        <ul class="user-list"></ul>
+      </section>
+    </aside>
+
+    <section class="message-container">
+      <ul class="message-list"></ul>
+    </section>
+
+    <section class="message-input-container">
+      <form class="message-form">
+        <input type="text" data-testid="message-box" placeholder="Digite uma nova mensagem aqui"
+          class="message-input" />
+        <button type="submit" data-testid="send-button" class="message-btn">Enviar</button>
+      </form>
+    </section>
+  </main>
+</body>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/index.js"></script>
+
+</html>

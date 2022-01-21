@@ -4,7 +4,6 @@ const { newMessageModel, getAllModel } = require('../models/chat');
 
 const newMessage = async ({ nickname, chatMessage, timestamp }) => {
   const message = { nickname, chatMessage, timestamp };
-
   await newMessageModel(message);
 };
 

@@ -14,7 +14,7 @@ const newMessageHandler = async (io, nickname, chatMessage) => {
 const sendHistoryMessages = (io, messages) => {
   messages.forEach((
     { timestamp, nickname, message: chatMessage },
-  ) => io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`));
+  ) => io.emit('historyMessages', `${timestamp} - ${nickname}: ${chatMessage}`));
 };
 
 const changeNicknameHandler = (io, newNickname, randomNickname) => {
@@ -33,7 +33,7 @@ module.exports = (io) => io.on('connection', async (socket) => {
 
   const socketNicknames = nicknames.reverse();
   socket.emit('userConnection', socketNicknames);
-
+  
   sendHistoryMessages(io, messages);
   
   socket.on('message', async (

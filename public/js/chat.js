@@ -10,6 +10,7 @@ const newUser = (name) => {
   const users = document.querySelector('#users');
   const li = document.createElement('li');
   li.setAttribute('data-testid', 'online-user');
+  li.setAttribute('id', 'online-user');
   li.innerText = name;
   users.appendChild(li);
 };
@@ -19,11 +20,11 @@ const clearUsers = () => {
   users.innerHTML = '';
 };
 
-const newMessage = (_newMessage) => {
+const sendNewMessage = (newMessage) => {
   const messages = document.querySelector('#messages');
   const li = document.createElement('li');
   li.setAttribute('data-testid', 'message');
-  li.innerText = _newMessage;
+  li.innerText = newMessage;
   messages.appendChild(li);
 };
 
@@ -39,14 +40,16 @@ sendButton.addEventListener('click', (e) => {
   message.value = '';
 });
 
-socket.on('connection', (messages) => messages.forEach((_message) => newMessage(_message)));
+socket.on('connection', (messages) => messages.forEach((_message) => sendNewMessage(_message)));
 
 socket.on('userConnection', (nicknames) => {
   clearUsers();
   nicknames.forEach((nickname) => newUser(nickname));
 });
 
-socket.on('message', (receivedMessage) => newMessage(receivedMessage));
+socket.on('message', (receivedMessage) => sendNewMessage(receivedMessage));
+
+socket.on('historyMessages', (receivedMessage) => sendNewMessage(receivedMessage));
 
 window.onbeforeunload = () => {
   socket.disconnect();

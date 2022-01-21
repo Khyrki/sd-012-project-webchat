@@ -5,7 +5,7 @@ const inputMessage = document.querySelector('#message-box');
 const inputNickname = document.querySelector('#nickname-box');
 const nicknameLabel = document.querySelector('#online-user');
 
-let nickname;
+let username;
 
 const generateNickname = () => {
   let generatedNickname = Math.random().toString(36).substring(2, 10);
@@ -20,7 +20,7 @@ const verifyAlreadyLogged = () => {
     sessionStorage.setItem('nickname', storedNickname);
   }
   nicknameLabel.innerText = storedNickname;
-  nickname = storedNickname;
+  username = storedNickname;
 };
 
 verifyAlreadyLogged();
@@ -28,16 +28,16 @@ verifyAlreadyLogged();
 sendMessageForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const chatMessage = inputMessage.value;
-  socket.emit('message', { nickname, chatMessage });
+  socket.emit('message', { nickname: username, chatMessage });
   inputMessage.value = '';
   return false;
 });
 
 changeNicknameForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  nickname = inputNickname.value;
-  nicknameLabel.innerText = nickname;
-  sessionStorage.setItem('nickname', nickname);
+  username = inputNickname.value;
+  nicknameLabel.innerText = username;
+  sessionStorage.setItem('nickname', username);
   inputNickname.value = '';
   return false;
 });
@@ -51,6 +51,16 @@ const createMessage = (message) => {
 };
 
 socket.on('message', (message) => createMessage(message));
+
+socket.on('history', (messages) => {
+  const messagesUl = document.querySelector('.messages');
+  messages.forEach(({ message, nickname, timestamp }) => {
+    const li = document.createElement('li');
+    li.innerText = `${timestamp} - ${nickname}: ${message}`;
+    li.setAttribute('data-testid', 'message');
+    messagesUl.appendChild(li);
+  });
+});
 
 window.onbeforeunload = function e(_event) {
   socket.disconnect();

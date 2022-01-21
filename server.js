@@ -1,11 +1,13 @@
 const express = require('express');
 
+require('dotenv').config();
 const app = express();
 const http = require('http').createServer(app);
 
+const PORT = process.env.PORT || 3000;
 const io = require('socket.io')(http, {
   cors: {
-    origin: 'http://localhost:3000', // url aceita pelo cors
+    origin: `http://localhost:${ PORT }`,// url aceita pelo cors
     methods: ['GET', 'POST'], // Métodos aceitos pela url
   } });
   const stringGenerator = require('./helpers/stringGenerator');
@@ -20,6 +22,6 @@ app.get('/', (req, res) => {
   res.render('chat', { nickname: stringGenerator(16) });
 });
 
-http.listen(3000, () => {
-  console.log('Servidor ouvindo na porta 3000');
+http.listen(PORT, () => {
+  console.log(`Servidor ouvindo na porta ${ PORT }`);
 });

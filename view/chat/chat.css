@@ -8,7 +8,7 @@
 
 main {
   align-items: center;
-  background: linear-gradient(to right, #f9d423, #e65c00);
+  background: linear-gradient(to right, #232526, #414345);
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -56,7 +56,7 @@ main {
 }
 
 .input-nickname {
-  background-color: #ffc971;
+  background-color: #71b280;
   border-radius: 50px 0 0 50px;
   height: 100%;
   padding-left: 15px;
@@ -69,7 +69,7 @@ main {
 }
 
 .save-nick {
-  background-color: #ff9505;
+  background-color: #134e5e;
   border-radius: 0 50px 50px 0;
   color: white;
   cursor: pointer;
@@ -120,7 +120,7 @@ main {
 }
 
 .messages-container ul li {
-  background-color: #ff9505;
+  background-color: #134e5e;
   border-radius: 0 50px 50px;
   color: white;
   font-size: 18px;

@@ -1,5 +1,3 @@
-// const history = [];
-
 const dataFunc = (date) => {
   const mo = new Intl.DateTimeFormat('pt-br', { 
     dateStyle: 'short', 
@@ -10,14 +8,10 @@ const dataFunc = (date) => {
   return correctDate;
 };
 
-module.exports = (io) => io.on('connection', (socket) => {
-  // socket.emit('message', history);
-
-  socket.on('message', (message) => {
-    const result = `${dataFunc(new Date())} - ${message.nickname}: ${message.chatMessage}`;
-    // history.push(result);
-    // console.log(result);
-
-    io.emit('message', result);
+module.exports = (io) =>
+  io.on('connection', (socket) => {
+    socket.on('message', (message) => {
+      const result = `${dataFunc(new Date())} - ${message.nickname}: ${message.chatMessage}`;
+      io.emit('message', result);
+    });
   });
-});

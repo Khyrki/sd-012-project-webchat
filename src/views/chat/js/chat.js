@@ -7,17 +7,6 @@ const userNick = document.querySelector('.nickInput');
 const messageBox = document.querySelector('.messageBox');
 const inputMessage = document.querySelector('.messageInput');
 
-// const dateFormat = (date) => {
-//   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-//     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-//   const splitedDate = date.split(' ');
-//   const formatedDate = `
-//   ${splitedDate[2]}-${months.indexOf(splitedDate[1]) + 1}-${splitedDate[3]} ${splitedDate[4]}
-//   `;
-
-//   return formatedDate;
-// };
-
 messageBox.addEventListener('submit', (e) => {
   e.preventDefault();
   const chatMessage = inputMessage.value;
@@ -53,6 +42,7 @@ const createMessage = (message) => {
 };
 
 const deleteUser = (userId) => {
+  sessionStorage.removeItem(userId);
   const messagesUl = document.querySelector('.users');
   const user = document.getElementById(userId);
   if (!user) return false;
@@ -71,12 +61,26 @@ const createUser = (nicknameInfo) => {
   messagesUl.appendChild(li);
 };
 
+const getAllUsers = () => {
+  console.log('chaves da sessão', Object.keys(sessionStorage));
+  const allUsers = Object.keys(sessionStorage).map((key) => {
+    const value = sessionStorage.getItem(key);
+    return { key, value };
+  });
+
+  return allUsers;
+};
+
+const users = getAllUsers();
+
 socket.on('loadMessages', (messageInfo) => loadMessages(messageInfo));
 socket.on('message', (message) => createMessage(message));
 socket.on('createUser', (nicknameInfo) => createUser(nicknameInfo));
 socket.on('deleteUser', (userId) => deleteUser(userId));
 
 socket.emit('joinRoom');
+socket.emit('loadChat');
+if (users) socket.emit('loadUsers', users);
 
 window.onbeforeunload = (_event) => {
   socket.disconnect();

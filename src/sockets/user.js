@@ -1,14 +1,15 @@
 const randomNick = require('../helpers/randomNick');
-const { loadMessages } = require('../controllers');
 
 module.exports = (io) => io.on('connection', (socket) => {
   const { id } = socket;
-  socket.on('joinRoom', async () => {
+  socket.on('joinRoom', () => {
     const nickname = randomNick(16);
     io.emit('createUser', { id, nickname });
-    const messages = await loadMessages();
-    messages.forEach((message) => {
-      socket.emit('loadMessages', message);
+  });
+  socket.on('loadUsers', (users) => {
+    users.forEach((user) => {
+      const { key, value } = user;
+      socket.emit('createUser', { key, value });
     });
   });
   socket.on('clientUser', (nickname) => {

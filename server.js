@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const { Server } = require('socket.io');
+const webchat = require('./controllers/webchat');
 
 app.use(express.json());
 
@@ -17,9 +18,7 @@ const io = new Server(http, {
 
 app.use(express.static(`${__dirname}/view/chat`));
 
-app.get('/', (req, res) => {
-  res.render(`${__dirname}/view/chat/index.ejs`);
-});
+app.get('/', webchat);
 
 app.set('view engine', 'ejs');
 

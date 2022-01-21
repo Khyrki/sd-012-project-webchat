@@ -10,9 +10,9 @@
       <aside class="users">
         <div class="nickname-container">
           <label for="input-nickname" class="label-nickname">
-            <input type="text" class="input-nickname" id="input-nickname" placeholder="Insira seu nickname" />
+            <input type="text" class="input-nickname" data-testid="nickname-box" id="input-nickname" placeholder="Insira seu nickname" />
           </label>
-          <button type="button" class="save-nick">Salvar</button>
+          <button data-testid="nickname-button" type="button" class="save-nick">Salvar</button>
         </div>
         <section class="users-container">
           <ul class="users-list">
@@ -22,15 +22,19 @@
       <section class="messages-container">
         <div class="message-scroll">
           <ul class="message-list">
+            <% if (messages) %>
+            <% messages.forEach(({ message, nickName, currentDate }) => { %>
+              <li data-testid="message"> <%= `${currentDate} ${nickName} ${message}` %> </li>
+          <% }) %>
           </ul>
         </div>
       </section>
     </section>
     <form class="submit-message-container">
       <label for="submit-input" class="submit-label">
-      <input type="text" class="submit-input" id="submit-input" placeholder="Digite sua menssagem...">
+      <input type="text" class="submit-input" id="submit-input" data-testid="message-box" placeholder="Digite sua menssagem...">
     </label>
-    <button type="button" class="submit-btn">Enviar</button>
+    <button type="button" data-testid="send-button" class="submit-btn">Enviar</button>
     </form>
   </main>
   <script src="/socket.io/socket.io.js"></script>

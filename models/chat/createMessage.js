@@ -1,7 +1,8 @@
 const connection = require('../connection');
 
-module.exports = async (message) => {
+module.exports = async (msg) => {
   const db = await connection();
-  const collection = await db.collection('messages');
-  await collection.insertOne(message);
+  const { message, nickName, currentDate } = msg;
+  const msgDB = db.collection('messages').insertOne({ message, nickName, currentDate });
+  return msgDB;
 };

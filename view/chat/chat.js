@@ -14,6 +14,13 @@ submitButton.addEventListener('click', () => {
   }
 });
 
+const autoScroll = () => {
+  const div = document.querySelector('.message-scroll');
+  div.scrollTop = div.scrollHeight;
+};
+
+autoScroll();
+
 saveNickButton.addEventListener('click', () => {
   if (nickNameInput.value !== '') {
     sessionStorage.setItem('nickName', nickNameInput.value);
@@ -24,9 +31,16 @@ saveNickButton.addEventListener('click', () => {
 
 const pushMessage = (message) => {
   const newItem = document.createElement('li');
+  const myNickName = sessionStorage.getItem('nickName');
+  if (message.includes(myNickName)) {
+    newItem.style.alignSelf = 'flex-end';
+    newItem.style.borderRadius = '50px 50px 0 50px';
+    newItem.style.backgroundColor = '#134e5e';
+  }
   newItem.setAttribute('data-testid', 'message');
   newItem.innerText = message;
   messageList.appendChild(newItem);
+  autoScroll();
 };
 
 const changeNickName = (nickNames) => {
@@ -35,7 +49,7 @@ const changeNickName = (nickNames) => {
   nickNames.forEach(({ nickName, id }) => {
     if (id === socket.id) sessionStorage.setItem('nickName', nickName);
     const newUser = document.createElement('li');
-    newUser.setAttribute('data-testid', 'user');
+    newUser.setAttribute('data-testid', 'online-user');
     newUser.innerText = nickName;
     userList.appendChild(newUser);
   });

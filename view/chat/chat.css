@@ -95,7 +95,9 @@ main {
 
 .messages-container {
   align-items: flex-start;
-  background-color: whitesmoke;
+  background-image: url('https://images.unsplash.com/photo-1464802686167-b939a6910659?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1150&q=80');
+  background-repeat: no-repeat;
+  background-size: cover;
   border-radius: 10px;
   box-shadow: 2px 10px 10px rgb(36, 36, 36);
   height: 100%;
@@ -107,8 +109,14 @@ main {
   display: flex;
   flex-direction: column;
   height: 100%;
+  -ms-overflow-style: none;
   overflow-y: scroll;
+  scrollbar-width: none;
   width: 100%;
+}
+
+.message-scroll::-webkit-scrollbar {
+  display: none;
 }
 
 .messages-container ul {
@@ -120,8 +128,9 @@ main {
 }
 
 .messages-container ul li {
-  background-color: #134e5e;
+  background-color: #0b2a33;
   border-radius: 0 50px 50px;
+  box-shadow: 1px 3px 10px black;
   color: white;
   font-size: 18px;
   font-weight: 700;

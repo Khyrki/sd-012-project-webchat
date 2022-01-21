@@ -1,39 +1,44 @@
 const socket = window.io();
 
-const submitButton = document.querySelector('#submit-btn');
-const saveNickButton = document.querySelector('#save-nick');
+const submitButton = document.querySelector('.submit-btn');
+const saveNickButton = document.querySelector('.save-nick');
+const messageInput = document.querySelector('.submit-input');
+const nickNameInput = document.querySelector('#input-nickname');
+const messageList = document.querySelector('.message-list');
 
 submitButton.addEventListener('click', () => {
-  const messageInput = document.querySelector('#submit-input');
-  if (messageInput !== '') {
+  if (messageInput.value !== '') {
     const nickName = sessionStorage.getItem('nickName');
     socket.emit('message', { nickName, message: messageInput.value });
+    messageInput.value = '';
   }
 });
 
 saveNickButton.addEventListener('click', () => {
-  const nickNameInput = document.querySelector('#input-nickname');
-  if (nickNameInput !== '') {
+  if (nickNameInput.value !== '') {
     sessionStorage.setItem('nickName', nickNameInput.value);
+    socket.emit('changeNickName', nickNameInput.value);
+    nickNameInput.value = '';
   }
 });
 
 const pushMessage = (message) => {
-  const messageList = document.querySelector('#message-list');
   const newItem = document.createElement('li');
   newItem.setAttribute('data-testid', 'message');
   newItem.innerText = message;
   messageList.appendChild(newItem);
 };
 
-const changeNickName = (nick) => {
-  console.log('chegou aqui');
-  sessionStorage.set('nickName', nick);
-  const userList = document.querySelector('#users-list');
-  const newUser = document.createElement('li');
-  newUser.setAttribute('data-testid', 'user');
-  newUser.innerText = nick;
-  userList.appendChild(newUser);
+const changeNickName = (nickNames) => {
+  const userList = document.querySelector('.users-list');
+  userList.innerHTML = '';
+  nickNames.forEach(({ nickName, id }) => {
+    if (id === socket.id) sessionStorage.setItem('nickName', nickName);
+    const newUser = document.createElement('li');
+    newUser.setAttribute('data-testid', 'user');
+    newUser.innerText = nickName;
+    userList.appendChild(newUser);
+  });
 };
 
 socket.on('message', pushMessage);

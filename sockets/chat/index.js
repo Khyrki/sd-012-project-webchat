@@ -1,6 +1,4 @@
-// const messageDate = (date) => {
-  
-// };
+// const date = require('../../utils/createData');
 
 const chat = (io) => {
   io.on('connection', (socket) => {

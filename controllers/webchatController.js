@@ -1,15 +1,12 @@
-const getMessages = require('../models/webchatModel');
+const { getMessages } = require('../models/webchatModel');
 
-const getAllMessages = async (_req, res) => {
+const getAllMessages = async (req, res) => {
   try {
     const messages = await getMessages();
-    return res.status(200).json(messages);
-  } catch (e) {
-    console.log(e);
-    return res.status(500).json({ message: 'Internal Server Error' });
+    return res.status(200).render('webchat', { messages });
+  } catch {
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
-module.exports = {
-  getAllMessages,
-};
+module.exports = { getAllMessages };

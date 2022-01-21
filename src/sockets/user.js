@@ -8,8 +8,7 @@ module.exports = (io) => io.on('connection', (socket) => {
   });
   socket.on('loadUsers', (users) => {
     users.forEach((user) => {
-      const { key, value } = user;
-      socket.emit('createUser', { key, value });
+      socket.emit('createUser', user);
     });
   });
   socket.on('clientUser', (nickname) => {

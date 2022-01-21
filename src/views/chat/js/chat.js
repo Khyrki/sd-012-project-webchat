@@ -42,7 +42,6 @@ const createMessage = (message) => {
 };
 
 const deleteUser = (userId) => {
-  sessionStorage.removeItem(userId);
   const messagesUl = document.querySelector('.users');
   const user = document.getElementById(userId);
   if (!user) return false;
@@ -62,10 +61,9 @@ const createUser = (nicknameInfo) => {
 };
 
 const getAllUsers = () => {
-  console.log('chaves da sessão', Object.keys(sessionStorage));
-  const allUsers = Object.keys(sessionStorage).map((key) => {
-    const value = sessionStorage.getItem(key);
-    return { key, value };
+  const allUsers = Object.keys(sessionStorage).map((id) => {
+    const nickname = sessionStorage.getItem(id);
+    return { id, nickname };
   });
 
   return allUsers;
@@ -76,11 +74,14 @@ const users = getAllUsers();
 socket.on('loadMessages', (messageInfo) => loadMessages(messageInfo));
 socket.on('message', (message) => createMessage(message));
 socket.on('createUser', (nicknameInfo) => createUser(nicknameInfo));
-socket.on('deleteUser', (userId) => deleteUser(userId));
+socket.on('deleteUser', (userId) => {
+  sessionStorage.removeItem(userId);
+  deleteUser(userId);
+});
 
 socket.emit('joinRoom');
 socket.emit('loadChat');
-if (users) socket.emit('loadUsers', users);
+if (users.length > 0) socket.emit('loadUsers', users);
 
 window.onbeforeunload = (_event) => {
   socket.disconnect();

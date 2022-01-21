@@ -9,10 +9,12 @@ const io = require('socket.io')(http, {
     methods: ['GET'], // Métodos aceitos pela url
   },
 });
+const { messagesChat, userDisconnect } = require('./sockets/chat');
 
 const getAllMessages = require('./models/getAllMessages');
 
-require('./sockets/chat')(io);
+messagesChat(io);
+userDisconnect(io);
 
 app.set('view engine', 'ejs');
 

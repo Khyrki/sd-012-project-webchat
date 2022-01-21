@@ -36,6 +36,10 @@
     >
     <button data-testid="send-button" id="send-button">Enviar</button>
   </div>
+  <div>
+    <h2>Online</h2>
+    <ul id="users-list"></ul>
+  </div>
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = window.io();
@@ -47,11 +51,15 @@
 
     nickElem.innerHTML = sessionStorage.getItem('nick') || randomNick;
 
+    console.log(nickElem.innerHTML);
+    socket.emit('newUser', nickElem.innerHTML);
+
     const nicknameInput = document.querySelector('#nickname-box');
     const nicknameButton = document.querySelector('#nickname-button');
     const sendButton = document.querySelector('#send-button');
     const messageInput = document.querySelector('#message-box');
     const chat = document.querySelector('#chat-box');
+    const userOn = document.querySelector('#users-list');
 
     nicknameInput.addEventListener('keyup', (event) => {
       if (event.key === 'Enter') nicknameButton.click();
@@ -62,8 +70,8 @@
       nicknameInput.value = '';
       nickElem.innerHTML = newNick;
       sessionStorage.setItem('nick', newNick);
+      socket.emit('updateNick', newNick);
     });
-
 
     messageInput.addEventListener('keyup', (event) => {
       if (event.key === 'Enter') sendButton.click();
@@ -76,6 +84,17 @@
       messageInput.value = '';
     });
 
+    socket.on('newUser', (userList) => {
+      userOn.innerHTML = '';
+      userList.forEach(({ nickname }) => {
+        const currentNickName = nickElem.innerHTML;
+        if (currentNickName === nickname) return;
+        const li = document.createElement('li');  
+        li.innerHTML = nickname;
+        li.setAttribute('data-testid', 'online-user');
+        userOn.appendChild(li);  
+      });
+    });
 
     socket.on('message', (message) => {
       const li = document.createElement('li');

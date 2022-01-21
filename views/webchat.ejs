@@ -4,13 +4,27 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>webchat</title>
 </head>
 <body>
   <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
+  <ol id="lista">
+    <% messages.forEach((message) => { %>
+      <li data-testid="message">
+        <%= message.timestamp %> - <%= message.message%> - <%= message.nickname %>
+      </li> 
+      <% }) %>
+    </ol>
+    <p data-testid="online-user" id="nickName"></p>
+    <form >
+      <input type="text" id="messageInput" data-testid="message-box"></input>
+      <button id="buttonSubmit" type="submit" data-testid="send-button">send</button>   
+    </form>
+    <form >
+      <input type="text" data-testid="nickname-box" id="inputRename"></input>
+      <button type="submit" data-testid="nickname-button" id="sendRename">send</button>   
+    </form>
 
-  </script>
+    <script src="chat.js"></script> 
 </body>
 </html>

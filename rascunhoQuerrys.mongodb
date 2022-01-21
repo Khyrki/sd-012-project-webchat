@@ -1,0 +1,12 @@
+
+
+use('webchat')
+db.messages.insertOne({
+  message: 'Lorem ipsum',
+  nickname: 'xablau',
+  timestamp: '2021-04-01 12:00:00'
+})
+
+
+use('webchat')
+db.messages.find()  

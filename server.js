@@ -19,7 +19,9 @@ const io = require('socket.io')(server, {
   },
 });
 
-const random = require('./helpers/random');
+const { getAllMsg } = require('./controller/messages');
+
+const { create } = require('./models/message/messagesModel');
 
 io.on('connection', (socket) => {
   console.log(`Feita a conexão! Novo usuario conectado. ${socket.id}`);
@@ -29,10 +31,10 @@ io.on('connection', (socket) => {
     io.emit('serverNickname', { nickname: name }); // envia jonas para front
   });
 
-  socket.on('message', ({ nickname, chatMessage }) => {
+  socket.on('message', async ({ nickname, chatMessage }) => {
     // mensagem que vem do front o msg
     const timestamp = moment().format('DD-MM-yyyy HH:mm:ss A');
-    
+    await create(chatMessage, nickname, timestamp);
     io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`); // ele envia a msg para o front
   });
   
@@ -43,8 +45,6 @@ io.on('connection', (socket) => {
 
 app.use(cors());
 
-app.get('/', (req, res) => {
-  res.render('client', { nickname: random(16) });
-});
+app.get('/', getAllMsg);
 
 server.listen(PORT, () => console.log(`Ouvindo Socket.io server na porta ${PORT}!`));

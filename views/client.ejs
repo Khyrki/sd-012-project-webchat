@@ -20,7 +20,11 @@
     <button data-testid="send-button">Enviar</button>
   </form>
   <div id="messages">
-    <ul></ul>
+    <ul> 
+      <% messages.forEach((message) => { %>
+        <li data-testid="message"> <%= `${message.timestamp} - ${message.nickname}: ${message.message} `%> </li>
+      <% }) %>
+    </ul>
   <div>
     <script>
       const socket = io()

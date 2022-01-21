@@ -1,5 +1,4 @@
 const express = require('express');
-const path = require('path');
 
 const app = express();
 const http = require('http').createServer(app);
@@ -10,10 +9,23 @@ const io = require('socket.io')(http, {
     methods: ['GET', 'POST'],
   } });
 
-require('./sockets/chat')(io);
+const onlineUsers = [];
 
-app.get('/', (req, res) => {
-  res.render(path.join(__dirname, '/public/webchat.ejs'));
+io.on('connection', (socket) => {
+  onlineUsers.push({ id: socket.id, nickname: socket.id });
+  io.emit('onlineUsers', onlineUsers);
+
+  socket.on('message', (message) => {
+    io.emit('message', `${message.nickname}: ${message.chatMessage}`);
+  });
+});
+
+app.set('view engine', 'ejs');
+
+app.set('views', './views');
+
+app.get('/', (_req, res) => {
+  res.render('webchat');
 });
 
 http.listen(3000, () => {

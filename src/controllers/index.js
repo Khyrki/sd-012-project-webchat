@@ -13,10 +13,10 @@ const loadMessages = async () => {
 
 const saveMessage = async (messageInfo) => {
   try {
-    const { message, nickname, timestamp } = messageInfo;
+    const { timestamp, chatMessage: message, nickname } = messageInfo;
     const createdMessage = await create({ timestamp, message, nickname });
   
-    if (!createdMessage) throw new Error(`Message ${messageInfo} not saved`);
+    if (!createdMessage) throw new Error(`Message "${message}" not saved`);
 
     return false;
   } catch (err) {
@@ -27,7 +27,7 @@ const saveMessage = async (messageInfo) => {
 const formatMessage = (message) => {
   const { chatMessage, nickname } = message;
   const timestamp = dateFormat(`${new Date()}`);
-
+  saveMessage({ timestamp, chatMessage, nickname });
   return `${timestamp} - ${nickname}: ${chatMessage}`;
 };
 

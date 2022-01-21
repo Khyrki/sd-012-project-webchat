@@ -8,7 +8,7 @@ module.exports = (io) => io.on('connection', (socket) => {
     io.emit('createUser', { id, nickname });
     const messages = await loadMessages();
     messages.forEach((message) => {
-      io.emit('loadMessages', message);
+      socket.emit('loadMessages', message);
     });
   });
   socket.on('clientUser', (nickname) => {

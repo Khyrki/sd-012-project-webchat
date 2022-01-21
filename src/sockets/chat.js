@@ -30,7 +30,7 @@ const usersOnline = (socket, io) => {
 };
 
 // localiza cli desconectado, retira do array e envia p cli appendar
-const disconnectUser = (socket, io) => {
+const userDisconnect = (socket, io) => {
   socket.on('disconnect', () => {
     const user = users.findIndex((u) => u.id === socket.id);
     users.splice(user, 1);
@@ -50,6 +50,6 @@ module.exports = (io) => io.on('connection', (socket) => {
   randomUser(socket, io);
   messages(socket, io);
   usersOnline(socket, io);
-  disconnectUser(socket, io);
+  userDisconnect(socket, io);
   saveNickname(socket, io);
 });

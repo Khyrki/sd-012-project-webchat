@@ -55,7 +55,13 @@ const renderUsersOnline = (user) => {
 // recebe o array de usuários do servidor e manda para renderUsersOnline
 const getUsersOnline = (users) => {
   usersUl.innerHTML = '';
-  users.forEach((u) => renderUsersOnline(u));
+  const user = users.find((u) => u.id === socket.id);
+  renderUsersOnline(user);
+  users.forEach((u) => u.id !== socket.id && renderUsersOnline(u));
+};
+
+window.onbeforeunload = () => {
+  socket.disconnect();
 };
 
 // escuta eventos do server

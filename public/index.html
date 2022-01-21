@@ -8,17 +8,18 @@
 </head>
 <body>
   <main>
+    <span data-testid="online-user" id="online-user"></span>
     <form class="login-form">
       <input data-testid="nickname-box" class="nickname-input" placeholder="nickname"/>
       <button data-testid="nickname-button">Login</button>
     </form>
-
+    
+    <ul id="users-list"></ul>
     <form class="message-form">
       <input data-testid="message-box" class="message-input" placeholder="message"/>
       <button data-testid="send-button">Send</button>
     </form>
 
-    <ul id="users-list"></ul>
     <ul id="messages"></ul>
 
     <script src="socket.io/socket.io.js"></script>

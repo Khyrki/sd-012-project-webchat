@@ -18,7 +18,8 @@ const io = require('socket.io')(http, {
 
 app.use(express.static(path.resolve(__dirname, './public/')));
 
-require('./src/sockets/chat')(io);
+require('./src/sockets/messages')(io);
+require('./src/sockets/users')(io);
 
 app.get('/', (_req, res) => {
   res.sendFile(`${__dirname}/public/index.html`);

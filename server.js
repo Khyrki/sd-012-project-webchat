@@ -11,9 +11,6 @@ const io = require('socket.io')(http, {
   },
 });
 
-const model = require('./models/chat/create');
-const { dataFunc } = require('./helpers/date');
-
 const controler = require('./controller/chat');
 
 app.use(express.static(`${__dirname}/public`));
@@ -23,20 +20,7 @@ app.set('view engine', 'ejs');
 app.set('views', './views');
 app.use('/', controler);
 
-io.on('connection', (socket) => {
-  console.log(`Usuário conectado: ${socket.id}`);
-
-  socket.on('message', (message) => {
-    model(
-      {
-        message: message.chatMessage,
-        nickname: message.nickname,
-        timestamp: dataFunc(new Date()),
-      },
-    );
-    io.emit('message', `${dataFunc(new Date())} - ${message.nickname}: ${message.chatMessage}`);
-  });
-});
+require('./socket/webchat')(io);
 
 http.listen(PORT, () => {
   console.log(`Ouvindo a porta ${PORT}`);

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+      integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
+      crossorigin="anonymous"
+    />
+
+    <title>Web Chat App</title>
+  </head>
+  <body>
+    <div class="chat-container">
+      <header class="chat-header">
+        <h1>Web Chat</h1>
+      </header>
+      <main class="chat-main">
+        <div class="chat-sidebar">
+          <div class="user-container">
+            <input
+            type="text"
+            name="username"
+            id="username"
+            placeholder="Insira seu nickname"
+            required
+            />
+            <button class="btn-nickname"> Enviar</button>
+          </div>
+          <h3><i class="fas fa-users"></i> Users</h3>
+          <p id="user" data-testid="online-user" ></p>
+          <ul id="users">
+              <li>jotinha</li>
+              <li>bolinha</li>
+          </ul>
+        </div>
+        <div class="chat-messages">
+          <div class="message">
+            <p class="meta">
+              jotinha
+              <span>09-10-2020 2:35:09 PM</span>
+            </p>
+            <p class="text">Olá</p>
+          </div>
+        </div>
+      </main>
+      <div class="chat-form-container">
+        <form id="chat-form">
+          <input
+            data-testid="message-box"
+            id="msg"
+            type="text"
+            placeholder="Digite uma nova mensagen aqui"
+          />
+          <button data-testid="send-button" class="btn"> Enviar</button>
+        </form>
+      </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/chat.js"></script>
+  </body>
+</html>

@@ -47,9 +47,10 @@ describe('2 - Crie um frontend para que as pessoas interajam com o chat', () => 
     expect(sendButton).not.toBeNull();
   });
 
-  it('Será validado que as mensagens enviadas possuem o data-test-id correto', async () => {
+  it.only('Será validado que as mensagens enviadas possuem o data-test-id correto', async () => {
     const messageBox = await page.$(`input${dataTestid('message-box')}`);
     const sendButton = await page.$(`button${dataTestid('send-button')}`);
+    console.log(sendButton, 'BUTTON')
 
     //send one message
     await messageBox.type(chatMessage);

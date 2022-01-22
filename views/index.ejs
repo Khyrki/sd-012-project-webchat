@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/socket.io/socket.io.js"></script>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Webchat</title>
+</head>
+
+  <body>
+    <form id="nick-form">
+      <input id="nickname-box" placeholder="Insira seu nickname" data-testid="nickname-box">
+      <button data-testid="nickname-button">Salvar</button>
+    </form>
+
+    <form id="webchat">
+      <input id="message-box" placeholder="Digite uma nova mensagem aqui" data-testid="message-box">
+      <button data-testid="send-button">Enviar</button>
+    </form>
+
+    <ul id="online"></ul>
+    <ul id="webchat-messages">
+      <% messages.forEach(({ message, nickname, timestamp }) => { %>
+        <li data-testid="message"><%= `${timestamp} - ${nickname}: ${message}` %></li>
+      <% }) %>
+    </ul>
+
+    <script>
+      const socket = window.io();
+      const webchatMessages = document.getElementById('webchat-messages');
+      const online = document.getElementById('online');
+      const webchat = document.getElementById('webchat');
+      const messageBox = document.getElementById('message-box');
+      const nicknameBox = document.getElementById('nickname-box');
+      const nickForm = document.getElementById('nick-form');
+
+      let nickname = '';
+      const createUsers = (users) => {
+        users.forEach((user) => {
+        const li = document.createElement('li');
+        li.setAttribute('data-testid', 'online-user');
+        li.innerText = user;
+        if (user === nickname || user === socket.id.substring(0, 16)) {
+          return online.prepend(li);
+        }
+        return online.appendChild(li);
+        });
+      };
+
+      webchat.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const chatMessage = messageBox.value;
+        socket.emit('message', { chatMessage, nickname });
+        messageBox.value = '';
+      });
+
+      nickForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        nickname = nicknameBox.value;
+        socket.emit('nickname', nickname);
+        nicknameBox.value = '';
+      });
+
+      socket.on('nickname', (users) => {
+        online.innerHTML = '';
+        createUsers(users);
+      });
+
+      socket.on('message', (message) => {
+        const li = document.createElement('li');
+        li.setAttribute('data-testid', 'message');
+        li.innerText = message;
+        webchatMessages.appendChild(li);
+      });
+
+      window.onbeforeunload = () => {
+        socket.disconnect();
+      };
+
+    </script>
+  </body>
+</html>

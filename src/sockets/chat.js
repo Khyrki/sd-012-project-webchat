@@ -1,12 +1,16 @@
-const { serializeMsg } = require('../utils');
+const { serializeMsg, serializeDate } = require('../utils');
+const { storeMessage, getMessages } = require('../models');
 
-const messages = (io, socket) => {
-  socket.on('message', ({ chatMessage, nickname }) => {
-    const serializedMsg = serializeMsg(chatMessage, nickname, new Date());
+module.exports = async (io, socket) => {
+  const messagesHistory = await getMessages();
+  console.log(messagesHistory);
+  
+  socket.emit('history', messagesHistory);
+
+  socket.on('message', ({ chatMessage, nickname, date }) => {
+    const serializedDate = serializeDate(date);
+    const serializedMsg = serializeMsg(chatMessage, nickname, serializedDate);
+    storeMessage({ message: chatMessage, nickname, timestamp: serializedDate });
     io.emit('message', serializedMsg);
   });
-};
-
-module.exports = (io, socket) => {
-  messages(io, socket);
 };

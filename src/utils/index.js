@@ -6,8 +6,7 @@ const serializeDate = (date) => {
 };
 
 const serializeMsg = (chatMessage, nickname, date) => {
-  const serializedDate = serializeDate(date);
-  const message = `${serializedDate} - ${nickname}: ${chatMessage}`;
+  const message = `${date} - ${nickname}: ${chatMessage}`;
   return message;
 };
 
@@ -17,4 +16,5 @@ const genRandomString = () => Array.from(Array(16),
 module.exports = {
   serializeMsg,
   genRandomString,
+  serializeDate,
 };

@@ -2,6 +2,8 @@ const express = require('express');
 
 require('dotenv').config();
 
+const messageController = require('./controllers/messagesController');
+
 const app = express();
 const http = require('http').createServer(app);
 
@@ -20,8 +22,9 @@ app.set('view engine', 'ejs');
 app.set('views', './public/views');
 
 app.get('/', (req, res) => {
-  res.render('chat', { nickname: stringGenerator(16) });
+  return res.render('chat', { nickname: stringGenerator(16) });
 });
+app.get('/', messageController.getAllMessages);
 
 http.listen(PORT, () => {
   console.log(`Servidor ouvindo na porta ${PORT}`);

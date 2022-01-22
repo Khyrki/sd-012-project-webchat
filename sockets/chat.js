@@ -4,7 +4,7 @@ const { createMessagesHistory } = require('../models');
 
 let userList = [];
 
-const socketFunction = async (socket, io) => {
+const createMessageWithSocket = async (socket, io) => {
   socket.on('message', async ({ chatMessage, nickname }) => {
     const currentDate = new Date();
     const date = format(currentDate, 'dd-MM-yyyy HH:mm:ss');
@@ -25,11 +25,16 @@ const socketFunction = async (socket, io) => {
 module.exports = (io) => {
   io.on('connection', async (socket) => {
     console.log(`${socket.id} connected`);
+
     const random = `${randomName()}`;
+
     userList.push({ id: socket.id, nickname: random });
+
     socket.emit('randomName', random);
+
     io.emit('connectedUsers', userList);
-        socket.on('nickName', (nickName) => {
+
+    socket.on('nickName', (nickName) => {
       userList.forEach((user, index) => {
         if (user.id === socket.id) {
           userList[index].nickname = nickName;
@@ -41,6 +46,6 @@ module.exports = (io) => {
       socket.emit('newNickName', nickName);
     });
     
-    await socketFunction(socket, io);
+    await createMessageWithSocket(socket, io);
   });
 };

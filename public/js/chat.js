@@ -3,7 +3,7 @@ const socket = window.io();
 const nickNameForm = document.querySelector('#nickNameForm');
 const nickNameInnerText = document.querySelector('#nickNamePlace');
 const nickNameInput = document.querySelector('#nickNameInput');
-const messageForm = document.querySelector('#messageForm');
+const formSendMessages = document.querySelector('#form-send-messages');
 const messageInput = document.querySelector('#messageInput');
 
 const setSessionStorage = () => {
@@ -51,7 +51,7 @@ const socketEmitMessage = () => {
   return false;
 };
 
-eventListener(messageForm, 'submit', socketEmitMessage);
+eventListener(formSendMessages, 'submit', socketEmitMessage);
 
 socket.on('message', (message) => createMessage(message));
 

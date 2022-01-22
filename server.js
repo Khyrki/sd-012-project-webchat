@@ -28,8 +28,8 @@ app.use(express.static(`${__dirname}/public`));
 
 require('./sockets/chat')(io);
 
-app.get('/', (_req, res) => {
-  res.sendFile(`${__dirname}/public/chat.html`);
-});
+// app.get('/', (_req, res) => {
+//   res.sendFile(`${__dirname}/public/chat.ejs`);
+// });
 
 http.listen(PORT, () => console.log(`Servidor ouvindo na porta ${PORT}`));

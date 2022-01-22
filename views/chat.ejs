@@ -4,46 +4,49 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/chat.css">
   <title>WebChat</title>
 </head>
 <body>
-  <div>
-    <form id="nickNameForm" action="">
+  <div class="main-div">
+    <section class="section-nickname-messages">
+      <div class="div-nickname">
+        <form id="nickNameForm" action="">
+          <h2 name="nickname" id="nickNamePlace"></h2>
+          <label for="nickNameInput"> Nickname: </label>
+          <input type="text" id="nickNameInput" data-testid="nickname-box"/>
+          <button data-testid="nickname-button">Salve</button>
+        </form>
+      </div>
       
-      <h2 name="nickname" id="nickNamePlace"></h2>
-
-      <label for="nickNameInput">Nickname</label>
-
-      <input type="text" id="nickNameInput" data-testid="nickname-box"/>
-
-      <button data-testid="nickname-button">Salve</button>
-
-    </form>
-  </div>
-
-  <div class="box-message">
-    <h3>Usuário conectados</h3>
-    <ul id="connected-user"></ul>
-  </div>
-
-  <ul id="messages">
-    <% messages.forEach(({ timestamp, nickname, message}) => { %>
-
-    <li data-testid="message"> <%= `${timestamp} - ${nickname}: ${message}` %> </li>
-
-    <% }) %>
-  </ul>
-
-  <form id="messageForm" action="">
-
-    <input name="chatMessage" data-testid="message-box" id="messageInput" autocomplete="off" />
+      <div class="messages-send-button">
+        <ul id="messages">
+          <% messages.forEach(({ timestamp, nickname, message}) => { %>
+            
+            <li data-testid="message"> <%= `${timestamp} - ${nickname}: ${message}` %> </li>
+          
+          <% }) %>
+        </ul>
+          
+        <form id="form-send-messages" class="form-send-messages">
+          
+          <input name="chatMessage" data-testid="message-box" id="messageInput" class="messageInput" autocomplete="off" />
+          
+          <button data-testid="send-button" class="send-button">Send</button>
+          
+        </form>
+      </div>
+    </section>
     
-    <button data-testid="send-button">Send</button>
+    <section class="section-conected-users">
+      <div class="div-conected-users">
+        <h3>Usuário conectados</h3>
+        <ul id="connected-user" class="ul-conected-users"></ul>
+      </div>
+    </section>
 
-  </form>
-
-  <script src="/socket.io/socket.io.js"></script>
-
-  <script src="../js/chat.js"></script>
-</body>
+  </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="../js/chat.js"></script>
+  </body>
 </html>

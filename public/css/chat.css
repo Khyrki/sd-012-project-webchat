@@ -1,0 +1,33 @@
+.form-send-messages {
+  bottom: 1rem;
+  left: 1rem;
+  position: fixed;
+  width: 100%;
+}
+
+.main-div {
+  display: flex;
+  flex-direction: row;
+}
+
+.messageInput {
+  width: 75%;
+}
+
+.send-button {
+  width: 20%;
+}
+
+.section-conected-users {
+  width: 20%;
+}
+
+.section-nickname-messages {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+}
+
+.ul-conected-users {
+  list-style-type: none;
+}

@@ -6,30 +6,38 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./css/webchat.css">
-  <title>Webchat</title>
+  <title>WebChat</title>
 </head>
 
 <body>
-  <main class="webchat-content">
-    <aside class="users">
-      <ul class="user-list" />
-    </aside>
 
-    <form class="webchat-login">
-      <input type="text" class="input-nickname" data-testid="nickname-box">
+  <main class="webchat-content">
+    <form class="login-form">
+      <strong>Choose your username (optional)</strong>
+      <input type="text" class="nickname-input" data-testid="nickname-box" />
       <button data-testid="nickname-button">Login</button>
     </form>
 
-    <article class="webchat-messages" />
+    <div class="online-users">
+      <h3>Online users</h3>
+      <div>
+        <strong data-testid="online-user" class="online-user"></strong>
+        <strong> (you)</strong>
+      </div>
+      <ul class="users-list"></ul>
+    </div>
+
+    <article class="webchat-messages"></article>
 
     <form class="webchat-form">
-      <input type="text" class="input-message" data-testid="message-box">
-      <button type="submit" class="btn-submit" data-testid="send-button">Enviar</button>
+      <input class="input-message" data-testid="message-box" type="text" />
+      <button class="btn-submit" data-testid="send-button">Send</button>
     </form>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="./js/webchat.js"></script>
   </main>
+
 </body>
 
 </html>

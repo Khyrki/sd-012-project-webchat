@@ -1,73 +1,126 @@
 const socket = window.io();
 
+const datatest = 'data-testid';
+
+const loginForm = document.querySelector('.login-form');
+const nicknameInput = document.querySelector('.nickname-input');
+
+const webchatMessages = document.querySelector('.webchat-messages');
 const webchatForm = document.querySelector('.webchat-form');
-const webchatLoginForm = document.querySelector('.webchat-login');
-const inputMessage = document.querySelector('.input-message');
-const inputNickname = document.querySelector('.input-nickname');
+const messageInput = document.querySelector('.input-message');
 
-const submitMessage = (event) => {
-  event.preventDefault();
-  const nickname = sessionStorage.getItem('user');
+const usersList = document.querySelector('.users-list');
+const onlineUser = document.querySelector('.online-user');
 
-  socket.emit('message', {
-    chatMessage: inputMessage.value,
-    nickname,
+const randomString = () => {
+  const alphanumeric = 'abcdefghijklmnopqrstuvwxxyz0123456789';
+  const randomS = [];
+  const anSplit = alphanumeric.split('');
+
+  for (let index = 0; randomS.length < 16; index = (Math.floor(Math.random() * 10))) {
+    randomS.push(anSplit[index]);
+  }
+
+  return randomS.join('');
+};
+
+const createNewUser = () => {
+  const userExists = sessionStorage.getItem('nickname');
+
+  const newU = userExists || randomString();
+  sessionStorage.setItem('nickname', newU);
+  onlineUser.innerHTML = newU;
+  socket.emit('user', newU);
+};
+
+const loadMessages = (messages) => {
+  if (messages) {
+    webchatMessages.innerText = '';
+    messages.forEach((message) => {
+      const messageElem = document.createElement('p');
+      messageElem.className = 'displayed-message';
+      messageElem.setAttribute(datatest, 'message');
+      messageElem.innerText = `${message.timestamp} - ${message.nickname}: ${message.message}`;
+      webchatMessages.appendChild(messageElem);
+    });
+  }
+};
+
+const createNewMessage = (message) => {
+  if (typeof message === 'string') {
+    const messageElem = document.createElement('p');
+    messageElem.setAttribute(datatest, 'message');
+    messageElem.className = 'displayed-message';
+    messageElem.innerText = message;
+    webchatMessages.appendChild(messageElem);
+    return false;
+  }
+};
+
+const renderUsers = (users) => {
+  usersList.innerHTML = '';
+
+  users.forEach((user) => {
+    const currentUser = onlineUser.innerHTML;
+    if (currentUser === user.nickname) return null;
+    const li = document.createElement('li');
+    li.setAttribute(datatest, 'online-user');
+    li.innerText = user.nickname;
+    usersList.appendChild(li);
+    return false;
   });
-
-  inputMessage.value = '';
-
-  return false;
 };
 
 const submitNickname = (event) => {
   event.preventDefault();
-  sessionStorage.setItem('user', inputNickname.value);
 
-  socket.emit('nickname', inputNickname.value);
-  inputNickname.value = '';
+  if (nicknameInput.value === '') {
+    sessionStorage.setItem('nickname', randomString());
+    socket.emit('userUpdate', randomString());
+    return false;
+  }
+
+  onlineUser.innerHTML = nicknameInput.value;
+  sessionStorage.setItem('nickname', nicknameInput.value);
+  socket.emit('userUpdate', nicknameInput.value);
+};
+
+const scrollToBottom = () => {
+  webchatMessages.scrollTop = webchatMessages.scrollHeight;
+};
+
+const submitMessage = (event) => {
+  event.preventDefault();
+  const shouldScroll = webchatMessages.scrollTop + webchatMessages
+    .clientHeight === webchatMessages.scrollHeight;
+
+  const message = {
+    chatMessage: messageInput.value,
+    nickname: sessionStorage.getItem('nickname'),
+  };
+
+  socket.emit('message', message);
+  messageInput.value = '';
+
+  if (!shouldScroll) scrollToBottom();
+
   return false;
 };
 
+loginForm.addEventListener('submit', (event) => submitNickname(event));
 webchatForm.addEventListener('submit', (event) => submitMessage(event));
-webchatLoginForm.addEventListener('submit', (event) => submitNickname(event));
 
-const createNewMessage = (msg) => {
-  const webchatMessages = document.querySelector('.webchat-messages');
-  const displayedMessage = document.createElement('p');
-  displayedMessage.setAttribute('data-testid', 'message');
-
-  if (typeof msg === 'object') {
-    const { message, nickname, date } = msg;
-    displayedMessage.innerText = `${date} - ${nickname}: ${message}`;
-  } else {
-    displayedMessage.innerText = msg;
-  }
-
-  webchatMessages.appendChild(displayedMessage);
-};
-
-const createNewUser = (nickname) => {
-  sessionStorage.setItem('user', nickname);
-
-  const userList = document.querySelector('.user-list');
-  const user = document.createElement('li');
-  user.className = 'user';
-  user.setAttribute('data-testid', 'online-user');
-  user.innerText = nickname;
-  userList.appendChild(user);
-};
+socket.on('loadMessages', (message) => loadMessages(message));
+socket.on('message', (msg) => createNewMessage(msg));
+socket.on('user', (user) => renderUsers(user));
+socket.on('loadMessages', (messages) => loadMessages(messages));
+socket.on('serverMessage', (serverMessage) => createNewMessage(serverMessage));
 
 window.addEventListener('load', () => {
-  socket.emit('nickname');
+  createNewUser();
+  socket.emit('loadMessages');
 });
 
-const connectMessages = (msgs) => {
-  msgs.forEach((msg) => {
-    const { message, nickname, date } = msg;
-    createNewMessage({ message, nickname, date });
-  });
+window.onbeforeunload = () => {
+  socket.disconnect();
 };
-
-socket.on('message', (message) => createNewMessage(message));
-socket.on('serverNickname', (nickname) => createNewUser(nickname));
-socket.on('loadMessages', (message) => connectMessages(message));

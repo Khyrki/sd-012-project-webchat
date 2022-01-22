@@ -1,18 +1,18 @@
 const connection = require('./connection');
 
-const newMessage = async (message) => {
-  const db = await connection();
-  const { ops } = await db.collection('messages').insertOne(message);
-  return ops;
-};
+const newMessage = ({ message, nickname, timestamp }) => connection()
+  .then((db) => db.collection('messages').insertOne({
+    message,
+    nickname,
+    timestamp,
+  }))
+  .then((result) => result);
 
-const getAllMessages = async () => {
-  const db = await connection();
-  const data = await db.collection('messages').find({}).toArray();
-  return data;
-};
+const getAllMessages = () => connection()
+  .then((db) => db.collection('messages').find({}).toArray())
+  .then((result) => result);
 
 module.exports = {
   newMessage,
   getAllMessages,
-}; 
+};

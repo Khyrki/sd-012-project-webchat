@@ -18,7 +18,12 @@ const receivedNickName = (nickname) => {
 socket.on('randomName', (content) => {
   receivedNickName(content);
   const storagedNickname = sessionStorage.getItem('nickname');
-  nicknameButton.value = storagedNickname;
+  console.log(storagedNickname);
+  if (storagedNickname === null) {
+    nicknameButton.value = 'There isn\'t yet!';
+  } else {
+    nicknameButton.value = storagedNickname;
+  }
 });
 
 const eventListener = (where, typeEvent, callback) => {

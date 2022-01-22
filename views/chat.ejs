@@ -7,19 +7,17 @@
 
 <body>
   <div id="users">
-    <ul id="nicknameList">
-      <form id="nickname" data-testid="online-user" action="">
-        <input id="nicknameInput" data-testid="nickname-box" placeholder="Insira seu nickname" type="text" />
-        <button id="sendNickname" data-testid="nickname-button" type="submit">Salvar</button>
-      </form>
-    </ul>
+    <form id="nickname" action="">
+      <input id="nicknameInput" data-testid="nickname-box" placeholder="Insira seu nickname" type="text" />
+      <button id="sendNickname" data-testid="nickname-button">Salvar</button>
+    </form>
   </div>
   <ul id="chatUl">
     <form id="formMessage" data-testid="message" action="">
       <input
       id="messageInput"
       data-testid="message-box"
-      autocomplete="off" 
+      autocomplete="off"
       placeholder="Digite uma nova mensagem aqui"
       />
       <button id="btn-send" data-testid="send-button">Enviar</button>
@@ -28,7 +26,6 @@
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="./js/chat.js"></script>
-  <script src="./js/mainUsers.js"></script>
 </body>
 
 </html>

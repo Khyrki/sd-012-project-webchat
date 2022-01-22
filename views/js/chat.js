@@ -1,15 +1,38 @@
 const socket = window.io();
-const ul = document.querySelector('#chatUl');
-const form = document.querySelector('#formMessage');
+const chatUl = document.querySelector('#chatUl');
+const formChat = document.querySelector('#formMessage');
 const messageInput = document.querySelector('#messageInput');
-const name = document.querySelector('#nickname');
+const formNickname = document.querySelector('#nickname');
+const nicknameInput = document.querySelector('#nicknameInput');
 
-// const { createUser } = require('./mainUsers');
+const tokenName = (length) => {
+  const character = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i += 1) {
+    result += character.charAt(Math.floor(Math.random() * character.length));
+  }
+  return result;
+};
 
-form.addEventListener('submit', (event) => {
+sessionStorage.setItem('nameToken', tokenName(16));
+
+const displayName = document.createElement('h2');
+displayName.dataset.testid = 'online-user';
+formNickname.appendChild(displayName);
+displayName.innerText = sessionStorage.getItem('nameToken');
+
+formNickname.addEventListener('submit', (event) => {
+  event.preventDefault();
+  sessionStorage.setItem('nameToken', nicknameInput.value);
+  displayName.innerText = nicknameInput.value;
+  nicknameInput.value = '';
+  return false;
+});
+
+formChat.addEventListener('submit', (event) => {
   event.preventDefault();
   socket.emit('message', {
-    nickname: name.value,
+    nickname: displayName.textContent,
     chatMessage: messageInput.value,
   }); 
   messageInput.value = '';
@@ -20,7 +43,7 @@ const createMessage = (message) => {
   const li = document.createElement('li');
   li.dataset.testid = 'message';
   li.innerText = message;
-  ul.appendChild(li);
+  chatUl.appendChild(li);
 };
 
 socket.on('welcome', (message) => createMessage(message));

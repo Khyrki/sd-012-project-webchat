@@ -32,6 +32,15 @@ const loadMessages = (messageInfo) => {
   messagesUl.appendChild(li);
 };
 
+const getAllUsers = () => {
+  const allUsers = Object.keys(sessionStorage).map((id) => {
+    const nickname = sessionStorage.getItem(id);
+    return { id, nickname };
+  });
+
+  return allUsers;
+};
+
 const createMessage = (message) => {
   const messagesUl = document.querySelector('.messages');
   const li = document.createElement('li');
@@ -48,25 +57,30 @@ const deleteUser = (userId) => {
   messagesUl.removeChild(user);
 };
 
+// const checkUserList = (nickname) => {
+//   const allUsers = getAllUsers();
+//   allUsers.forEach((user) => {
+//     if (nickname !== user.nickname) {
+//       const listedUser = document.getElementById(user.id);
+//       if (!listedUser) {
+//         socket.emit('createUser', user);
+//       }
+//     }
+//   });
+// };
+
 const createUser = (nicknameInfo) => {
-  sessionStorage.setItem(nicknameInfo.id, nicknameInfo.nickname);
-  const messagesUl = document.querySelector('.users');
-  const user = document.getElementById(nicknameInfo.id);
-  if (user) deleteUser(nicknameInfo.id);
+  const { id, nickname } = nicknameInfo;
+  const user = document.getElementById(id);
+  if (user && user.innerText === nickname) return false;
+  sessionStorage.setItem(id, nickname);
+  const usersUl = document.querySelector('.users');
+  if (user && user.innerText !== nickname) deleteUser(id);
   const li = document.createElement('li');
-  li.innerText = nicknameInfo.nickname;
+  li.innerText = nickname;
   li.setAttribute(dataTestId, 'online-user');
-  li.setAttribute('id', nicknameInfo.id);
-  messagesUl.appendChild(li);
-};
-
-const getAllUsers = () => {
-  const allUsers = Object.keys(sessionStorage).map((id) => {
-    const nickname = sessionStorage.getItem(id);
-    return { id, nickname };
-  });
-
-  return allUsers;
+  li.setAttribute('id', id);
+  usersUl.appendChild(li);
 };
 
 const users = getAllUsers();

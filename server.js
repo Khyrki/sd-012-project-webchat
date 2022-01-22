@@ -11,7 +11,7 @@ const bodyParser = require('body-parser');
 const chat = require('./sockets/chat');
 const { chatIDE } = require('./controllers/chat');
 
-const { PORT } = process.env || 3000;
+const PORT = process.env.PORT || 3000;
 
 const httpServer = http.createServer(app);
 

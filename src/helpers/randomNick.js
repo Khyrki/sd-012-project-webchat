@@ -1,4 +1,4 @@
-// Função obtiada de dúvida no stackoverflow: https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
+// Função obtida de dúvida no stackoverflow: https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
 
 module.exports = (length) => {
   let result = '';

@@ -10,7 +10,7 @@ const inputMessage = document.querySelector('.messageInput');
 messageBox.addEventListener('submit', (e) => {
   e.preventDefault();
   const chatMessage = inputMessage.value;
-  const nickname = sessionStorage.getItem(socket.id);
+  const nickname = localStorage.getItem(socket.id);
   socket.emit('message', { chatMessage, nickname });
   inputMessage.value = '';
   return false;
@@ -33,8 +33,8 @@ const loadMessages = (messageInfo) => {
 };
 
 const getAllUsers = () => {
-  const allUsers = Object.keys(sessionStorage).map((id) => {
-    const nickname = sessionStorage.getItem(id);
+  const allUsers = Object.keys(localStorage).map((id) => {
+    const nickname = localStorage.getItem(id);
     return { id, nickname };
   });
 
@@ -57,23 +57,11 @@ const deleteUser = (userId) => {
   messagesUl.removeChild(user);
 };
 
-// const checkUserList = (nickname) => {
-//   const allUsers = getAllUsers();
-//   allUsers.forEach((user) => {
-//     if (nickname !== user.nickname) {
-//       const listedUser = document.getElementById(user.id);
-//       if (!listedUser) {
-//         socket.emit('createUser', user);
-//       }
-//     }
-//   });
-// };
-
 const createUser = (nicknameInfo) => {
   const { id, nickname } = nicknameInfo;
   const user = document.getElementById(id);
   if (user && user.innerText === nickname) return false;
-  sessionStorage.setItem(id, nickname);
+  localStorage.setItem(id, nickname);
   const usersUl = document.querySelector('.users');
   if (user && user.innerText !== nickname) deleteUser(id);
   const li = document.createElement('li');
@@ -89,7 +77,7 @@ socket.on('loadMessages', (messageInfo) => loadMessages(messageInfo));
 socket.on('message', (message) => createMessage(message));
 socket.on('createUser', (nicknameInfo) => createUser(nicknameInfo));
 socket.on('deleteUser', (userId) => {
-  sessionStorage.removeItem(userId);
+  localStorage.removeItem(userId);
   deleteUser(userId);
 });
 

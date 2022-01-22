@@ -8,20 +8,20 @@ body , html {
   align-items: center;
   border-radius: 5px;
   display: flex;
+  height: 30px;
   margin-left: 10px;
   padding: 10px;
-  height: 30px;
 }
 
 .webchat-messages {
-  width: 70%;
-  margin: auto;
-  transition: all 2s;
   height: 75vh;
+  margin: auto;
   overflow-y: scroll;
+  transition: all 2s;
+  width: 70%;
 }
 
-.displayed-message:nth-child(odd) {
+.displayed-message:nth-child( odd ) {
   background-color: lavender;
   justify-content: flex-end;
 }
@@ -35,46 +35,46 @@ body , html {
 }
 
 .online-users {
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  width: fit-content;
-  top: 0;
-  right: 10px;
   border: 1px solid black;
   border-radius: 0 0 10px 10px;
+  display: flex;
+  flex-direction: column;
   height: fit-content;
   padding: 10px;
+  position: absolute;
+  right: 10px;
+  top: 0;
+  width: fit-content;
 }
 
 .online-users h3 {
-  padding: 0;
-  margin: 10px 0;
   border-bottom: 1px solid grey;
+  margin: 10px 0;
+  padding: 0;
 }
 
 .webchat-form {
+  background-color: lavender;
   bottom: 0;
   display: flex;
   height: 40px;
   justify-content: space-evenly;
+  padding: 10px;
   position: fixed;
   width: 100vw;
-  background-color: lavender;
-  padding: 10px;
 }
 
 .webchat-form .input-message {
-  width: 80%;
-  border-radius: 10px;
   border: 2px solid lightseagreen;
+  border-radius: 10px;
+  width: 80%;
 }
 
 .webchat-form .btn-submit {
-  border: none;
-  width: 10%;
-  border-radius: 10px;
   background-color: lightseagreen;
+  border: none;
+  border-radius: 10px;
   color: aliceblue;
   font-weight: 700;
+  width: 10%;
 }

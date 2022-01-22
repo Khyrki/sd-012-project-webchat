@@ -1,3 +1,6 @@
+const create = require('../models/create');
+const getAll = require('../models/getAll');
+
 const dataFunc = (date) => {
   const mo = new Intl.DateTimeFormat('pt-br', { 
     dateStyle: 'short', 
@@ -8,10 +11,24 @@ const dataFunc = (date) => {
   return correctDate;
 };
 
-module.exports = (io) =>
-  io.on('connection', (socket) => {
-    socket.on('message', (message) => {
-      const result = `${dataFunc(new Date())} - ${message.nickname}: ${message.chatMessage}`;
-      io.emit('message', result);
-    });
+const actualDate = dataFunc(new Date());
+
+const createMsgs = (socket, io) => {
+  socket.on('message', async ({ nickname, chatMessage }) => {
+    await create(chatMessage, nickname, actualDate);
+    io.emit('message', `${actualDate} - ${nickname}: ${chatMessage}`);
   });
+};
+
+const getMessages = async (socket) => {
+  const result = await getAll();
+
+  socket.emit('getMessages', result);
+};
+
+const messages = (io) => io.on('connection', (socket) => {
+  getMessages(socket);
+  createMsgs(socket, io);
+});
+
+module.exports = messages;

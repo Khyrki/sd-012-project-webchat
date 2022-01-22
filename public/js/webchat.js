@@ -7,7 +7,7 @@ const chat = document.getElementById('chat');
 const labelNickname = document.getElementById('online-user');
 const btnRename = document.getElementById('btnRename');
 
-const arrMessages = [];
+// const arrMessages = [];
 
 let users = [...Array(16)]
   .map((_i) => Math.floor(Math.random() * 36).toString(36))
@@ -29,14 +29,17 @@ btnRename.addEventListener('click', (e) => {
 });
 
 const renderChat = (message) => {
-  chat.innerHTML = '';
-  arrMessages.push(message);
-  arrMessages.forEach((msgs) => {
-    const li = document.createElement('li');
-    li.dataset.testid = 'message';
-    li.innerText = msgs;
-    chat.appendChild(li);
+  const li = document.createElement('li');
+  li.dataset.testid = 'message';
+  li.innerText = message;
+  chat.appendChild(li);
+};
+
+const getAllMessages = (arrMessages) => {
+  arrMessages.forEach(({ message, nickname, timestamp }) => {
+    renderChat(`${timestamp} - ${nickname}: ${message}`);
   });
 };
 
 socket.on('message', (message) => renderChat(message));
+socket.on('getMessages', (arrMessages) => getAllMessages(arrMessages));

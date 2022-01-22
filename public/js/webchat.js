@@ -4,16 +4,14 @@ const formButton = document.getElementById('formButton');
 const inputName = document.getElementById('inputName');
 const inputMessage = document.getElementById('inputMessage');
 const chat = document.getElementById('chat');
-const labelNickname = document.getElementById('online-user');
 const btnRename = document.getElementById('btnRename');
+const ulChat = document.getElementById('users');
 
-// const arrMessages = [];
+let nicknameUser = '';
 
-let users = [...Array(16)]
-  .map((_i) => Math.floor(Math.random() * 36).toString(36))
-  .join('');
-
-labelNickname.innerText = users;
+const getConnectedUser = (nick) => {
+  nicknameUser = nick;
+};
 
 formButton.addEventListener('click', (e) => {
   e.preventDefault();
@@ -24,9 +22,26 @@ formButton.addEventListener('click', (e) => {
 
 btnRename.addEventListener('click', (e) => {
   e.preventDefault();
-  users = inputName.value;
-  labelNickname.innerText = users;
+  nicknameUser = inputName.value;
+  socket.emit('renameNickname', nicknameUser);
 });
+
+const onlineUsers = (arrUsers) => {
+  ulChat.innerHTML = '';
+  const liClient = document.createElement('li');
+  liClient.setAttribute('data-testid', 'online-user');
+  liClient.innerText = nicknameUser;
+  ulChat.appendChild(liClient);
+
+  arrUsers.forEach(({ nickname }) => {
+    if (nickname === nicknameUser) return;
+
+    const li = document.createElement('li');
+    li.setAttribute('data-testid', 'online-user');
+    li.innerText = nickname;
+    ulChat.appendChild(li);
+  });
+};
 
 const renderChat = (message) => {
   const li = document.createElement('li');
@@ -43,3 +58,5 @@ const getAllMessages = (arrMessages) => {
 
 socket.on('message', (message) => renderChat(message));
 socket.on('getMessages', (arrMessages) => getAllMessages(arrMessages));
+socket.on('connectedUser', (nick) => getConnectedUser(nick));
+socket.on('onlineUsers', (arrUsers) => onlineUsers(arrUsers));

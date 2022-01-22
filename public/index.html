@@ -9,7 +9,7 @@
 <body>
   <form>
     <input type="text" id="inputMessage" data-testid="message-box">
-    <p data-testid="online-user" id="online-user"></p>
+    <!-- <p data-testid="online-user" id="online-user"></p> -->
     <button data-testid="send-button" id="formButton" type="button">Enviar</button>
   </form>
   <form>
@@ -17,6 +17,7 @@
     <input data-testid="nickname-box" type="text" id="inputName">
   </form>
   <ul id="chat"></ul>
+  <ul id="users"></ul>
   <script src="/socket.io/socket.io.js"></script>
   <script src="./js/webchat.js"></script>
 </body>

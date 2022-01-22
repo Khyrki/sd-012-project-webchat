@@ -55,6 +55,26 @@ eventListener(messageForm, 'submit', socketEmitMessage);
 
 socket.on('message', (message) => createMessage(message));
 
+const ulUsers = document.querySelector('#connected-user');
+
+const createUserList = (name) => {
+  const li = document.createElement('li');
+  li.innerText = name;
+  li.setAttribute('data-testid', 'online-user');
+  ulUsers.appendChild(li);
+};
+
+socket.on('connectedUsers', (arrayUser) => {
+  ulUsers.innerHTML = '';
+  const user = arrayUser.find(({ id }) => id === socket.id);
+  
+  const userFilter = arrayUser.filter(({ id }) => id !== socket.id);
+
+  userFilter.unshift(user);
+  
+  userFilter.forEach(({ nickname }) => createUserList(nickname));
+});
+
 window.onbeforeunload = (_event) => {
   socket.disconnect();
 };

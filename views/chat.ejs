@@ -1,18 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <title>chat</title>
-</head>
-<body>
-  
-<ul id="message">
-  <form id="formMessage" action="">
-    <input id="messageInput" autocomplete="off" />
-    <button type="submit" id="btn-send">send</button>
-  </form>
-</ul>
 
-<script src="/socket.io/socket.io.js"></script>
-<script src="./js/chat.js"></script>
+<head>
+  <title>Web Chat</title>
+</head>
+
+<body>
+  <div id="users">
+    <ul id="nicknameList">
+      <form id="nickname" data-testid="online-user" action="">
+        <input id="nicknameInput" data-testid="nickname-box" placeholder="Insira seu nickname" type="text" />
+        <button id="sendNickname" data-testid="nickname-button" type="submit">Salvar</button>
+      </form>
+    </ul>
+  </div>
+  <ul id="chatUl">
+    <form id="formMessage" data-testid="message" action="">
+      <input
+      id="messageInput"
+      data-testid="message-box"
+      autocomplete="off" 
+      placeholder="Digite uma nova mensagem aqui"
+      />
+      <button id="btn-send" data-testid="send-button">Enviar</button>
+    </form>
+  </ul>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="./js/chat.js"></script>
+  <script src="./js/mainUsers.js"></script>
 </body>
+
 </html>

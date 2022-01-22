@@ -5,6 +5,7 @@ const nickNameInnerText = document.querySelector('#nickNamePlace');
 const nickNameInput = document.querySelector('#nickNameInput');
 const formSendMessages = document.querySelector('#form-send-messages');
 const messageInput = document.querySelector('#messageInput');
+const nicknameButton = document.getElementById('recover-nickname-button');
 
 const setSessionStorage = () => {
   sessionStorage.setItem('nickname', nickNameInput.value);
@@ -14,12 +15,16 @@ const receivedNickName = (nickname) => {
   nickNameInnerText.innerText = nickname;
 };
 
-socket.on('randomName', (content) => receivedNickName(content));
+socket.on('randomName', (content) => {
+  receivedNickName(content);
+  const storagedNickname = sessionStorage.getItem('nickname');
+  nicknameButton.value = storagedNickname;
+});
 
-const eventListener = (where, typeEvent, socketEmitFunction) => {
+const eventListener = (where, typeEvent, callback) => {
   where.addEventListener(typeEvent, (e) => {
     e.preventDefault();
-    socketEmitFunction();
+    callback();
   });
 };
 
@@ -74,6 +79,17 @@ socket.on('connectedUsers', (arrayUser) => {
   
   userFilter.forEach(({ nickname }) => createUserList(nickname));
 });
+
+const recoverChosenName = () => {
+  nickNameInnerText.innerText = nicknameButton.value;
+};
+
+const socketRecoverNickname = () => {
+  recoverChosenName();
+  socket.emit('nickName', nickNameInnerText.innerText);
+};
+
+eventListener(nicknameButton, 'click', socketRecoverNickname);
 
 window.onbeforeunload = (_event) => {
   socket.disconnect();

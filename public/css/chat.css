@@ -1,3 +1,8 @@
+.div-nickname {
+  display: flex;
+  justify-content: space-around;
+}
+
 .form-send-messages {
   bottom: 1rem;
   left: 1rem;

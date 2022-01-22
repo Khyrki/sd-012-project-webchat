@@ -26,11 +26,11 @@ module.exports = (io) => {
   io.on('connection', async (socket) => {
     console.log(`${socket.id} connected`);
 
-    const random = `${randomName()}`;
+    const randomNickname = `${randomName()}`;
 
-    userList.push({ id: socket.id, nickname: random });
+    userList.push({ id: socket.id, nickname: randomNickname });
 
-    socket.emit('randomName', random);
+    socket.emit('randomName', randomNickname);
 
     io.emit('connectedUsers', userList);
 

@@ -12,10 +12,14 @@ module.exports = (io) => {
     });
     
     socket.on('message', async ({ chatMessage, nickname }) => {
-      const dateNow = moment().format('DD-MM-YYYY hh:mm:ss A');
+      const dateNow = moment().format('DD-MM-YYYY hh:mm:ss');
+      
       const message = `${dateNow} - ${nickname} ${chatMessage}`;
-      await messageModel.create(chatMessage, nickname, dateNow);
+      
       io.emit('message', message); // transmite para todo mundo
+      
+      await messageModel.create(chatMessage, nickname, dateNow);
     });
   });
 };
+

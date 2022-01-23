@@ -1,8 +1,8 @@
 const moment = require('moment');
+const { createMessages } = require('../models');
 
 module.exports = (io) => {
   io.on('connection', (socket) => {
-    console.log(`${socket.id} conectado`);
     io.emit('connection', 'Bem-vindo ao chat da Uol');
     const newNick = socket.id.substring(0, 16);
 
@@ -21,6 +21,8 @@ module.exports = (io) => {
       const userMessage = `${timestamp} - ${nickname}: ${chatMessage}`;
 
       io.emit('message', userMessage);
+
+      createMessages(chatMessage, nickname, timestamp);
     });
   });
 };

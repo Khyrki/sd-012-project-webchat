@@ -21,10 +21,9 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/views', express.static(path.join(__dirname, 'views')));
 
 require('./sockets/chat')(io);
+const { listAllMessages } = require('./controllers');
 
-app.get('/', (_req, res) => {
-  res.render('chat');
-});
+app.get('/', listAllMessages);
 
 http.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

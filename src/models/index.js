@@ -6,7 +6,7 @@ module.exports.getAllMessages = async () => {
   return newMessage;
 };
 
-module.exports.createMessages = async (message, nickname, timestamp) => {
+module.exports.createMessages = async (chatMessage, nickname, timestamp) => {
   const database = await connection();
-  await database.collection('messages').insertOne({ message, nickname, timestamp });
+  await database.collection('messages').insertOne({ chatMessage, nickname, timestamp });
 };

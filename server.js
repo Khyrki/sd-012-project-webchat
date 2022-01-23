@@ -19,6 +19,8 @@ io.on('connection', (socket) => {
   socket.on('message', (message) => {
     const dateObj = new Date();
     const dateTime = dateObj.toLocaleString('pt-BR').replace(/\//g, '-');
+
+    // código dateTime baseado no código do colega David Gonzaga: https://github.com/tryber/sd-012-project-webchat/pull/76/commits/e2d4ae2bbc7d0f6e63af094e42e7b31a1b6760c7
     
     io.emit('message', `${dateTime} - ${message.nickname}: ${message.chatMessage}`);
   });

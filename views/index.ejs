@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="/css/index.css">
+  <script src="/socket.io/socket.io.js" defer></script>
+  <script src="/js/index.js" defer></script>
+  <title>Webchat</title>
+</head>
+<body>
+  <header>
+    <h1>Trybers Webchat</h1>
+  </header>
+
+  <main>
+    <section class="chat-container">
+      <aside class="chat-left">
+        <section class="nickname-container">
+          <form class="form-change-nickname" action="" method="POST">
+            <input
+              type="text"
+              name="nickname"
+              placeholder="Insira seu nickname"
+              id="nickname"
+              data-testid="nickname-box"
+            >
+            <button type="submit" id="save-nickname" data-testid="nickname-button">Salvar</button>
+          </form>
+        </section>
+        <section class="users-container">
+          <ul id="users"></ul>
+        </section>
+      </aside>
+
+      <section class="chat-right">
+        <ul id="messages"></ul>
+      </section>
+    </section>
+    <form class="form-send-message" action="" method="POST">
+      <input
+        type="text"
+        name="chatMessage"
+        placeholder="Digite uma nova mensagem aqui"
+        id="chat-message"
+        data-testid="message-box"
+      >
+      <button type="submit" id="send-message" data-testid="send-button">Enviar</button>
+    </form>
+  </main>
+</body>
+</html>

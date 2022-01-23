@@ -1,0 +1,243 @@
+* {
+    box-sizing: border-box;
+    font-family: Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+  }
+  
+  header {
+    display: flex;
+    flex-direction: column;
+    height: 18vh;
+    min-height: 18vh;
+    width: 100%;
+  }
+  
+  .title-container {
+    align-items: center;
+    background-color:lightgrey;
+    display: flex;
+    height: 10vh;
+    justify-content: space-evenly;
+  }
+  
+  h2 {
+    font-weight: 1000;
+    margin-left: 2vw;
+  }
+  
+  .chat-icon {
+    background-image: url('../images/chat.svg');
+    background-repeat: no-repeat;
+    background-size: center;
+    height: 80%;
+    margin-left: 4vh;
+    width: 5%;
+  }
+  
+  .webchat-logo {
+    max-height: 90%;
+    max-width: 90%;
+  }
+  
+  .nickname-container {
+    background-color: lightgrey;
+    box-shadow: 10px 5px 5px black;
+    display: flex;
+    font-size: 1.5em;
+    padding: 1%;
+  }
+  
+  .nickname-container h3 {
+    margin-left: 0.5vw;
+    margin-right: 0.5vw;
+  }
+  
+  .user-nickname {
+    font-size: 1.1em;
+    font-weight: 800;
+  }
+  
+  .user-container {
+    align-items: center;
+    background-color: black;
+    box-shadow: 10px 10px 10px 6px black;
+    display: flex;
+    height: 8vh;
+    justify-content: flex-start;
+    min-height: 8vh;
+    width: 100%;
+  }
+  
+  .user-container h3 {
+    color: white;
+    margin-left: 2vw;
+  }
+  
+  .form-nickname {
+    align-items: center;
+    background-color: transparent;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    width: 20%;
+  }
+  
+  .input-nickname {
+    font-size: 1.2em;
+    height: 60%;
+    text-align: center;
+    width: 60%;
+  }
+  
+  .nickname-button {
+    background-color: white;
+    font-size: 1.3em;
+    font-weight: 800;
+    height: 60%;
+    margin-left: 2vh;
+    transition-duration: 0.4s;
+    width: 25%;
+  }
+  
+  .nickname-button:hover {
+    background-color: darkcyan;
+    color: white;
+  }
+  
+  .nickname-button:active {
+    background-color: darkslategray;
+    color: white;
+  }
+  
+  .main-container {
+    background-color: red;
+    display: flex;
+    height: 70vh;
+    width: 100vw;
+  }
+  
+  .chat-container {
+    background-color: rgb(48, 48, 48);
+    display: flex;
+    flex-direction: column;
+    height: 70vh;
+    max-height: 70vh;
+    max-width: 84vw;
+    overflow-y: scroll;
+    width: 84vw;
+  }
+  
+  .chat-container li {
+    border: 1px solid darkgrey;
+    color: white;
+    font-size: 1.3em;
+    font-weight: 800;
+    padding: 1%;
+    vertical-align: middle;
+  }
+  
+  .online-users-container {
+    align-items: center;
+    background-image: linear-gradient(to bottom, lightblue, white);
+    display: flex;
+    flex-direction: column;
+    height: 70vh;
+    min-height: 70vh;
+    min-width: 16vw;
+    width: 16vw;
+  }
+  
+  .online-users-title {
+    background-color: darkcyan;
+    border: 2px solid grey;
+    color: white;
+    font-size: 1.2em;
+    padding: 2%;
+    text-align: center;
+    width: 100%;
+  }
+  
+  .users-list {
+    background-color: white;
+    color: black;
+    font-size: 1.4em;
+    text-align: center;
+    width: 100%;
+  }
+  
+  .users-list ul {
+    list-style-type: none;
+  }
+  
+  .users-list li {
+    border: 1px solid gray;
+    padding: 1.5%;
+  }
+  
+  .client-id {
+    background-color: whitesmoke;
+    border: 1px solid gray;
+    color: black;
+    font-weight: 800;
+    padding: 1.5%;
+    text-align: center;
+  }
+  
+  footer {
+    background-color: black;
+    box-shadow: 10px 5px 5px 6px black;
+    display: flex;
+    height: 12vh;
+    min-height: 12vh;
+    min-width: 100%;
+    width: 100%;
+  }
+  
+  .message-form {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .message-box {
+    border: 2px solid black;
+    font-size: 1.3em;
+    height: 40%;
+    text-align: center;
+    width: 50%;
+  }
+  
+  .message-box:hover {
+    border: 2px solid red;
+  }
+  
+  .send-button {
+    background-color: white;
+    border-radius: 5%;
+    font-size: larger;
+    font-weight: 800;
+    height: 40%;
+    margin-left: 2vh;
+    transition-duration: 0.2s;
+    width: 10%;
+  }
+  
+  .send-button:hover {
+    background-color: darkcyan;
+    color: white;
+  }
+  
+  .send-button:active {
+    background-color: darkslategray;
+    color: white;
+  }

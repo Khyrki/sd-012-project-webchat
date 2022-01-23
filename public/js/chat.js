@@ -14,6 +14,7 @@ form.addEventListener('submit', (event) => {
 
 const onlineUser = (nickname) => {
   const user = document.querySelector('#user');
+  user.setAttribute('data-testid', 'online-user');
   user.innerText = nickname;
 }; 
 
@@ -44,7 +45,7 @@ const createMessage = (chatMessage) => {
 
   const pText = document.createElement('p');
   pText.innerText = chatMessage;
-  pText.setAttribute('dataTestid', 'message');
+  pText.setAttribute('data-testid', 'message');
     messagesUl.appendChild(pText);
 };
 

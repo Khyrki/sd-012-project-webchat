@@ -9,7 +9,6 @@
       integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
       crossorigin="anonymous"
     />
-
     <title>Web Chat App</title>
   </head>
   <body>
@@ -21,13 +20,14 @@
         <div class="chat-sidebar">
           <div class="user-container">
             <input
+            data-testid="nickname-box"
             type="text"
             name="username"
             id="username"
             placeholder="Insira seu nickname"
             required
             />
-            <button class="btn-nickname"> Enviar</button>
+            <button data-testid="nickname-button" class="btn-nickname">Enviar</button>
           </div>
           <h3><i class="fas fa-users"></i> Users</h3>
           <p id="user" data-testid="online-user" ></p>
@@ -54,7 +54,8 @@
             type="text"
             placeholder="Digite uma nova mensagen aqui"
           />
-          <button data-testid="send-button" class="btn"> Enviar</button>
+          <button data-testid="send-button" class="btn"
+           id="send">Enviar</button>
         </form>
       </div>
     </div>

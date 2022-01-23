@@ -1,0 +1,24 @@
+
+<script>
+
+  // Sets new nickname and updates for everyone
+  const saveButton = document.getElementById('set-nickname');
+  saveButton.addEventListener('click', () => {
+    const nickInput = document.getElementById('nick-input');
+    const newUsername = nickInput.value;
+    setNickname(newUsername);
+    sessionStorage.setItem('username', newUsername);
+    socket.emit('updateMyName', newUsername);
+    nickInput.value = '';
+  });
+
+  // Broadcasts message
+  const sendButton = document.getElementById('send');
+  sendButton.addEventListener('click', () => {
+    const username = sessionStorage.getItem('username') || 'John Doe';
+    const messageInput = document.getElementById('message');
+    socket.emit('message', { chatMessage: messageInput.value, nickname: username });
+    messageInput.value = '';
+  });
+  
+</script>

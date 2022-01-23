@@ -12,11 +12,15 @@ const io = require('socket.io')(http, {
 const onlineUsers = [];
 
 io.on('connection', (socket) => {
-  onlineUsers.push({ id: socket.id, nickname: socket.id });
+  io.emit('setDefaultNickname');
+  onlineUsers.push({ id: socket.id, nickname: socket.nickname });
   io.emit('onlineUsers', onlineUsers);
 
   socket.on('message', (message) => {
-    io.emit('message', `${message.nickname}: ${message.chatMessage}`);
+    const dateObj = new Date();
+    const dateTime = dateObj.toLocaleString('pt-BR').replace(/\//g, '-');
+    
+    io.emit('message', `${dateTime} - ${message.nickname}: ${message.chatMessage}`);
   });
 });
 

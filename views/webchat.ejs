@@ -19,7 +19,11 @@
     const inputMessage = document.querySelector('#messageInput');
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      socket.emit('message', {chatMessage: inputMessage.value, nickname: socket.id});
+      socket.emit('message', 
+      { 
+        chatMessage: inputMessage.value,
+        nickname: socket.nickname,
+      });
       inputMessage.value = '';
       return false;
     });
@@ -32,6 +36,7 @@
       // código baseado no seguinte site: https://www.codegrepper.com/code-examples/javascript/javascript+create+li+element+and+append+to+ul
     }
 
+    socket.on('setDefaultNickname', () => socket.nickname = socket.id);
     socket.on('message', (message) => appendMessageToUl(message));
     socket.on('onlineUsers', (onlineUsers) => console.log((onlineUsers)));
   </script>

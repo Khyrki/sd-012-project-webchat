@@ -1,7 +1,11 @@
 require('dotenv').config();
-const app = require('express')();
+const express = require('express');
+
+const app = express();
 const http = require('http').createServer(app);
 const cors = require('cors');
+
+const PORT = process.env.PORT || 3000;
 
 const io = require('socket.io')(http, {
     cors: {
@@ -12,8 +16,6 @@ const io = require('socket.io')(http, {
     app.use(cors());
 
 require('./sockets/chat')(io);
-
-const PORT = process.env.PORT || 3000;
 
 http.listen(PORT, () => {
   console.log(`Servidor ouvindo na porta ${PORT}`);

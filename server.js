@@ -8,7 +8,7 @@ app.use(express.json());
 const PORT = 3000;
 
 const userList = [];
-const messageList = [];
+let messageList = [];
 
 const generateDate = () => {
   const d = new Date();
@@ -25,10 +25,17 @@ const io = require('socket.io')(socketIoServer, {
     methods: ['GET', 'POST'], // métodos permitidos
   },
 });
+const { getMessages, postMessage } = require('./controllers/messages');
 
-io.on('connection', (socket) => {
+const renderMessages = async () => {
+  const messageArray = await getMessages();
+  messageList = messageArray.map((message) => 
+  `${message.timestamp} - ${message.nickname}: ${message.message}`);
+};
+
+io.on('connection', async (socket) => {
   console.log(`Uma nova conexão com ${socket.id} foi estabelecida!`);
-  socket.on('teste', (name) => {
+  socket.on('login', (name) => {
     userList.push({ name, id: socket.id });
     io.emit('serverLogin', name);
   });
@@ -42,12 +49,14 @@ io.on('connection', (socket) => {
   });
   socket.on('message', ({ nickname, chatMessage }) => {
     const date = generateDate();
-    messageList.push(`${date} - ${nickname}: ${chatMessage}`);
+    postMessage({ message: chatMessage, nickname, timestamp: date });
+    // messageList.push(`${date} - ${nickname}: ${chatMessage}`);
     io.emit('message', `${date} - ${nickname}: ${chatMessage}`);
   });
 });
 
-app.get('/', (_req, res) => {
+app.get('/', async (_req, res) => {
+  await renderMessages();
   res.render('index', { userList, messageList });
 });
 

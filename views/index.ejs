@@ -17,9 +17,7 @@
           <button data-testid="nickname-button">Salvar</button>
         </form>
         <ul id="users">
-          <% userList.forEach(user => { %>
-            <li data-testid="online-user" ><%= user.name %></li>
-          <% }) %>
+          
         </ul>
       </div>
       <div>
@@ -30,7 +28,7 @@
         </ul>
       </div>
     </div>
-    <form id="messageForm" action="">
+    <form id="messageForm" action="" >
       <input id="messageInput" data-testid="message-box" />
       <button data-testid="send-button" >Enviar</button>
     </form>
@@ -44,7 +42,7 @@
     // String gerada com base no codigo encontrado em https://gist.github.com/6174/6062387
     let nickname = Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10);
 
-    socket.emit('teste', nickname)
+    socket.emit('login', nickname)
 
     const createList = (text, list, id) => {
       const li = document.createElement('li');

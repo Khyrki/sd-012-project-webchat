@@ -1,0 +1,29 @@
+<script>
+
+  socket.on("loadHistory", (messages) => {
+    const msgsUl = document.getElementById("messages");
+    messages.forEach(({ message, nickname, timestamp }) => {
+      const li = document.createElement("li");
+      li.dataset.testid = "message";
+      li.innerText = `${timestamp} - ${nickname}: ${message}`;
+      msgsUl.append(li);
+    });
+  });
+
+  socket.on("userConnection", (username) => {
+    setNickname(username);
+    sessionStorage.setItem("username", username);
+    addUserToOnlineBoard(username);
+  });
+
+  socket.on("addNewUser", (username) => {
+    addUserToOnlineBoard(username);
+    const myUsername = getUsername();
+    socket.emit("introduceMeToNewUser", myUsername);
+  });
+
+  socket.on("introduceUsersToNewUser", (username) => {
+    if (!userExists(username)) addUserToOnlineBoard(username);
+  });
+  
+</script>

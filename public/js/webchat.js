@@ -44,3 +44,16 @@ const createChatMessage = (message) => {
   ulMessageList.appendChild(li);
 };
 
+const ulOnlineUsers = document.querySelector('.online-users');
+
+const createOnlineUserList = (onlineUsers) => {
+  onlineUsers.forEach((user) => {
+    if (user.id !== socket.id) {
+      const li = document.createElement('li');
+      li.innerText = user.nickname;
+      li.setAttribute('data-testid', 'online-user');
+      ulOnlineUsers.appendChild(li);
+    }
+  });
+};
+

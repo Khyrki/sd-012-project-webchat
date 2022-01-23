@@ -36,3 +36,11 @@
 .ul-conected-users {
   list-style-type: none;
 }
+
+.ul-order {
+  transform: rotate(180deg);
+}
+
+.ul-order > li {
+  transform: rotate(-180deg);
+}

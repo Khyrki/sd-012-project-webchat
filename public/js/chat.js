@@ -6,6 +6,7 @@ const nickNameInput = document.querySelector('#nickNameInput');
 const formSendMessages = document.querySelector('#form-send-messages');
 const messageInput = document.querySelector('#messageInput');
 const nicknameButton = document.getElementById('recover-nickname-button');
+const THERE_ISNT_YET = 'There isn\'t yet!';
 
 const setSessionStorage = () => {
   sessionStorage.setItem('nickname', nickNameInput.value);
@@ -18,18 +19,17 @@ const receivedNickName = (nickname) => {
 socket.on('randomName', (content) => {
   receivedNickName(content);
   const storagedNickname = sessionStorage.getItem('nickname');
-  console.log(storagedNickname);
-  if (storagedNickname === null) {
-    nicknameButton.value = 'There isn\'t yet!';
+  if (!storagedNickname) {
+    nicknameButton.value = THERE_ISNT_YET;
   } else {
     nicknameButton.value = storagedNickname;
   }
 });
 
-const eventListener = (where, typeEvent, callback) => {
+const eventListener = (where, typeEvent, socketFunctions) => {
   where.addEventListener(typeEvent, (e) => {
     e.preventDefault();
-    callback();
+    socketFunctions();
   });
 };
 
@@ -44,14 +44,6 @@ eventListener(nickNameForm, 'submit', socketEmitNickName);
 
 socket.on('newNickName', (newName) => receivedNickName(newName));
 
-const createMessage = (message) => {
-  const messagesUl = document.querySelector('#messages');
-  const li = document.createElement('li');
-  li.innerText = message;
-  li.setAttribute('data-testid', 'message');
-  messagesUl.appendChild(li);
-};
-
 const socketEmitMessage = () => {
   socket.emit('message', {
     chatMessage: messageInput.value,
@@ -62,6 +54,14 @@ const socketEmitMessage = () => {
 };
 
 eventListener(formSendMessages, 'submit', socketEmitMessage);
+
+const createMessage = (message) => {
+  const messagesUl = document.querySelector('#messages');
+  const li = document.createElement('li');
+  li.innerText = message;
+  li.setAttribute('data-testid', 'message');
+  messagesUl.appendChild(li);
+};
 
 socket.on('message', (message) => createMessage(message));
 
@@ -86,7 +86,9 @@ socket.on('connectedUsers', (arrayUser) => {
 });
 
 const recoverChosenName = () => {
-  nickNameInnerText.innerText = nicknameButton.value;
+  if (nicknameButton.value !== THERE_ISNT_YET) {
+    nickNameInnerText.innerText = nicknameButton.value;
+  }
 };
 
 const socketRecoverNickname = () => {

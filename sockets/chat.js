@@ -4,15 +4,15 @@ const { createMessagesHistory } = require('../models');
 
 let userList = [];
 
-const createMessageWithSocket = async (socket, io) => {
-  socket.on('message', async ({ chatMessage, nickname }) => {
+const createMessageWithSocket = (socket, io) => {
+  socket.on('message', ({ chatMessage, nickname }) => {
     const currentDate = new Date();
     const date = format(currentDate, 'dd-MM-yyyy HH:mm:ss');
     const message = `${date} - ${nickname}: ${chatMessage}`;
   
-    await createMessagesHistory(chatMessage, nickname, date);
-  
     io.emit('message', message);
+    
+    createMessagesHistory(chatMessage, nickname, date);
   });
 
   socket.on('disconnect', () => {
@@ -46,6 +46,6 @@ module.exports = (io) => {
       socket.emit('newNickName', nickName);
     });
     
-    await createMessageWithSocket(socket, io);
+    createMessageWithSocket(socket, io);
   });
 };

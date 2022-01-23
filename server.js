@@ -10,6 +10,7 @@ const io = require('socket.io')(http, {
   } });
 
 const newNickname = require('./sockets/newNickname');
+const disconnectUser = require('./sockets/disconnectUser');
 
 const onlineUsers = [];
 
@@ -28,6 +29,8 @@ io.on('connection', (socket) => {
     
     io.emit('message', `${dateTime} - ${message.nickname}: ${message.chatMessage}`);
   });
+
+  socket.on('disconnect', () => disconnectUser(io, socket, onlineUsers));
 });
 
 app.set('view engine', 'ejs');

@@ -10,6 +10,5 @@ module.exports = (io, socket, nickname, onlineUsers) => {
   } else {
     onlineUsers.push({ id: socket.id, nickname });
   }
-  io.emit('onlineUser', onlineUsers.find((user) => user.id === socket.id));
   io.emit('onlineUsers', onlineUsers);
 };

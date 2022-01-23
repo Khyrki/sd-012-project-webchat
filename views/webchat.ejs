@@ -12,9 +12,7 @@
       data-testid="nickname-box"
       placeholder="change your nickname"
   /><button id="nickname-button" data-testid="nickname-button">Change</button>
-  <ul id="online-users">
-    <li id="online-user" data-testid="online-user"></li>
-  </ul>
+  <ul id="online-users"></ul>
   <ul id="messages"></ul>
   <form action="">
     <input
@@ -45,7 +43,7 @@
     const sendNickname = document.querySelector('#nickname-button');
     sendNickname.addEventListener('click', (e) => {
       e.preventDefault();
-      socket.nickname = inputNickname.value;;
+      socket.nickname = inputNickname.value;
       socket.emit('newNickname', socket.nickname);
       inputNickname.value = '';
       return false;
@@ -61,22 +59,38 @@
       // código baseado no seguinte site: https://www.codegrepper.com/code-examples/javascript/javascript+create+li+element+and+append+to+ul
     }
 
-    const renderOnlineUser = (user) => {
-      const onlineUserLi = document.getElementById("online-user");
-      onlineUserLi.innerText = user.nickname;
+    const renderOnlineUsers = (users) => {
+      const usersList = document.getElementById("online-users");
+
+      usersList.innerHTML = null;
+
+      const thisUser = users.find((user) => user.id === socket.id);
+      const thisUserLi = document.createElement('li');
+
+      thisUserLi.setAttribute('data-testId', 'online-user');
+      thisUserLi.innerText = socket.nickname;
+      usersList.appendChild(thisUserLi);
+
+      const AllTheOtherUsers = users.filter((user) => user.id !== socket.id);
+      AllTheOtherUsers.forEach((user) => {
+        const userLi = document.createElement('li');
+        userLi.setAttribute('data-testId', 'online-user');
+        userLi.innerText = user.nickname;
+        usersList.appendChild(userLi);
+      });
     }
 
     socket.on('setDefaultNickname', () => {
-      const defaultNickname = socket.id.slice(0, 16);
-      socket.nickname = defaultNickname;
-      socket.emit('newNickname', socket.nickname);
+      if (!socket.nickname) {
+        const defaultNickname = socket.id.slice(0, 16);
+        socket.nickname = defaultNickname;
+        socket.emit('newNickname', socket.nickname);
+      }
     });
     socket.on('message', (message) => appendMessageToUl(message));
-    socket.on('onlineUsers', (onlineUsers) => console.log(onlineUsers));
-    socket.on('onlineUser', (onlineUser) => {
-      if (onlineUser.id === socket.id) {
-        renderOnlineUser(onlineUser);
-      }
+    socket.on('onlineUsers', (onlineUsers) => {
+      renderOnlineUsers(onlineUsers);
+      console.log(onlineUsers);
     });
   </script>
 </body>

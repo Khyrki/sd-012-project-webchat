@@ -4,9 +4,25 @@
     <title>WebChat - Trybe</title>
   </head>
   <body>
+    <h3 id="currentUser" data-testid="online-user"></h3>
     <ul id="messages"></ul>
     <form action="">
-      <input id="messageInput" autocomplete="off" /><button>Send</button>
+      <input 
+        id="messageInput" 
+        autocomplete="off"
+        data-testid="message-box"
+      />
+      <button data-testid="send-button">Send</button>
+    </form>
+
+    <form action="" id = "formNick">
+      <input 
+        id="nickName" 
+        autocomplete="off"
+        data-testid="nickname-box"
+        placeholder="Insira seu nick"
+      />
+      <button data-testid="nickname-button">OK</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
     <script src='./chat.js'></script>

@@ -20,8 +20,11 @@ const formatTime = (currentDate) => {
 };
 
 module.exports = (io) => io.on('connection', (socket) => {
-  console.log(`Usuario conectou! ID: ${socket.id}`);
-  socket.emit('hello', 'Olá, seja bem vindo ao nosso chat público!');
+  const { id } = socket;
+  console.log(`Usuario conectou! ID: ${id}`);
+  const initialNick = id.slice(0, -4);
+  socket.emit('hello', 
+    { msg: 'Olá, seja bem vindo ao nosso chat público!', initialNick });
   socket.on('message', ({ chatMessage, nickname }) => {
     console.log(`O ${nickname} enviou a mensagem: ${chatMessage}`);
     io.emit('message', `${formatTime(new Date())} - ${nickname}: ${chatMessage}`);

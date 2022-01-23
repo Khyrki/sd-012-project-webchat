@@ -45,7 +45,18 @@ messageForm.addEventListener('submit', (e) => {
 });
 
 socket.on('userOnline', (users) => {
-  usersList = users;
+  let usersWithoutCurrentUser = [];
+  let currentUser = {};
+  users.forEach((user) => {
+    if (user.id === socket.id) {
+      currentUser = user;
+    } else {
+      usersWithoutCurrentUser = [...usersWithoutCurrentUser, user];
+    }
+  });
+
+  usersList = [currentUser, ...usersWithoutCurrentUser];
+
   const usersUl = document.querySelector('#users');
   usersUl.innerHTML = '';
 

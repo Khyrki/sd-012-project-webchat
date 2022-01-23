@@ -57,3 +57,18 @@ const createOnlineUserList = (onlineUsers) => {
   });
 };
 
+socket.on('welcome', (_message) => {
+  const randomName = socket.id.substring(0, 16);
+  setClientNickname(randomName);
+});
+
+socket.on('message', (message) => createChatMessage(message));
+
+socket.on('connection', (onlineUsers) => {
+  ulOnlineUsers.innerHTML = '';
+  createOnlineUserList(onlineUsers);
+});
+
+window.onbeforeunload = () => {
+  socket.disconnect();
+};

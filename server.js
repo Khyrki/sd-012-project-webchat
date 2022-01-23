@@ -9,12 +9,16 @@ const io = require('socket.io')(http, {
     methods: ['GET', 'POST'],
   } });
 
+const newNickname = require('./sockets/newNickname');
+
 const onlineUsers = [];
 
 io.on('connection', (socket) => {
   io.emit('setDefaultNickname');
-  onlineUsers.push({ id: socket.id, nickname: socket.nickname });
-  io.emit('onlineUsers', onlineUsers);
+
+  socket.on('newNickname', (nickname) => {
+    newNickname(io, socket, nickname, onlineUsers);
+  });
 
   socket.on('message', (message) => {
     const dateObj = new Date();

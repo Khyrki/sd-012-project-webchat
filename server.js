@@ -13,18 +13,23 @@ const io = require('socket.io')(http, {
 });
 
 io.on('connection', async (socket) => {
-  const allSockets = await io.allSockets();
+  // Everytime a user connects, sendo his id to him.
+  io.to(socket.id).emit('userConnected', socket.id);
 
-  io.sockets.emit('userJoined', [...allSockets]);
+  //
+  const allSockets = await io.allSockets();
+  io.emit('userJoined', [...allSockets]);
 
   socket.on('changedNickname', ({ oldNick, newNick }) => {
     console.log(socket.id);
   });
 
+  // When a user disconnects, broadcast the msg to all connected users
+  // firing the refreshOnlineUsers function.
   socket.on('disconnect', async () => {
     const sockets = await io.allSockets();
 
-    io.sockets.emit('userLeft', [...sockets]);
+    io.emit('userLeft', [...sockets]);
     socket.disconnect();
   });
 

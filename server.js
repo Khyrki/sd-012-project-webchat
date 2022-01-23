@@ -15,6 +15,6 @@ require('./sockets/chat')(io);
 
 const { PORT } = process.env || 3000;
 
-http.listen(3000, () => {
+http.listen(PORT, () => {
   console.log(`Servidor ouvindo na porta ${PORT}`);
 }); 

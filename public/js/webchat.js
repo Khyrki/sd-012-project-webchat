@@ -24,3 +24,14 @@ nicknameForm.addEventListener('submit', (e) => {
   return false;
 });
 
+const messageForm = document.querySelector('.message-form');
+const inputMessage = document.querySelector('.message-box');
+
+messageForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const chatMessage = inputMessage.value;
+  socket.emit('message', { chatMessage, nickname });
+  inputMessage.value = '';
+  return false;
+});
+

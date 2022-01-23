@@ -1,0 +1,11 @@
+<script>
+
+socket.on('message', (msg) => {
+    const sentMessagesUl = document.getElementById('messages');
+    const li = document.createElement('li');
+    li.dataset.testid = 'message';
+    li.append(msg);
+    sentMessagesUl.append(li);
+  });
+  
+</script>

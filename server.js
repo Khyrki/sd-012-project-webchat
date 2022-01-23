@@ -12,6 +12,7 @@ const io = require('socket.io')(http, {
     methods: ['GET', 'POST'],
   },
 });
+const root = require('./controller/root');
 
 require('./sockets/chat').chat(io);
 
@@ -20,8 +21,6 @@ app.set('views', './views');
 
 app.use(express.static(`${__dirname}/views`));
 
-app.get('/', (_req, res) => {
-  res.render('chat');
-});
+app.use('/', root);
 
 http.listen(PORT, () => console.log(`Ouvindo na porta: ${PORT}`));

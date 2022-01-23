@@ -1,0 +1,13 @@
+<script>
+
+socket.on('updateNameForAll', ({ oldUsername, newUsername }) => {
+    const users = getOnlineUsers();
+    for (let index = 0; index < users.length; index += 1) {
+      if (users[index].innerText === oldUsername) {
+        users[index].innerText = newUsername;
+        break;
+      }
+    }
+  });
+  
+</script>

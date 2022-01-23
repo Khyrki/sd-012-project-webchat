@@ -1,4 +1,4 @@
-const date = require('../../utils/createData');
+const date = require('../../utils/createDate');
 
 const chat = (io) => {
   io.on('connection', (socket) => {

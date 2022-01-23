@@ -1,32 +1,32 @@
 const socket = window.io();
-
-const userOnline = document.querySelector('[data-testid="online-user"]');
-const userList = document.getElementById('user-list');
-
+const userOnline = document.getElementById('user');
 const nickNameBox = document.querySelector('[data-testid="nickname-box"]');
 const nickNameBtn = document.querySelector('[data-testid="nickname-button"]');
-
 const sendMessageBtn = document.querySelector('[data-testid="send-button"]');
 const messageBox = document.querySelector('[data-testid="message-box"]');
-const messageList = document.getElementById('message');
+const userList = document.getElementById('user-list');
+const messageList = document.getElementById('message-list');
 
-socket.on('nickname', (nick) => {
-  userOnline.innerHTML = nick;
+socket.on('nickname', (nickname) => {
+  userOnline.innerHTML = nickname;
 });
 
-socket.on('userList', (listUser) => {
-  const list = JSON.parse(listUser);
+socket.on('userList', (listJson) => {
+  const list = JSON.parse(listJson);
   userList.innerHTML = '';
-  list.forEach((name) => {
-    const li = document.createElement('li');
-    li.innerHTML = name;
-    userList.appendChild(li);
-  });
+  userList.appendChild(userOnline);
+  list.filter((name) => name !== userOnline.innerHTML)
+    .forEach((name) => {
+      const li = document.createElement('li');
+      li.setAttribute('data-testid', 'online-user');
+      li.innerHTML = name;
+      userList.appendChild(li);
+    });
 });
 
-socket.on('message', (msg) => {
+socket.on('message', (message) => {
   const li = document.createElement('li');
-  li.innerHTML = msg;
+  li.innerHTML = message;
   li.setAttribute('data-testid', 'message');
   messageList.appendChild(li);
 });

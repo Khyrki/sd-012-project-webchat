@@ -1,8 +1,8 @@
 const { Router } = require('express');
-const chat = require('../controllers/chat');
+const getChat = require('../controllers/getChat');
 
 const router = Router();
 
-router.get('/', chat);
+router.get('/', getChat);
 
 module.exports = router;

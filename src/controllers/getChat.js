@@ -1,9 +1,9 @@
-const { OK, INTERNAL_SERVER_ERROR } = require('../errors/index');
+const { OK, INTERNAL_SERVER_ERROR } = require('../constants/status');
 const MessageModel = require('../models/MessageModel');
 
 const Message = new MessageModel();
 
-const chat = async (_req, res, _next) => {
+const getChat = async (_req, res, _next) => {
   try {
     const messages = await Message.find();
 
@@ -12,4 +12,4 @@ const chat = async (_req, res, _next) => {
     res.status(INTERNAL_SERVER_ERROR).render('error', { err });
   }
 };
-module.exports = chat;
+module.exports = getChat;

@@ -8,16 +8,21 @@
 </head>
 <body>
   <div id="room-container">
-    <div id="message">
-      <p data-testid="online-user"></p>
-      <form action="" id="user">
+    <div id="user-container">
+      <form action="">
         <input data-testid="nickname-box" type="text" placeholder="Insira seu nickname">
         <button data-testid="nickname-button" type="button">Salvar</button>
       </form>
-      <ul id="user-list"></ul>
+      <ul id="user-list">
+        <li id="user" data-testid="online-user"></li>
+      </ul>
     </div>
     <div id="messages-container">
-      <ul id="message-list"></ul>
+      <ul id="message-list">
+        <% messages.forEach(({ message, nickname, timestamp }) => { %>
+          <li data-testid="message"><%= `${timestamp} - ${nickname} ${message}` %></li>
+        <% }) %>
+      </ul>
     </div>
     </div>
   <form id="message-container">

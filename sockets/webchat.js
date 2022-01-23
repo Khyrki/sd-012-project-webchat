@@ -21,3 +21,27 @@ const updateNicknameSocket = (io, socket) => {
   });
 };
 
+module.exports = (io) => {
+  io.on('connection', (socket) => {
+    const client = {
+      nickname: socket.id.substring(0, 16),
+      id: socket.id,
+    };
+
+    onlineUsers.push(client);
+    console.log(`${socket.id} just arrived.`);
+
+    socket.emit('welcome', `${socket.id} just arrived.`);
+    io.emit('connection', onlineUsers);
+
+    messageSocket(io, socket);
+    updateNicknameSocket(io, socket);
+
+    socket.on('disconnect', () => {
+      onlineUsers.forEach(({ id }, index) => {
+        if (socket.id === id) onlineUsers.splice(index, 1);
+      });
+      io.emit('connection', onlineUsers);
+    });
+  });
+};

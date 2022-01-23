@@ -13,13 +13,12 @@ const createLi = (liText, ulId, dataTextId) => {
   ul.appendChild(li);
 };
 
-socket.on('reconnect', (messages) => messages.forEach((msg) => {
-  const { message, nickname, timestamp } = msg;
-
-  const chatMessage = `${timestamp} - ${nickname}: ${message}`;
-
-  createLi(chatMessage, '#messages', 'message');
-}));
+socket.on('reconnect', (messages) => messages
+  .forEach(({ message, nickname, timestamp }) => createLi(
+    `${timestamp} - ${nickname}: ${message}`,
+    '#messages',
+    'message',
+)));
 
 let usersList = [];
 
@@ -54,5 +53,3 @@ socket.on('userOnline', (users) => {
 });
 
 socket.on('message', (chatMessage) => createLi(chatMessage, '#messages', 'message'));
-
-window.onbeforeunload = (_e) => socket.disconnect();

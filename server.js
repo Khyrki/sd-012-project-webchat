@@ -1,7 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
-const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
@@ -17,19 +14,10 @@ const io = require('socket.io')(server, {
   },
 });
 
-app.use(cors());
 app.use(express.static(`${__dirname}/views`));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
-app.set('view engine', 'ejs');
-
-app.set('views', './views');
 
 require('./sockets')(io);
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
+app.get('/', (_req, res) => res.sendFile(`${__dirname}/views/index.html`));
 
 server.listen(PORT, () => console.log(`Servidor ouvindo na porta ${PORT}`));

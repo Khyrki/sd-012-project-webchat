@@ -13,7 +13,7 @@ const io = require('socket.io')(http, {
 
 require('./sockets/chat')(io);
 
-const { PORT } = process.env || 3000;
+const PORT = process.env.PORT || 3000;
 
 http.listen(PORT, () => {
   console.log(`Servidor ouvindo na porta ${PORT}`);

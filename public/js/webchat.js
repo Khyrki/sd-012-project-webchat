@@ -35,3 +35,12 @@ messageForm.addEventListener('submit', (e) => {
   return false;
 });
 
+const ulMessageList = document.querySelector('.message-list');
+
+const createChatMessage = (message) => {
+  const li = document.createElement('li');
+  li.innerText = message;
+  li.setAttribute('data-testid', 'message');
+  ulMessageList.appendChild(li);
+};
+

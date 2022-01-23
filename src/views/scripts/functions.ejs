@@ -1,0 +1,34 @@
+<script>
+
+  const setNickname = (nickname) => {
+    const nicknameSpan = document.getElementById('nickname');
+    nicknameSpan.innerText = nickname;
+  };
+
+  const userExists = (username) => {
+    const users = getOnlineUsers();
+    for (let index = 0; index < users.length; index += 1) {
+      if (users[index].innerText === username) return true;
+    }
+    return false;
+  };
+
+  const addUserToOnlineBoard = (username) => {
+    const onlineUsersUl = document.getElementById('onlineUsers');
+    const li = document.createElement('li');
+    li.dataset.testid = 'online-user';
+    li.innerText = username;
+    onlineUsersUl.append(li);
+  };
+
+  const getOnlineUsers = () => {
+    const loggedUsersUl = document.getElementById('onlineUsers');
+    return loggedUsersUl.children;
+  };
+
+  const getUsername = () => {
+    const usernameSpan = document.getElementById('nickname');
+    return usernameSpan.innerText;
+  };
+
+</script>

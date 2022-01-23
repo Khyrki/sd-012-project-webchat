@@ -28,17 +28,22 @@ const io = require('socket.io')(socketIoServer, {
 
 io.on('connection', (socket) => {
   console.log(`Uma nova conexão com ${socket.id} foi estabelecida!`);
-
-  socket.on('userLogin', (user) => {
-    userList.push(user);
-    io.emit('serverLogin', user);
+  socket.on('teste', (name) => {
+    userList.push({ name, id: socket.id });
+    io.emit('serverLogin', name);
   });
-
+  socket.on('userLogin', (userName) => {
+    // userList.forEach((user) => {
+    //   if (user.id === socket.id) {
+    //     user.name = userName;
+    //   }
+    // });
+    io.emit('serverLogin', userName);
+  });
   socket.on('message', ({ nickname, chatMessage }) => {
     const date = generateDate();
-    const message = `${date} - ${nickname}: ${chatMessage}`;
-    messageList.push(message);
-    io.emit('message', message);
+    messageList.push(`${date} - ${nickname}: ${chatMessage}`);
+    io.emit('message', `${date} - ${nickname}: ${chatMessage}`);
   });
 });
 

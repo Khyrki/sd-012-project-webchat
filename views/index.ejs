@@ -13,24 +13,26 @@
     <div>
       <div>
         <form id="userForm" action="">
-          <input id="userInput" autocomplete="off" /><button>Salvar</button>
+          <input id="userInput" data-testid="nickname-box" />
+          <button data-testid="nickname-button">Salvar</button>
         </form>
         <ul id="users">
           <% userList.forEach(user => { %>
-            <li><%= user %></li>
+            <li data-testid="online-user" ><%= user.name %></li>
           <% }) %>
         </ul>
       </div>
       <div>
         <ul id="messages">
           <% messageList.forEach(message => { %>
-            <li><%= message %></li>
+            <li data-testid="message" ><%= message %></li>
           <% }) %>
         </ul>
       </div>
     </div>
     <form id="messageForm" action="">
-      <input id="messageInput" autocomplete="off" /><button>Enviar</button>
+      <input id="messageInput" data-testid="message-box" />
+      <button data-testid="send-button" >Enviar</button>
     </form>
   </div>
   <script>
@@ -39,10 +41,14 @@
     const userInput = document.getElementById('userInput');
     const messageForm = document.getElementById('messageForm');
     const messageInput = document.getElementById('messageInput');
-    let nickname = ''
+    // String gerada com base no codigo encontrado em https://gist.github.com/6174/6062387
+    let nickname = Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10);
 
-    const createList = (text, list) => {
+    socket.emit('teste', nickname)
+
+    const createList = (text, list, id) => {
       const li = document.createElement('li');
+      li.setAttribute('data-testid', id)
       const liText = document.createTextNode(`${text}`);
       li.appendChild(liText);
       document.getElementById(list).appendChild(li);
@@ -66,8 +72,8 @@
       return false;
     });
 
-    socket.on('serverLogin', (user) => { createList(user, 'users') });
-    socket.on('message', (message) => { createList(message, 'messages') });
+    socket.on('serverLogin', (user) => { createList(user, 'users', 'online-user') });
+    socket.on('message', (message) => { createList(message, 'messages', 'message') });
   </script>
 </body>
 </html>

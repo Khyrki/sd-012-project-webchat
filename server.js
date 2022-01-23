@@ -2,6 +2,8 @@ const express = require('express');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 
+const chatHandler = require('./sockets/chat');
+
 const { PORT = 3000 } = process.env;
 
 const app = express();
@@ -13,7 +15,9 @@ const io = new Server(httpServer, {
   },
 });
 
-const onConnection = (_socket) => { };
+const onConnection = (socket) => {
+  chatHandler(io, socket);
+};
 
 io.on('connection', onConnection);
 

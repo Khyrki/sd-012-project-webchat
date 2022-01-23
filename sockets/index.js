@@ -13,6 +13,7 @@ const nickNameUpdate = (id, newName) => users.map((user) => {
 
 module.exports = (io) => io.on('connection', async (socket) => {
   const messages = await searchAll();
+
   socket.emit('reconnect', messages);
 
   users = [{ id: socket.id, nickname: socket.id.slice(0, 16) }, ...users];

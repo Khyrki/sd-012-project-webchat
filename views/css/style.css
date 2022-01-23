@@ -1,0 +1,89 @@
+body {
+  margin: 0px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.border {
+  border: 1px solid black;
+}
+
+.container {
+  display: flex;
+  padding: 5px;
+  height: 90vh;
+  justify-content: space-around;
+}
+
+.sing {
+  padding: 5px;
+}
+
+#user {
+  width: 80%;
+  padding: 5px;
+}
+
+#save {
+  margin: 5;
+  width: 10%;
+  padding: 5px;
+}
+
+.users {
+  width: 47vw;
+  height: 80vh;
+  padding: 5px;
+  margin: 5px;
+  overflow-y: scroll;
+}
+
+.users > div {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.chat {
+  padding: 5px;
+  width: 47vw;
+  overflow-y: scroll;
+}
+
+.chat > div {
+  padding: 15px 10px;
+  color: white;
+}
+
+.broadcast {
+  background-color: #999999 !important;
+  color: black !important;
+}
+
+.chat > div:nth-child(even) {
+  background-color: #303030;
+}
+
+.chat > div:nth-child(odd) {
+  background-color: #252525;
+}
+
+.message-box {
+  padding: 5px;
+  margin: 0px 10px;
+  display: flex;
+  justify-content: space-around;
+}
+
+#message {
+  padding: 5px;
+  width: 85%;
+  height: 5vh;
+  font-size: 16px;
+}
+
+#send {
+  width: 10%;
+  font-size: 16px;
+}
+

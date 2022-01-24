@@ -6,7 +6,7 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
-const { PORT } = process.env || 3000;
+const { PORT } = process.env;
 
 app.use(cors());
 
@@ -25,6 +25,6 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/public/index.html'));
 });
 
-http.listen(PORT, () => {
+http.listen(PORT || 3000, () => {
   console.log(`Servidor conectado na porta ${PORT}`);
 });

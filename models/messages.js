@@ -5,8 +5,7 @@ const COLLECTION = 'messages';
 async function createNewMessage(messageData) {
   return connection()
     .then((db) => db.collection(COLLECTION)
-      .insertOne(messageData))
-    .then((result) => result.ops);
+      .insertOne(messageData));
 }
 
 async function getAllMessages() {

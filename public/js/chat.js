@@ -36,7 +36,13 @@ const createMessage = (message) => {
   messagesUl.appendChild(li);
 };
 
-socket.on('clientMessage', (message) => createMessage(message));
+socket.on('connection', (messages) => messages.forEach((message) => {
+  socket.emit('history', {
+    chatMessage: message.message, nickname: message.nickname, timestamp: message.timestamp });
+  return false;
+}));
+
+socket.on('message', (message) => createMessage(message));
 
 userform.addEventListener('submit', (e) => {
   e.preventDefault();

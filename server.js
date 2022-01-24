@@ -7,9 +7,9 @@ const cors = require('cors');
 const app = express();
 const http = require('http').createServer(app);
 
+app.use(express.static(`${__dirname}/public`));
 app.use(cors());
 app.use(express.json());
-app.use(express.static(`${__dirname}/public`));
 
 app.set('view engine', 'ejs');
 
@@ -24,7 +24,7 @@ const io = require('socket.io')(http, {
   const { getHistory } = require('./controllers/history');
   
   require('./sockets/chat')(io);
-
+  
   app.get('/', getHistory);
 
   const PORT = process.env.PORT || 3000;

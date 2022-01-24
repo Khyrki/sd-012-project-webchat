@@ -36,6 +36,13 @@ const moveNickName = (arr, from, to) => {
   return arr;
 };
 
+// https://qastack.com.br/programming/3955229/remove-all-child-elements-of-a-dom-node-in-javascript
+const clearUsers = () => {
+  while (nickLists.firstChild) {
+    nickLists.removeChild(nickLists.lastChild);
+  }
+};
+
 buttonForm.addEventListener('click', (e) => {
 e.preventDefault();
 
@@ -66,6 +73,7 @@ socket.on('connect', () => {
 });
 
 socket.on('usersList', (nicks) => {
+  clearUsers();
   const nickname = sessionStorage.getItem('nickname');
   const index = nicks.findIndex((nick) => nick === nickname);
   const newPosition = moveNickName(nicks, index, 0);
@@ -74,7 +82,8 @@ socket.on('usersList', (nicks) => {
 
 socket.on('message', (msg) => createMessage(msg));
 
-socket.on('disconnect', () => {
+window.onbeforeunload = () => {
   const nickname = sessionStorage.getItem('nickname');
   socket.emit('disconnect', nickname);
-});
+  socket.disconnect();
+};

@@ -69,7 +69,5 @@ inputMessage.addEventListener('keypress', onMessage);
 sendButton.addEventListener('click', onMessage);
 
 socket.on('serverMessage', (message) => {
-  const div = createDiv(message);
-  div.setAttribute('class', 'broadcast');
-  chat.appendChild(div);
+  insertDiv(`[ Server ] ${message}`, chat, 'message');
 });

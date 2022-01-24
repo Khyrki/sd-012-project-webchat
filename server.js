@@ -7,7 +7,7 @@ app.use(express.json());
 
 const PORT = 3000;
 
-const userList = [];
+let userList = [];
 let messageList = [];
 
 const generateDate = () => {
@@ -33,26 +33,56 @@ const renderMessages = async () => {
   `${message.timestamp} - ${message.nickname}: ${message.message}`);
 };
 
-io.on('connection', async (socket) => {
-  console.log(`Uma nova conexão com ${socket.id} foi estabelecida!`);
+const onLogin = (socket) => {
   socket.on('login', (name) => {
     userList.push({ name, id: socket.id });
     io.emit('serverLogin', name);
   });
+};
+
+const onUserLogin = (socket, socketIo) => {
   socket.on('userLogin', (userName) => {
-    // userList.forEach((user) => {
-    //   if (user.id === socket.id) {
-    //     user.name = userName;
-    //   }
-    // });
-    io.emit('serverLogin', userName);
+    const userFound = userList.find((user) => user.id === socket.id);
+    if (userFound) {
+      const { name } = userFound;
+      userList = userList.map((user) => {
+        if (user.id === socket.id) {
+          return { ...user, name: userName };
+        }
+        return user;
+      });
+      socketIo.emit('updateLogin', { name, userName });
+    }
   });
+};
+
+const onMessage = (socket, socketIo) => {
   socket.on('message', ({ nickname, chatMessage }) => {
     const date = generateDate();
     postMessage({ message: chatMessage, nickname, timestamp: date });
-    // messageList.push(`${date} - ${nickname}: ${chatMessage}`);
-    io.emit('message', `${date} - ${nickname}: ${chatMessage}`);
+    socketIo.emit('message', `${date} - ${nickname}: ${chatMessage}`);
   });
+};
+
+const onDisconnect = (socket, socketIo) => {
+  socket.on('disconnect', () => {
+    console.log(`${socket.id} foi desconectado!`);
+    const index = userList.findIndex((user) => user.id === socket.id);
+    const userFound = userList.find((user) => user.id === socket.id);
+    userList.splice(index, 1);
+    if (userFound) {
+      socketIo.emit('removeUser', userFound.name);
+    }
+  });
+};
+
+io.on('connection', async (socket) => {
+  console.log(`Uma nova conexão com ${socket.id} foi estabelecida!`);
+
+  onLogin(socket);
+  onUserLogin(socket, io);
+  onMessage(socket, io);
+  onDisconnect(socket, io);
 });
 
 app.get('/', async (_req, res) => {

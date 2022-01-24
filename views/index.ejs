@@ -17,7 +17,9 @@
           <button data-testid="nickname-button">Salvar</button>
         </form>
         <ul id="users">
-          
+          <% userList.forEach(user => { %>
+            <li id="<%= user.name %>" name="user" data-testid="online-user"><%= user.name %></li>
+          <% }) %>
         </ul>
       </div>
       <div>
@@ -44,12 +46,39 @@
 
     socket.emit('login', nickname)
 
-    const createList = (text, list, id) => {
+    const createMessages = (text, list, id) => {
       const li = document.createElement('li');
+      li.setAttribute('id', text)
       li.setAttribute('data-testid', id)
       const liText = document.createTextNode(`${text}`);
       li.appendChild(liText);
-      document.getElementById(list).appendChild(li);
+      document.getElementById(list).appendChild(li)
+    }
+
+    const createUsers = (text, list, id) => {
+      const li = document.createElement('li');
+      const user = document.getElementsByName("user")[0]
+      li.setAttribute('id', text)
+      li.setAttribute('data-testid', id)
+      const liText = document.createTextNode(`${text}`);
+      li.appendChild(liText);
+      if(user) {
+        document.getElementById(list).insertBefore(li, user)
+      } else {
+        document.getElementById(list).appendChild(li)
+      }
+    }
+
+    const RemoveUser = (id) => {
+      const ul = document.getElementById('users');
+      const li = document.getElementById(id);
+      ul.removeChild(li);
+    }
+
+    const updateUser = (id, newName) => {
+      const li = document.getElementById(id);
+      li.setAttribute('id', newName)
+      li.innerText = `${newName}`;
     }
 
     userForm.addEventListener('submit', (e) => {
@@ -70,8 +99,10 @@
       return false;
     });
 
-    socket.on('serverLogin', (user) => { createList(user, 'users', 'online-user') });
-    socket.on('message', (message) => { createList(message, 'messages', 'message') });
+    socket.on('serverLogin', (user) => { createUsers(user, 'users', 'online-user') });
+    socket.on('message', (message) => { createMessages(message, 'messages', 'message') });
+    socket.on('removeUser', (user) => { RemoveUser(user) });
+    socket.on('updateLogin', ({ name, userName }) => { updateUser(name, userName) });
   </script>
 </body>
 </html>

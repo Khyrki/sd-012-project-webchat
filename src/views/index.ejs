@@ -47,8 +47,6 @@
       overflow: auto;
       background-color: mintcream;
       transition: 500ms cubic-bezier(0.75,-1,0,1.75);
-      perspective: 5000px;
-      /* flex: 1; */
     }
 
     .chat__box.close {
@@ -113,7 +111,12 @@
     }
 
     .chat__nickname-input {
-      padding: 2px 6px;
+      flex-grow: 1;
+      padding: 4px;
+      border: none;
+      border: 1px solid silver;
+      border-radius: 2px;
+      outline: none;
     }
 
     .chat__nickname-button {
@@ -125,6 +128,11 @@
       font-size: 1rem;
       color: white;
       transition: 100ms;
+    }
+
+    .chat__nickname-button:active {
+      box-shadow: none;
+      transform: scale(.99);
     }
 
     .chat__online-users {
@@ -180,7 +188,7 @@
       <ul class="chat__online-users"></ul>
     </div>
     <form class="chat__config-form" action="">
-      <label for="nickname">Nickname:</label>
+      <label for="nickname"><strong>Nickname:</strong></label>
       <input class="chat__nickname-input" id="nickname" type="text" data-testid="nickname-box">
       <button class="chat__nickname-button" data-testid="nickname-button">Salvar</button>
     </form>
@@ -201,12 +209,12 @@
     const chatForm = document.querySelector('.chat__form');
     const chatInput = document.querySelector('.chat__chat-input');
     const chatButton = document.querySelector('.chat__chat-button');
-    
-    // chatConfigForm.addEventListener('click', () => chatBox.classList.toggle('close'));
 
-    const getNickname = (nickname) => {
-      const alpha = nickname.replace(/[_-]/g, '').slice(0, 16);
-      sessionStorage.setItem('nickname', alpha)
+    const generateNickname = (nickname) => {
+      const alpha = nickname.slice(0, 16);
+      if (!sessionStorage.getItem('nickname')) {
+        sessionStorage.setItem('nickname', alpha)
+      }
     };
 
     chatForm.addEventListener('submit', (e) => {
@@ -223,8 +231,10 @@
       e.preventDefault();
       const oldNick = sessionStorage.getItem('nickname');
       const newNick = chatNicknameInput.value;
+      if (!newNick.length) return;
       chatNicknameInput.value = '';
       sessionStorage.setItem('nickname', newNick);
+      socket.emit('changedNickname', ({ oldNick, newNick }));
     })
 
     const insertMessage = (userMessage) => {
@@ -248,12 +258,18 @@
         const alpha = user.replace(/[-_]/g, '').slice(0, 16);
         chatUsers.innerHTML += `<li data-testid="online-user">${alpha}</li>`
       }
+    }
+
+    const userChangedNickname = ({ oldNick, newNick }) => {
+      const onlineUsers = [...document.querySelectorAll('.chat__online-users li')];
+      const findUser = onlineUsers.find((user) => user.innerText === oldNick);
+      findUser.innerText = newNick;
+      findUser.id = newNick;
     };
 
-    
-
-    socket.on('userConnected', getNickname);
+    socket.on('userConnected', generateNickname);
     socket.on('message', insertMessage);
+    socket.on('changedNickname', userChangedNickname);
     socket.on('userJoined', refreshOnlineUsersList);
     socket.on('userLeft', refreshOnlineUsersList);
   </script>

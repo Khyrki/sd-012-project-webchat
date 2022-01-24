@@ -1,6 +1,10 @@
+const userModel = require('../models/userModel');
+const messageModel = require('../models/messageModel');
+
 function client(socket) {
-  socket.on('userAdd', async (nickname) => {
-    socket.broadcast.emit('serverMessage', nickname);
+  socket.on('user', async (nickname) => {
+    socket.broadcast.emit('newUser', nickname);
+    // await userModel.create(socket.id, nickname);
   });
 }
 

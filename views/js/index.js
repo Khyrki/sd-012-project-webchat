@@ -1,82 +1,66 @@
 const socket = window.io();
-const users = require('./user');
-const message = require('./message');
 
-
-const sendButton = document.getElementById('send');
-const inputMessage = document.getElementById('message');
-
-const chat = document.querySelector('.chat');
-
-function createDiv(value, testId = null) {
+// Functions
+function insertDiv(testId, text, element) {
   const div = document.createElement('div');
+  div.setAttribute('data-testid', testId);
+  div.innerText = text;
 
-  if (testId !== null) {
-    div.setAttribute('data-testid', testId);
-  }
-
-  div.innerText = value;
-  return div;
-}
-
-function getInput(target) {
-  if (target.type === 'text') {
-    return target;
-  }
-
-  return target.previousElementSibling;
-}
-
-function insertDiv(text, element, testId) {
-  const div = createDiv(text, testId);
   element.appendChild(div);
 }
 
-function sendEvent(id, value) {
-  const socketEvents = {
-    user() {
-      socket.emit('userAdd', value);
-    },
+// User
+const users = document.querySelector('.users');
+const inputNick = document.getElementById('user');
+const saveButton = document.getElementById('save');
 
-    message() {
-      socket.send(value);
-    },
-  };
-
-  const emitEvent = socketEvents[id];
-  emitEvent();
+function getNickname() {
+  return inputNick.value;
 }
 
-function onInputEvent({ target, key }, element, testId) {
-  if (!key || key === 'Enter') {
-    const inputElement = getInput(target);
-    const { id, value } = inputElement;
-    inputElement.value = '';
+function insertUser(text) {
+  insertDiv('online-user', text, users);
+}
 
-    insertDiv(value, element, testId);
-    sendEvent(id, value);
+saveButton.addEventListener('click', () => {
+  const nickname = getNickname();
+  if (nickname !== undefined) {
+    socket.emit('user', nickname);
   }
+});
+
+socket.on('newUser', (nickname) => {
+  insertUser(nickname);
+});
+
+// Message
+const chat = document.querySelector('.chat');
+const sendButton = document.getElementById('send');
+const inputMessage = document.getElementById('message');
+
+function getChatMessage() {
+  return inputMessage.value;
 }
 
-function onUser(event) {
-  onInputEvent(event, users, 'online-user');
+function insertMessage(text) {
+  insertDiv('message', text, chat);
+  inputMessage.value = '';
 }
 
-function onMessage(event) {
-  onInputEvent(event, chat, 'message');
-}
-
-inputName.addEventListener('keypress', onUser);
-saveButton.addEventListener('click', onUser);
-
-inputMessage.addEventListener('keypress', onMessage);
-sendButton.addEventListener('click', onMessage);
-
-socket.on('serverMessage', (nickname) => {
-  const div = createDiv(nickname, 'online-user');
-  insertDiv(nickname, users, 'online-user');
+sendButton.addEventListener('click', () => {
+  const nickname = getNickname();
+  const chatMessage = getChatMessage();
+  if (chatMessage !== undefined) {
+    socket.send({ nickname, chatMessage });
+  }
 });
 
 socket.on('message', (message) => {
-  insertDiv(`${}, ${message}`, chat, 'message');
+  insertMessage(message);
 });
+
+// socket.on('listMessage', (messages) => {
+  // messages.forEach((message) => {
+    // insertMessage(message);
+  // });
+// });

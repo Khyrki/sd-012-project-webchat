@@ -1,13 +1,18 @@
-function client(socket) {
-  socket.on('message', ({ nickname, message }) => {
-    const userMessage = {
-      date: new Date(),
-      nickname,
-      message,
-    };
+const userModel = require('../models/userModel');
+const messageModel = require('../models/messageModel');
 
-  socket.broadcast.send(message);
-  socket.send(message);
+function client(socket) {
+  socket.on('message', async ({ nickname, chatMessage }) => {
+    const dateFormatted = new Date().toLocaleString();
+    const messageFormatted = `${dateFormatted} - ${nickname} ${chatMessage}`;
+
+    // const user = await userModel.find(socket.id);
+    // console.log(user);
+    // const msg = await messageModel.create(chatMessage);
+    // console.log(msg);
+
+    socket.broadcast.send(messageFormatted);
+    socket.send(messageFormatted);
   });
 }
 

@@ -10,6 +10,45 @@
         <input type="text" id="inputNickname" data-testid="nickname-box" placeholder="digite seu nick" />
         <button type="submit" id="nicknameBtn" data-testid="nickname-button">Salvar</button>
         <ul id="nicknames-ul">
+          <li id="nickname-li" data-testid="online-user"></li>
+        </ul>
+      </form>
+      <form id="messageForm">
+        <input type="text" id="inputMessage" data-testid="message-box" placeholder="digite sua mensagem" />
+        <button type="submit" id="sendBtn" data-testid="send-button">Enviar</button>
+        <ul id="messages-ul">
+          <% messages.forEach(({ timestamp, nickname, message}) => { %>            
+            <li data-testid="message"> <%= `${timestamp} - ${nickname}: ${message}` %> </li>
+          <% }) %>
+        </ul>
+      </form>
+      <section>
+        <h2>Usuários Online</h2>
+        <ul>
+          <li id='userTag'></li>
+        </ul>
+        <ul id='usersOnline-ul'>
+        </ul>
+      </section>
+    </body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="text/javascript" src="../scripts.js"></script>
+</body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>WEBCHAT</title>
+</head>
+<body>
+  <section>
+    <body>
+      <form id="nickNameForm">
+        <input type="text" id="inputNickname" data-testid="nickname-box" placeholder="digite seu nick" />
+        <button type="submit" id="nicknameBtn" data-testid="nickname-button">Salvar</button>
+        <ul id="nicknames-ul">
           <li id="nickname-li" data-testid="online-user"><%= nickname %></li>
         </ul>
       </form>
@@ -17,17 +56,19 @@
         <input type="text" id="inputMessage" data-testid="message-box" placeholder="digite sua mensagem" />
         <button type="submit" id="sendBtn" data-testid="send-button">Enviar</button>
         <ul id="messages-ul">
-
-          <% messages.forEach(({ timestamp, nickname, message}) => { %>
-            
+          <% messages.forEach(({ timestamp, nickname, message}) => { %>            
             <li data-testid="message"> <%= `${timestamp} - ${nickname}: ${message}` %> </li>
-          
           <% }) %>
-
         </ul>
       </form>
+      <section>
+        <h2>Usuários Online</h2>
+        <ul id='usersOnline-ul'>
+          <li id='userTag'><%= nickname %></li>
+        </ul>
+      </section>
     </body>
   <script src="/socket.io/socket.io.js"></script>
   <script type="text/javascript" src="../scripts.js"></script>
 </body>
-</html>
+</html> -->

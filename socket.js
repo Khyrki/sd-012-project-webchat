@@ -3,7 +3,9 @@ const { getAllMessages, createNewMessage } = require('./models/messages');
 
 module.exports = (io) => io.on('connection', async (socket) => {
   const allMessages = await getAllMessages();
-  socket.emit('connection', allMessages);
+  if (allMessages[0]) {
+    socket.emit('connection', allMessages);
+  }
   socket.emit('newUser');
 
   socket.on('message', async ({ chatMessage, nickname }) => {
@@ -16,6 +18,6 @@ module.exports = (io) => io.on('connection', async (socket) => {
 
   socket.on('history', ({ chatMessage, nickname, timestamp }) => {
     const message = `${timestamp} - ${nickname}: ${chatMessage}`;
-    io.emit('clientMessage', message);
+    io.emit('message', message);
   });
 });

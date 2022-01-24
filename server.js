@@ -7,9 +7,11 @@ const moment = require('moment');
 const cors = require('cors');
 const io = require('socket.io')(http, {
   cors: { origin: 'http://localhost:3000', method: ['GET', 'POST'] } });
-const { addMessage } = require('./src/models/chat');
+const { addMessage, getMessages } = require('./src/models/chat');
 
 io.on('connection', async (socket) => {
+  const history = await getMessages();
+  io.emit('messagesHistory', history);
   // Everytime a user connects, send his id.
   io.to(socket.id).emit('userConnected', socket.id);
 

@@ -13,6 +13,17 @@ const addMessage = async (timestamp, message, nickname) => {
   }
 };
 
+const getMessages = async () => {
+  try {
+    const db = await connection();
+    const docs = await db.collection('messages').find().toArray();
+    return docs;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   addMessage,
+  getMessages,
 };

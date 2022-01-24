@@ -267,6 +267,16 @@
       findUser.id = newNick;
     };
 
+    const renderMessages = (messages) => {
+      messages.forEach(({ message, nickname, timestamp }) => {
+        const li = document.createElement('li');
+        li.setAttribute('data-testid', 'message');
+        li.innerText = `${timestamp} - ${nickname}: ${message}`;
+        chatBox.appendChild(li);
+      });
+    }
+
+    socket.on('messagesHistory', renderMessages);
     socket.on('userConnected', generateNickname);
     socket.on('message', insertMessage);
     socket.on('changedNickname', userChangedNickname);

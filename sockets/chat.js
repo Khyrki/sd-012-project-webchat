@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function */
 const moment = require('moment');
 const { saveMsgs } = require('../helpers/api');
 
@@ -6,7 +5,6 @@ const timestamp = moment().format('DD-MM-YYYY HH:mm:ss');
 let users = [];
 
 module.exports = (io) => io.on('connection', (socket) => {
-  console.log(`${socket.id} entrou na sala!`)
   let randomNick = socket.id.slice(0, 16);
   users.unshift(randomNick);
 

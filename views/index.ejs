@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Webchat</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
+</head>
+<body>
+  <form id="chat">
+    <span data-testid="username"></span>
+    <div id="messages">
+      <ul id="message-list">
+        <% messages.forEach(({ message, nickname, timestamp }) => { %>
+          <li data-testid="message"><%= `${nickname}: ${message}` %></li>
+        <% }) %>
+      </ul>
+    </div>
+    <input type="text" data-testid="message-box" id="message-input" placeholder="Envie a mensagem aqui">
+    <button type="submit" id="nessage-btn" data-testid="send-button">Enviar</button>
+  </form>
+
+  <form id="nick-change">
+    <input type="text" data-testid="nickname-box" id="nick-input" placeholder="Insira seu nick aqui">
+    <button data-testid="nickname-button">Alterar nick</button>
+  </form>
+
+  <ul id="user-list">
+    <% onlineUsers.forEach(({ nickname, user }) => { %>
+      <li data-testid="online-user" id="<%= `${user}` %>"><%= `${nickname}` %></li>
+    <% }) %>
+  </ul>
+
+  <script type="text/javascript">
+    const socket = io('http://localhost:3000');
+
+    let nickname;
+    document.querySelector('span').innerText = nickname;
+
+    document.querySelector('#nick-change').addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const newNick = document.querySelector('#nick-input').value;
+
+      if (newNick) {
+        socket.emit('user-change', newNick);
+        const editedElement = document.createElement('h5');
+        editedElement.innerHTML = 'edited';
+        editedElement.setAttribute('display', 'none');
+        document.querySelector('body').appendChild(editedElement);
+      }
+    })
+
+    document.querySelector('#chat').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const message = document.querySelector('#message-input').value;
+
+      if (message) {
+        const messageObject = {
+          chatMessage: message,
+          nickname,
+        }
+        socket.emit('message', messageObject);
+      }
+    });
+
+    socket.on('message', (msg) => {
+      const messageElement = document.createElement('li');
+      messageElement.innerHTML = msg;
+      messageElement.setAttribute("data-testid", "message");
+      document.querySelector('#message-list').appendChild(messageElement);
+    });
+
+    socket.on('user-In', (user) => {
+      nickname = user.slice(0, 16);
+      const userElement = document.createElement('li');
+      userElement.innerHTML = nickname;
+      userElement.setAttribute("data-testid", "online-user");
+      userElement.setAttribute("id", user);
+      document.querySelector('#user-list').appendChild(userElement);
+      if (!document.querySelector('h5')) {
+        document.querySelector('#user-list').insertBefore(userElement, document.querySelector('#user-list li'));
+      }
+      document.querySelector('span').innerText = nickname;
+    });
+
+    socket.on('user-change', (newNick, socketId) => {
+      const userElement = document.getElementById(socketId);
+      userElement.innerHTML = newNick;
+      nickname = newNick;
+    });
+
+    socket.on('user-Out', (user) => {
+      const userElement = document.getElementById(user);
+      userElement.remove();
+    });
+  </script>
+</body>
+</html>

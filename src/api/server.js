@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const http = require('http').createServer(app);
-// const path = require('path');
+const path = require('path');
 
 const PORT = process.env.PORT || 3000;
 
@@ -15,14 +15,19 @@ const io = require('socket.io')(http, {
   },
 });
 
+const { renderChat } = require('./controllers/chatController');
+
 app.use(cors());
+
 require('./sockets/chat')(io);
 
-app.use(express.static(`${__dirname}/views`));
+app.set('view engine', 'ejs');
 
-app.get('/', (req, res) => {
-  res.sendFile(`${__dirname}/views/chat.html`);
-});
+app.set('views', path.join(__dirname, 'views'));
+
+app.use(express.static(path.join(__dirname, 'views')));
+
+app.get('/', renderChat);
 
 http.listen(PORT, () => {
   console.log(`httpServer is listening on port ${PORT}`);

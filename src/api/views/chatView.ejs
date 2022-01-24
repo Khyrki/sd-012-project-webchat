@@ -5,7 +5,13 @@
   </head>
   <body>
     <h3 id="currentUser" data-testid="online-user"></h3>
-    <ul id="messages"></ul>
+    <ul id="messages">
+      <% msgs.forEach((msg) => { %>
+        <li data-testid="message">
+          <%= `${msg.timestamp} - ${msg.nickname}: ${msg.message}` %>
+        </li>
+      <% }) %>
+    </ul>
     <form action="">
       <input 
         id="messageInput" 

@@ -34,8 +34,8 @@ const createInitialNick = (nick) => {
   currentUser.innerText = nick;
 };
 
-socket.on('hello', ({ msg, initialNick }) => {
-  createMessage(msg);
+socket.on('hello', ({ _msg, initialNick }) => {
+  // createMessage(msg);
   createInitialNick(initialNick);
 });
 socket.on('message', (message) => createMessage(message));

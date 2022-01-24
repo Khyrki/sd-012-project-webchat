@@ -9,7 +9,7 @@ const inputNickName = document.querySelector('#nickname-box');
 const nickLists = document.querySelector('#nicksList');
 const ul = document.querySelector('#messages');
 
-const createNickName = (nick) => nick.slice(0, 16);
+const generateNickName = (nick) => nick.slice(0, 16);
 
 const createMessage = (message) => {
   const li = document.createElement('li');
@@ -18,7 +18,7 @@ const createMessage = (message) => {
   ul.appendChild(li);
 };
 
-const createUser = (user) => {
+const createNickName = (user) => {
   const li = document.createElement('li');
 
   li.innerHTML = user;
@@ -37,7 +37,7 @@ const moveNickName = (arr, from, to) => {
 };
 
 // https://qastack.com.br/programming/3955229/remove-all-child-elements-of-a-dom-node-in-javascript
-const clearUsers = () => {
+const clearNicks = () => {
   while (nickLists.firstChild) {
     nickLists.removeChild(nickLists.lastChild);
   }
@@ -67,17 +67,17 @@ buttonNickName.addEventListener('click', (e) => {
   });
 
 socket.on('connect', () => {
-  const nick = createNickName(socket.id);
+  const nick = generateNickName(socket.id);
   sessionStorage.setItem('nickname', nick);
   socket.emit('user', nick);
 });
 
 socket.on('usersList', (nicks) => {
-  clearUsers();
+  clearNicks();
   const nickname = sessionStorage.getItem('nickname');
   const index = nicks.findIndex((nick) => nick === nickname);
   const newPosition = moveNickName(nicks, index, 0);
-  newPosition.forEach((nick) => createUser(nick));
+  newPosition.forEach((nick) => createNickName(nick));
 });
 
 socket.on('message', (msg) => createMessage(msg));

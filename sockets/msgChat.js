@@ -25,7 +25,7 @@ module.exports = (io) => io.on('connection', (socket) => {
   // remove o  usuario(id) da lista do array iterando o array e removendo ele pelo metodo splice que remove ou substitui o 
   // elemento de acordo com a localização que vocẽ indica
   socket.on('disconnect', () => {
-    const index = users.findIndex(({ id }) => id === socket.id);
-    users.splice(index, index + 1); io.emit('users', users);
+    const userLoc = users.findIndex(({ id }) => id === socket.id);
+    users.splice(userLoc, userLoc + 1); io.emit('users', users);
   });
 });

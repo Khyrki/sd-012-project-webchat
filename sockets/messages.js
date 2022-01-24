@@ -6,7 +6,8 @@ function client(socket) {
       message,
     };
 
-    console.log(userMessage);
+  socket.broadcast.send(message);
+  socket.send(message);
   });
 }
 

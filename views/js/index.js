@@ -1,12 +1,11 @@
 const socket = window.io();
+const users = require('./user');
+const message = require('./message');
 
-const inputName = document.getElementById('user');
-const saveButton = document.getElementById('save');
 
 const sendButton = document.getElementById('send');
 const inputMessage = document.getElementById('message');
 
-const users = document.querySelector('.users');
 const chat = document.querySelector('.chat');
 
 function createDiv(value, testId = null) {
@@ -35,8 +34,13 @@ function insertDiv(text, element, testId) {
 
 function sendEvent(id, value) {
   const socketEvents = {
-    user: () => socket.emit('userAdd', value),
-    message: () => socket.send(value),
+    user() {
+      socket.emit('userAdd', value);
+    },
+
+    message() {
+      socket.send(value);
+    },
   };
 
   const emitEvent = socketEvents[id];
@@ -69,6 +73,10 @@ inputMessage.addEventListener('keypress', onMessage);
 sendButton.addEventListener('click', onMessage);
 
 socket.on('serverMessage', (nickname) => {
-  insertDiv(`[ Server ] ${nickname} Acabou de entrar`, chat, 'message');
+  const div = createDiv(nickname, 'online-user');
   insertDiv(nickname, users, 'online-user');
+});
+
+socket.on('message', (message) => {
+  insertDiv(`${}, ${message}`, chat, 'message');
 });

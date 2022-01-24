@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Webchat Project</title>
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+  <main>
+    <section class="upper-container">
+      <section class="user-info-container">
+        <section class="username-container">
+          <input type="text" name="username" id="username" placeholder="Type your username here">
+          <button type="button" id="save">Save</button>
+        </section>
+        <section class="users-container">
+          <ul id="logged-users"></ul>
+        </section>
+      </section>
+      <section class="message-container">
+        <ul id="sent-messages"></ul>
+      </section>
+    </section>
+    <section class="lower-container">
+      <input type="text" name="message" id="message" placeholder="Type your message here">
+      <button type="button" id="send">Send</button>
+    </section>
+  </main>
+
+  <script src="./socket.io/socket.io.js"></script>
+  <script>
+    const socket = io('http://localhost:<%= process.env.PORT || 3000 %>');
+    const saveButton = document.getElementById('save');
+    saveButton.addEventListener('click', () => {
+      const usernameInput = document.getElementById('username');
+      sessionStorage.setItem('username', usernameInput.value);
+      usernameInput.value = '';
+    });
+    const sendButton = document.getElementById('send');
+    sendButton.addEventListener('click', () => {
+      const username = sessionStorage.getItem('username') || 'Unknown user';
+      const messageInput = document.getElementById('message');
+      socket.emit('message', { chatMessage: messageInput.value, nickname: username });
+      messageInput.value = '';
+      messageInput.focus();
+    });
+    socket.on('message', (data) => {
+      const sentMessagesUl = document.getElementById('sent-messages');
+      const newLi = document.createElement('li');
+      newLi.append(data);
+      sentMessagesUl.append(newLi);
+    });
+  </script>
+</body>
+</html>

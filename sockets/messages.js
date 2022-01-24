@@ -3,7 +3,9 @@ const messageModel = require('../models/messageModel');
 
 function client(socket) {
   socket.on('message', async ({ nickname, chatMessage }) => {
-    const dateFormatted = new Date().toLocaleString();
+    const dateFormatted = new Date()
+      .toISOString()
+      .replace(/(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)\.\d+Z/gm, '$3-$2-$1 $4:$5:$6');
     const messageFormatted = `${dateFormatted} - ${nickname} ${chatMessage}`;
 
     // const user = await userModel.find(socket.id);

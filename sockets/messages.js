@@ -1,4 +1,4 @@
-const userModel = require('../models/userModel');
+// const userModel = require('../models/userModel');
 const messageModel = require('../models/messageModel');
 
 function client(socket) {
@@ -8,10 +8,13 @@ function client(socket) {
       .replace(/(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)\.\d+Z/gm, '$3-$2-$1 $4:$5:$6');
     const messageFormatted = `${dateFormatted} - ${nickname} ${chatMessage}`;
 
-    // const user = await userModel.find(socket.id);
-    // console.log(user);
-    // const msg = await messageModel.create(chatMessage);
-    // console.log(msg);
+    const messageDB = {
+      timestamp: messageFormatted,
+      nickname,
+      chatMessage,
+    };
+
+    await messageModel.create(messageDB);
 
     socket.broadcast.send(messageFormatted);
     socket.send(messageFormatted);

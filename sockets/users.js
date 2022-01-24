@@ -1,6 +1,6 @@
 const faker = require('faker');
-const userModel = require('../models/userModel');
-const messageModel = require('../models/messageModel');
+// const userModel = require('../models/userModel');
+// const messageModel = require('../models/messageModel');
 
 function generateName() {
   let fullName;

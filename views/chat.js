@@ -1,31 +1,32 @@
 const socket = window.io();
 
-const messageInput = document.getElementById('message-box');
+const messageBox = document.getElementById('message-box');
 const sendButton = document.getElementById('send-button');
-
-const nicknameInput = document.getElementById('nickname-box');
+const nicknameBox = document.getElementById('nickname-box');
 const nicknameButton = document.getElementById('nickname-button');
-
-const User = document.getElementById('online-user');
+const onlineUser = document.getElementById('online-user');
+const messageUl = document.getElementById('messages');
+const onlineUsersElem = document.getElementById('users-list');
 
 const randomNickname = Array.from(Array(16), 
 () => Math.floor(Math.random() * 36).toString(36)).join('');
 
-User.innerHTML = sessionStorage.getItem('nickname') || randomNickname;
+const clientNickname = sessionStorage.getItem('nick') || randomNickname;
+onlineUser.innerHTML = clientNickname;
+socket.emit('create', clientNickname);
 
 sendButton.addEventListener('click', () => {
-  socket.emit('message', { chatMessage: messageInput.value, nickname: User.innerHTML });
-  messageInput.value = '';
+  socket.emit('message', { chatMessage: messageBox.value, nickname: onlineUser.innerHTML });
+  messageBox.value = '';
 });
 
 nicknameButton.addEventListener('click', () => {
-  const newNickname = nicknameInput.value;
-  nicknameInput.value = '';
-  User.innerHTML = newNickname;
+  const newNickname = nicknameBox.value;
+  nicknameBox.value = '';
+  onlineUser.innerHTML = newNickname;
   sessionStorage.setItem('nickname', newNickname);
+  socket.emit('updateNickname', newNickname);
 });
-
-const messagesList = document.querySelector('.messages');
 
 function messageCreation(message) {
   const messageLi = document.createElement('li');
@@ -33,7 +34,22 @@ function messageCreation(message) {
   messageLi.setAttribute('data-testid', 'message');
   messageLi.innerText = message;
 
-  messagesList.appendChild(messageLi);
+  messageUl.appendChild(messageLi);
 }
 
-socket.on('message', (message) => messageCreation(message)); 
+socket.on('message', (message) => messageCreation(message));
+
+socket.on('onlineUsers', (onlineUsers) => {
+  onlineUsersElem.innerHTML = '';
+  onlineUsers.forEach(({ nickname }) => {
+    const currentNickName = onlineUser.innerHTML;
+    if (currentNickName === nickname) return;
+    const li = document.createElement('li');
+    li.innerHTML = nickname;
+    li.setAttribute('data-testid', 'online-user');
+    onlineUsersElem.appendChild(li);  
+  });
+});
+window.onbeforeunload = () => {
+socket.disconnect();
+}; 

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Webchat</title>
+  <link rel="stylesheet" href="public/css/style.css">
+</head>
+<body>
+  <header>
+
+    <section class="title-container">
+      <div class="chat-icon"></div>
+      <img class="webchat-logo" src="public/images/webchat-logo.svg" alt="bate-papo uau">
+      <div class="nickname-container">
+        <h3>Nickname:</h3>
+        <h3 class="user-nickname"></h3>
+      </div>
+    </section>
+
+    <section class="user-container">
+      <h3>Mudar seu nickname:</h3>
+      <form class="form-nickname" action="">
+        <input 
+          type="text"
+          class="input-nickname"
+          placeholder="Insira seu nickname"
+          autocomplete="off"
+          data-testid="nickname-box"
+          maxlength="16"
+        >
+        <button class="nickname-button" data-testid="nickname-button">Salvar</button>
+      </form>
+
+    </section>
+  </header>
+  <main class="main-container">
+
+    <section class="chat-container">
+      <ul class="message-list">
+        <% formatMessages.forEach((message) => { %>
+          <li data-testid="message"> <%=message%> </li>
+        <% }) %>
+      </ul>
+    </section>
+
+    <section class="online-users-container">
+      <div class="online-users-title">
+        <h3>Usuários on-line</h3>
+      </div>
+      <div class="users-list">
+        <ul>
+          <li class="client-id" data-testid="online-user"> </li>
+        </ul>
+        <ul class="online-users">
+        </ul>
+      </div>
+    </section>
+
+  </main>
+  <footer>
+
+    <form action="" class="message-form">
+      <input
+        class="message-box"
+        data-testid="message-box"
+        autocomplete="off"
+        placeholder="Digite uma mensagem"
+      >
+      <button class="send-button" data-testid="send-button">Enviar</button>
+    </form>
+
+  </footer>
+  <script src="./socket.io/socket.io.js"></script>
+  <script src="public/js/webchat.js"></script>
+</body>
+</html>

@@ -68,6 +68,7 @@ saveButton.addEventListener('click', onUser);
 inputMessage.addEventListener('keypress', onMessage);
 sendButton.addEventListener('click', onMessage);
 
-socket.on('serverMessage', (message) => {
-  insertDiv(`[ Server ] ${message}`, chat, 'message');
+socket.on('serverMessage', (nickname) => {
+  insertDiv(`[ Server ] ${nickname} Acabou de entrar`, chat, 'message');
+  insertDiv(nickname, users, 'online-user');
 });

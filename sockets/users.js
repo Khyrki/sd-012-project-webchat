@@ -1,6 +1,11 @@
+const { createUser } = require('../models/userModel');
+
 function client(socket) {
-  socket.on('userAdd', (nickname) => {
-    socket.broadcast.emit('serverMessage', `${nickname} Acabou de entrar`);
+  socket.on('userAdd', async (nickname) => {
+    socket.broadcast.emit('serverMessage', nickname);
+    createUser(socket.id, nickname)
+      .then(console.log)
+      .catch(console.err);
   });
 }
 

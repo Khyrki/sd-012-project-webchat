@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>|| WebChat|| </title>
+  <title>|| WEB CHAT ||</title>
 </head>
 <body>
-  <h1>Welcome to Flavio WebChat</h1>
+  <h1>Bem vindo ao meu Web Chat</h1>
   <div>
-    <h2>Olá <span id="current-user" data-testid="online-user"></span></h2>
+    <h2>Seja bem-vindo, <span id="current-user" data-testid="online-user"></span></h2>
     <h3>Usuários Online</h3>
-    <ul id="users-online"></ul>
+    <ul id="online-list"></ul>
   </div>
   <div>
     <h3>Mensagens</h3>
@@ -31,8 +31,8 @@
     </form>
   <script src="/socket.io/socket.io.js"></script>
   <script>
-   const socket = io();
-    let user = ''
+    const socket = io();
+    let user = '';
     window.onload = () => {
       // How to create a random string JS => (https://gist.github.com/6174/6062387)  
       user = (Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)).substring(0, 16);
@@ -40,11 +40,13 @@
       document.getElementById('current-user').innerText = user;
       socket.emit('new-user', user);
     }    
+
     const messageContainer = document.getElementById('message-container');
     const input = document.getElementById('input');
     const nickname = document.getElementById('nickname');
     const buttonNickname = document.getElementById('nickname-button');
     const containerNickname = document.getElementById('nickname-container');
+    
     containerNickname.addEventListener('submit', (e) => {
       e.preventDefault();
       user = nickname.value;
@@ -53,6 +55,7 @@
       console.log(user)
       socket.emit('edit-user', user);
     });
+
     messageContainer.addEventListener('submit', (e) => {
       e.preventDefault();
       if (input.value && user) {
@@ -60,6 +63,7 @@
         input.value = '';
       }
     });
+
     socket.on('message', (message) => {
       const messages = document.getElementById('messages');
       const li = document.createElement('li');
@@ -67,14 +71,17 @@
       li.innerText = message;
       messages.appendChild(li);
     });
-    socket.on('online', (usersOnline) => {
-      const ul = document.getElementById('users-online');
+
+    socket.on('online', (onlineList) => {
+      const ul = document.getElementById('online-list');
       while (ul.childNodes.length > 0) {
         ul.removeChild(ul.lastChild);
       }
-      const indexUser = usersOnline.findIndex((item) => item.nickname === user);
-      usersOnline.splice(indexUser, 1);
-      usersOnline.forEach((user) => {
+      const indexUser = onlineList.findIndex((item) => item.nickname === user);
+
+      onlineList.splice(indexUser, 1);
+
+      onlineList.forEach((user) => {
         const li = document.createElement('li');
         li.setAttribute('data-testid', 'online-user');
         li.innerText = user.nickname;

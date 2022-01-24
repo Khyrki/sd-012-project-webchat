@@ -1,30 +1,31 @@
-const usersOnline = [];
+const onlineList = [];
 const chatModel = require('../models/chatModel');
 
 const newUser = (socket, io) => {
   socket.on('new-user', (user) => {
-    usersOnline.push({ id: socket.id, nickname: user });
-    console.log(usersOnline);
-    io.emit('online', usersOnline);
+    onlineList.push({ id: socket.id, nickname: user });
+    console.log(onlineList);
+    io.emit('online', onlineList);
   });
 };
 
 const editUser = (socket, io) => {
   socket.on('edit-user', (user) => {
     console.log(user);
-    const indexUser = usersOnline.findIndex((item) => item.id === socket.id);
-    usersOnline[indexUser].nickname = user;
-    console.log(usersOnline);
-    io.emit('online', usersOnline);
+    const indexUser = onlineList.findIndex((item) => item.id === socket.id);
+    onlineList[indexUser].nickname = user;
+    console.log(onlineList);
+    io.emit('online', onlineList);
   });
 };
 
 const offlineUser = (socket, io) => {
   socket.on('disconnect', () => {
     console.log(`Um usuário desconectou de ${socket.id}`);
-    const indexUser = usersOnline.findIndex((item) => item.id === socket.id);
-    usersOnline.splice(indexUser, 1);
-    io.emit('online', usersOnline);
+    const indexUser = onlineList.findIndex((item) => item.id === socket.id);
+    onlineList.splice(indexUser, 1);
+    console.log(onlineList);
+    io.emit('online', onlineList);
   });
 };
 
@@ -32,28 +33,27 @@ const messageVal = (socket, io) => {
   socket.on('message', async (message) => {
     const dateMessage = new Date();
     const timeMessage = dateMessage.toLocaleTimeString();
-    const editedDateMessage = dateMessage.toLocaleDateString();
-    const editedMessage = `${editedDateMessage} ${timeMessage}
-    -${message.nickname}: ${message.chatMessage}`;
-
+    const formattedDateMessage = dateMessage.toLocaleDateString().replaceAll('/', '-');
+    const formattedMessage = `${formattedDateMessage} ${timeMessage}
+    - ${message.nickname}: ${message.chatMessage}`;
     await chatModel.sendMessage(
       { nickname: message.nickname,
         message: message.chatMessage,
-        timestamp: `${editedDateMessage} ${timeMessage}` },
+        timestamp: `${formattedDateMessage} ${timeMessage}` },
     );
-    io.emit('message', editedMessage);
-    console.log(dateMessage, timeMessage, editedDateMessage, editedMessage);
+    io.emit('message', formattedMessage);
+    console.log(dateMessage, timeMessage, formattedDateMessage, formattedMessage);
   });
 };
 
 const chat = async (io) => {
-  io.on('connection', (socket) => {
-    newUser(socket, io);
-    editUser(socket, io);
-    console.log(`Um usuário conectou em ${socket.id}`); 
-    offlineUser(socket, io);
-    messageVal(socket, io);
-  });
+    io.on('connection', (socket) => {
+      newUser(socket, io);
+      editUser(socket, io);
+      console.log(`Um usuário conectou em ${socket.id}`); 
+      offlineUser(socket, io);
+      messageVal(socket, io);
+    });
 };
 
 module.exports = chat;

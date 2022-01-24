@@ -27,6 +27,15 @@ const createUser = (user) => {
   nickLists.appendChild(li);
 };
 
+// https://qastack.com.br/programming/5306680/move-an-array-element-from-one-array-position-to-another
+// https://www.codegrepper.com/code-examples/javascript/change+position+of+item+in+array+javascript
+// https://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another
+
+const moveNickName = (arr, from, to) => {
+  arr.splice(to, 0, arr.splice(from, 1)[0]);
+  return arr;
+};
+
 buttonForm.addEventListener('click', (e) => {
 e.preventDefault();
 
@@ -45,7 +54,7 @@ buttonNickName.addEventListener('click', (e) => {
   
   sessionStorage.setItem('nickname', newNick);
   
-  socket.emit('updateNick', newNick, old);
+    socket.emit('updateNick', newNick, old);
 
   inputNickName.value = '';
   });
@@ -57,7 +66,15 @@ socket.on('connect', () => {
 });
 
 socket.on('usersList', (nicks) => {
-  nicks.forEach((nick) => createUser(nick));
+  const nickname = sessionStorage.getItem('nickname');
+  const index = nicks.findIndex((nick) => nick === nickname);
+  const newPosition = moveNickName(nicks, index, 0);
+  newPosition.forEach((nick) => createUser(nick));
 });
 
 socket.on('message', (msg) => createMessage(msg));
+
+socket.on('disconnect', () => {
+  const nickname = sessionStorage.getItem('nickname');
+  socket.emit('disconnect', nickname);
+});

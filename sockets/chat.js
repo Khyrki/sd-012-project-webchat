@@ -1,3 +1,5 @@
+const { addHistory } = require('../controllers/history');
+
 const nicks = [];
 
 module.exports = (io) => io.on('connection', (socket) => {
@@ -8,6 +10,7 @@ module.exports = (io) => io.on('connection', (socket) => {
 
   socket.on('message', ({ chatMessage, nickname }) => {
     const date = new Date().toLocaleString().replace('/', '-');
+    addHistory({ timeStamp: date.replace('/', '-'), nickname, chatMessage });
     io.emit('message', `${date.replace('/', '-')} ${nickname}: ${chatMessage}`);
   });
 

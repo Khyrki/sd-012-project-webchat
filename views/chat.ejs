@@ -29,11 +29,13 @@
     </form>
   </section>
 
-  <div>
     <ul id="messages">
+      <% history.forEach((hist) => { %>
+        <li data-testid="message">
+          <%= `${hist.timeStamp} - ${hist.nickname}: ${hist.chatMessage}`%>
+        </li>
+       <% }) %>
     </ul>
-  </div>
-
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="./js/chat.js"></script>

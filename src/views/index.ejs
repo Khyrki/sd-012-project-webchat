@@ -6,8 +6,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Web chat</title>
   <link rel="stylesheet" href="./styles.css">
+  <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
+  <aside>
+    <form id="user-form">
+      <fieldset>
+        <label for="name">
+          Insira seu nickname
+        </label>
 
+        <input id="user-input" type="text" placeholder="starlord">
+        <button type="submit">salvar</button>
+      </fieldset>
+    </form>
+
+    <section>
+      <strong>usuários</strong>
+
+      <ul id="user-list">
+      </ul>
+    </section>
+  </aside>
+
+
+  <main>
+    <section>
+      <ul id="messages"></ul>
+    </section>
+    <form id="submitMessage">
+      <input type="text" id="messageInput">
+      <button type="submit">Enviar</button>
+    </form>
+  </main>
+
+  <script>
+    const socket = io();
+
+    socket.on('connection', (onlineUsers) => {
+      const userList = document.getElementById('user-list');
+
+      userList.innerHTML = '';
+      
+      onlineUsers.forEach((user) => {
+        const li = document.createElement('li');
+        li.innerText = user.nickname;
+      
+        userList.appendChild(li);
+      });
+    });
+
+    const userForm = document.querySelector('#user-form');
+    userForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const userInput = document.querySelector('#user-input').value;
+      socket.emit('nickname', userInput);
+    });
+  </script>
 </body>
 </html>

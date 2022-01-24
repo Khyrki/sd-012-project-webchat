@@ -10,10 +10,11 @@ const buttonNick = document.querySelector('#nickname-button');
 const ul = document.querySelector('#users');
 const form = document.querySelector('form');
 let loggedUsers = [];
+let nickname;
 
 // renderiza nome do usuario
-const renderUsers = (users) => {
-  console.log('ooois');
+const renderUsers = ({ users, randomNick }) => {
+  nickname = randomNick;
   users.forEach((user) => {
     if (loggedUsers.includes(user)) return;
     
@@ -51,6 +52,7 @@ socket.on('nickname', (users) => renderUsers(users));
 // troca nome do user
 buttonNick.addEventListener('click', () => {
   const { value } = inputNick;
+  nickname = value;
   
   socket.emit('changenick', value);
 });
@@ -59,7 +61,7 @@ buttonNick.addEventListener('click', () => {
 form.addEventListener('submit', (e) => {
   e.preventDefault();
   const { value: chatMessage } = inputMessage;
-  socket.emit('message', { chatMessage });
+  socket.emit('message', { chatMessage, nickname });
 });
 
 // executada ao ser enviada uma mensagem

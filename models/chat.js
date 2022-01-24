@@ -11,7 +11,6 @@ const getAll = async () => {
   const list = await connection()
   .then((db) => db.collection('messages').find().toArray())
   .then((result) => result);
-  console.log(list);
   return list;
 };
 module.exports = { 

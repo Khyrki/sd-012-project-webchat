@@ -9,21 +9,29 @@
 <body>
   <h1>Socket.io</h1>
   <div>
+    <h3>your nickname</h3>
     <li data-testid="online-user" id="user"></li>
     <br>
     <input
       type="text"
       data-testid="nickname-box"
       id="nick-input"
-      placeholder="insert your name"
+      placeholder="insert your nickname"
     >
     <button data-testid="nickname-button" id="nick-button">Salvar</button>  
   </div>
   <div>
+    <h3>messages</h3>
     <ul id="chat-box">
       <% getAllMessages.forEach((message) => { %>
         <li data-testid="message"><%= `${message.timestamp}: ${message.nickname} => ${message.message}` %></li>
       <% }) %>
+    </ul>
+  </div>
+  <div> 
+    <h3> Users Online </h3>
+    <ul id="users-online">
+
     </ul>
   </div>
   <div>
@@ -56,6 +64,7 @@ const user = document.querySelector('#user');
 const nickName = geraStringAleatoria(16);
 
 user.innerHTML = nickName;
+socket.emit('newUser', nickName);
 
 const nickInput = document.querySelector('#nick-input');
 const nickButton = document.querySelector('#nick-button');
@@ -66,6 +75,7 @@ nickButton.addEventListener('click', () => {
   const nameUser = nickInput.value;
   nickInput.value = '';
   user.innerHTML = nameUser;
+  socket.emit('updateNick', nameUser);
 });
 
 const send = document.querySelector('#send-button');
@@ -87,6 +97,24 @@ socket.on('message', (message) => {
   li.setAttribute('data-testid', 'message');
   chat.appendChild(li);
 });
+
+const onlineUsersElem = document.querySelector('#users-online');
+
+socket.on('onlineUsers', (onlineUsers) => {
+  onlineUsersElem.innerHTML = '';
+  onlineUsers.forEach(({ nickname }) => {
+    const currentNickName = user.innerHTML;
+    if (currentNickName === nickname) return;
+    const li = document.createElement('li');
+    li.innerHTML = nickname;
+    li.setAttribute('data-testid', 'online-user');
+    onlineUsersElem.appendChild(li);  
+  });
+});
+
+window.onbeforeunload = () => {
+  socket.disconnect();
+};
 
 </script>
 </html>

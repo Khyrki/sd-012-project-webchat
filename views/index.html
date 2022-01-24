@@ -11,8 +11,10 @@
       <div class="container">
         <div class="sing border">
           <div>
-            <input data-testid="nickname-box" class="user" id="user" type="text" placeholder="Insira o nome do seu usuário" autocomplete="off" />
-            <input data-testid="nickname-button" class="save" id="save" type="submit" value="Salvar" />
+            <input data-testid="nickname-box" class="user" id="user" type="text" placeholder="Insira o nome do seu usuário" autocomplete="off" maxlength="16" />
+            <button data-testid="nickname-button" class="save" id="save" type="submit">
+              Salvar
+            </button>
           </div>
           <div class="users border"></div>
         </div>
@@ -20,7 +22,9 @@
       </div>
       <div class="message-box">
         <input data-testid="message-box" class="message" id="message" type="text" placeholder="Escreva uma mensagem"  autocomplete="off" />
-        <input data-testid="send-button" class="send" id="send" type="button" value="Enviar" />
+        <button data-testid="send-button" class="send" id="send" type="button">
+          Enviar
+        </button>
       </div>
     </div>
     <script src="socket.io/socket.io.js"></script>

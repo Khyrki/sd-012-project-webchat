@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/views', express.static(path.join(__dirname, 'src', 'views')));
-app.use('/public', express.static(path.join(__dirname, 'src', 'assets')));
+app.use('/assets', express.static(path.join(__dirname, 'src', 'assets')));
 
 const io = require('socket.io')(http, {
   cors: {

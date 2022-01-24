@@ -98,17 +98,17 @@ socket.on('message', (message) => {
   chat.appendChild(li);
 });
 
-const onlineUsersElem = document.querySelector('#users-online');
+const UsersOnline  = document.querySelector('#users-online');
 
-socket.on('onlineUsers', (onlineUsers) => {
-  onlineUsersElem.innerHTML = '';
-  onlineUsers.forEach(({ nickname }) => {
+socket.on('users', (users) => {
+  UsersOnline .innerHTML = '';
+  users.forEach(({ nickname }) => {
     const currentNickName = user.innerHTML;
     if (currentNickName === nickname) return;
     const li = document.createElement('li');
     li.innerHTML = nickname;
     li.setAttribute('data-testid', 'online-user');
-    onlineUsersElem.appendChild(li);  
+    UsersOnline .appendChild(li);  
   });
 });
 

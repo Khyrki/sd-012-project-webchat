@@ -7,45 +7,52 @@
   <title>|| WebChat|| </title>
 </head>
 <body>
-  <h1>Flavio Web Chat</h1>
+  <h1>Welcome to Flavio WebChat</h1>
   <div>
+    <h2>Olá <span id="current-user" data-testid="online-user"></span></h2>
     <h3>Usuários Online</h3>
-    <ul id="users-online" data-testid="online-user"></ul>
+    <ul id="users-online"></ul>
   </div>
   <div>
     <h3>Mensagens</h3>
-    <ul id="messages"></ul>
+    <ul id="messages">
+      <% messages.forEach(({nickname, message, timestamp}) => { %>
+        <li data-testid="message"><%= `${timestamp} - ${nickname}: ${message}` %></li>
+      <%})%>
+    </ul>
   </div>
   <form id="nickname-container">
     <input id="nickname" autocomplete="on" data-testid="nickname-box"/>
-    <button data-testid="nickname-button">Alterar o nick</button>
+    <button data-testid="nickname-button">Alterar nome</button>
   </form>
     <form id="message-container" action="">
       <input id="input" autocomplete="off" data-testid="message-box"/>
       <button data-testid="send-button">Enviar mensagem</button>
+    </form>
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    const socket = io();
-    let user = '';
+   const socket = io();
+    let user = ''
     window.onload = () => {
+      // How to create a random string JS => (https://gist.github.com/6174/6062387)  
       user = (Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)).substring(0, 16);
-      document.getElementById('nickname').value = user;
+      document.getElementById('current-user').innerText = '';
+      document.getElementById('current-user').innerText = user;
       socket.emit('new-user', user);
-    }
-    
-    const form = document.getElementById('form');
+    }    
+    const messageContainer = document.getElementById('message-container');
     const input = document.getElementById('input');
     const nickname = document.getElementById('nickname');
     const buttonNickname = document.getElementById('nickname-button');
     const containerNickname = document.getElementById('nickname-container');
-
     containerNickname.addEventListener('submit', (e) => {
       e.preventDefault();
       user = nickname.value;
+      document.getElementById('current-user').innerText = '';
+      document.getElementById('current-user').innerText = user;
       console.log(user)
       socket.emit('edit-user', user);
     });
-
     messageContainer.addEventListener('submit', (e) => {
       e.preventDefault();
       if (input.value && user) {
@@ -53,22 +60,24 @@
         input.value = '';
       }
     });
-
     socket.on('message', (message) => {
       const messages = document.getElementById('messages');
       const li = document.createElement('li');
       li.setAttribute('data-testid', 'message');
-      li.textContent = message;
+      li.innerText = message;
       messages.appendChild(li);
     });
-
     socket.on('online', (usersOnline) => {
       const ul = document.getElementById('users-online');
-      ul.innerHTML= '';
+      while (ul.childNodes.length > 0) {
+        ul.removeChild(ul.lastChild);
+      }
+      const indexUser = usersOnline.findIndex((item) => item.nickname === user);
+      usersOnline.splice(indexUser, 1);
       usersOnline.forEach((user) => {
         const li = document.createElement('li');
         li.setAttribute('data-testid', 'online-user');
-        li.textContent = user.nickname;
+        li.innerText = user.nickname;
         ul.appendChild(li);
       })
     });

@@ -12,7 +12,7 @@ renameNick.addEventListener('click', (event) => {
 });
 
 form.addEventListener('submit', (event) => {
-  const nickname = document.querySelector('#user').innerText;
+  const nickname = user.innerText;
   event.preventDefault();
   const chatMessage = inputMessage.value;
   socket.emit('message', { nickname, chatMessage });
@@ -56,5 +56,12 @@ const createMessage = (chatMessage) => {
     messagesUl.appendChild(pText);
 };
 
+const getAllMessages = (arrMessages) => {
+  arrMessages.forEach(({ message, nickname, timestamp }) => {
+    createMessage(`${timestamp} - ${nickname}: ${message}`);
+  });
+};
+
+socket.on('getMessages', (arrMessages) => getAllMessages(arrMessages));
 socket.on('message', (chatMessage) => createMessage(chatMessage));
 socket.on('nickname', (nickname) => onlineUser(nickname));

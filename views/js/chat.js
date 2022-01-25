@@ -46,5 +46,11 @@ const createMessage = (message) => {
   chatUl.appendChild(li);
 };
 
-socket.on('welcome', (message) => createMessage(message));
+const createSpan = (message) => {
+  const span = document.createElement('span');
+  span.innerText = message;
+  formChat.appendChild(span);
+};
+
+socket.on('welcome', (message) => createSpan(message));
 socket.on('message', (message) => createMessage(message));

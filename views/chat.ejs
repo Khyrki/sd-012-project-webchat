@@ -13,16 +13,25 @@
     </form>
   </div>
   <ul id="chatUl">
-    <form id="formMessage" data-testid="message" action="">
+    <form id="formMessage" action="">
       <input
-        id="messageInput"
-        data-testid="message-box"
-        autocomplete="off"
-        placeholder="Digite uma nova mensagem aqui"
+      id="messageInput"
+      data-testid="message-box"
+      autocomplete="off"
+      placeholder="Digite uma nova mensagem aqui"
       />
-      <button id="btn-send" data-testid="send-button">Enviar</button>
-    </form>
-  </ul>
+      <button
+        id="btn-send"
+        data-testid="send-button">
+          Enviar
+      </button>
+      <% chats.forEach(({ message, nickname, timestamp }) => { %>
+        <li data-testid="message">
+          <%= `${timestamp} - ${nickname}: ${message}` %>
+        </li>
+      <% }) %>
+      </form>
+    </ul>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="./js/chat.js"></script>

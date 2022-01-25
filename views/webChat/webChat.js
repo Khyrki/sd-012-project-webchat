@@ -21,7 +21,7 @@ nicknameForm.addEventListener('submit', (e) => {
     const newNickname = inputNickname.value;
     sessionStorage.setItem('nickname', newNickname);
     inputNickname.value = '';
-    socket.emit('clientsChange', newNickname);
+    socket.emit('changeNickname', newNickname);
     return false;
 });
 
@@ -44,11 +44,12 @@ const renderNicknames = ({ nickname, id }) => {
 socket.on('message', (message) => sendMessage(message));
 
 socket.on('clientsChange', (clients) => {
-    console.log(clients);
+    const sortedClients = [clients.find((client) => client.id === socket.id),
+        ...clients.filter((client) => client.id !== socket.id)];
     const { nickname } = clients.find((client) => client.id === socket.id);
     sessionStorage.setItem('nickname', nickname);
     nicknamesContainer.innerHTML = '';
-    clients.forEach(renderNicknames);
+    sortedClients.forEach(renderNicknames);
 });
 
 window.onbeforeunload = (_event) => {

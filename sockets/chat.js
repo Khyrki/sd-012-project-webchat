@@ -38,7 +38,7 @@ module.exports = (io) => io.on('connection', (socket) => {
     io.emit('message', `${createDate()} - ${nickname}: ${chatMessage}`);
   });
 
-  socket.on('clientsChange', (nickname) => {
+  socket.on('changeNickname', (nickname) => {
     const index = currentClients.indexOf(currentClients.find((client) => client.id === socket.id));
     currentClients[index].nickname = nickname;
     io.emit('clientsChange', currentClients);

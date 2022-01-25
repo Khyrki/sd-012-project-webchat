@@ -20,6 +20,7 @@ const io = require('socket.io')(http, {
 });
 
 require('./socket')(io);
+require('./socketConnections')(io);
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/public/index.html'));

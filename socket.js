@@ -6,8 +6,6 @@ module.exports = (io) => io.on('connection', async (socket) => {
   if (allMessages[0]) {
     socket.emit('connection', allMessages);
   }
-  socket.emit('newUser');
-
   socket.on('message', async ({ chatMessage, nickname }) => {
     const date = moment().format('DD-MM-YYYY HH:MM:SS A');
     const message = `${date} - ${nickname}: ${chatMessage}`;

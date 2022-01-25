@@ -9,7 +9,8 @@
 </head>
 <body>
   <h1>Usuários</h1>
-  <ul id="user-list"></ul>
+  <ul id="user-list">
+  </ul>
   <h1>Mensagens</h1>
   <ul id="message-list">
     <% if (messageHistory && messageHistory.length > 0) { %>
@@ -43,7 +44,7 @@
     const messageInput = document.getElementById('message-input');
     const username = document.getElementById('nickname');
     const nameButton = document.getElementById('save-name-btn')
-    const userList = document.getElementById('user-list')
+    const nicknameList = document.getElementById('user-list')
     
     window.onload = () => {
       socket.emit('newUser');
@@ -52,7 +53,7 @@
     nameButton.addEventListener('click', (e) => {
       e.preventDefault();
       sessionStorage.setItem('user', username.value);
-      renderUser(username.value);
+      socket.emit('nicknameChange', ({ newName: username.value }));
     });
     
     messageForm.addEventListener('submit', (e) => {
@@ -65,9 +66,33 @@
 
     const renderUser = (name) => {
       const newUser = document.createElement('li');
-      userList.appendChild(newUser);
       newUser.innerText = name;
       newUser.setAttribute('data-testid', 'online-user');
+      if (nicknameList.children.length > 0) {
+        nicknameList.insertBefore(newUser, nicknameList.children[0]);
+      } else {
+        nicknameList.appendChild(newUser);
+      }
+    }
+
+    renderUserList = (list, reverse = true) => {
+      list.map(({ nickname }) => {
+        const newUser = document.createElement('li');
+        newUser.innerText = nickname;
+        newUser.setAttribute('data-testid', 'online-user');
+        if (nicknameList.children.length > 0 && reverse) {
+        nicknameList.insertBefore(newUser, nicknameList.children[0]);
+      } else {
+        nicknameList.appendChild(newUser);
+      }
+      })
+    }
+
+
+    const removeChildNodes = (parent) => {
+      while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+      }
     }
 
     const createMessage = (message) => {
@@ -82,9 +107,24 @@
       createMessage(newMessage);
     });
 
-    socket.on('newUser', (nickname) => {
-      renderUser(nickname);
-      sessionStorage.setItem('user', nickname);
+    socket.on('specificUserUpdate', ({ nickname, userList }) => {
+      removeChildNodes(nicknameList);
+      renderUserList(userList);
+    })
+
+    socket.on('newUser', ({ nickname, userList }) => {
+      removeChildNodes(nicknameList);
+      renderUserList(userList, false);
+    })
+
+    socket.on('refreshUsers', (userList) => {
+      removeChildNodes(nicknameList);
+      renderUserList(userList);
+    })
+
+    socket.on('userDisconnect', (userList) => {
+      removeChildNodes(nicknameList);
+      renderUserList(userList);
     })
 
   </script>

@@ -5,6 +5,10 @@ const formNick = document.querySelector('#formNick');
 const inputMessage = document.querySelector('#messageInput');
 const currentUser = document.querySelector('#currentUser');
 
+const createInitialNick = (nick) => {
+  currentUser.innerText = nick;
+};
+
 form.addEventListener('submit', (e) => {
   e.preventDefault();
   socket.emit('message', { chatMessage: inputMessage.value, nickname: currentUser.innerText });
@@ -15,7 +19,9 @@ form.addEventListener('submit', (e) => {
 formNick.addEventListener('submit', (e) => {
   e.preventDefault();
   const fieldNick = document.querySelector('#nickName');
-  currentUser.innerText = fieldNick.value;
+  const userNickName = fieldNick.value;
+  currentUser.innerText = userNickName;
+  socket.emit('changeNick', userNickName);
   fieldNick.value = '';
   return false;
 });
@@ -24,14 +30,28 @@ const createMessage = (message) => {
   const messagesUl = document.querySelector('#messages');
   const li = document.createElement('li');
   li.innerText = message;
-  if (message !== 'Olá, seja bem vindo ao nosso chat público!') {
-    li.dataset.testid = 'message';
-  }
+  li.dataset.testid = 'message';
   messagesUl.appendChild(li);
 };
 
-const createInitialNick = (nick) => {
-  currentUser.innerText = nick;
+const createUser = (user, userListUl) => {
+  const li = document.createElement('li');
+  li.innerText = user.nick;
+  li.dataset.testid = 'online-user';
+  userListUl.appendChild(li);
+};
+
+const createUserList = (userArray) => {
+  const userListUl = document.querySelector('#onlineUsers');
+  userListUl.innerHTML = '';
+  userListUl.appendChild(currentUser);
+  const userNick = currentUser.innerText;
+  const userIndex = userArray.findIndex((user) => user.nick === userNick);
+  userArray.splice(userIndex, 1);
+
+  userArray.forEach((user) => {
+    createUser(user, userListUl);
+  });
 };
 
 socket.on('hello', ({ _msg, initialNick }) => {
@@ -39,3 +59,4 @@ socket.on('hello', ({ _msg, initialNick }) => {
   createInitialNick(initialNick);
 });
 socket.on('message', (message) => createMessage(message));
+socket.on('onlineList', (userArray) => createUserList(userArray));

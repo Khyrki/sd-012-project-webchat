@@ -4,7 +4,12 @@
     <title>WebChat - Trybe</title>
   </head>
   <body>
-    <h3 id="currentUser" data-testid="online-user"></h3>
+    <h3>current online users:</h3>
+    <ul id="onlineUsers">
+      <li id="currentUser" data-testid="online-user"></li>
+    </ul> 
+    <h3>________________</h3>
+
     <ul id="messages">
       <% msgs.forEach((msg) => { %>
         <li data-testid="message">

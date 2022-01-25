@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projeto Webchat</title>
+</head>
+<body>
+  <section>
+    <ul id="users">Usuários</ul>
+    <ul id="messages">Mensagens: </ul>
+  </section>
+  <form>
+    <label htmlfor="nickname">
+      <input type="text" name="nickname" placeholder="Defina o seu apelido" data-testid="nickname-box" id="nickname" />
+    </label>
+    <button type="button" data-testid="nickname-button" id="nicknameBtn">Definir apelido</button>
+    <label htmlfor="messageBox">
+      <input type="text" name="messageBox" placeholder="Digite aqui a sua mensagem" data-testid="message-box" id="messageBox" />
+    </label>
+    <button type="button" data-testid="send-button" id="sendBtn">Enviar Mensagem</button>
+  </form>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="./client.js"></script>
+</body>
+</html>

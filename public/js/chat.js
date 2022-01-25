@@ -2,6 +2,14 @@ const socket = window.io();
 
 const form = document.querySelector('#chat-form');
 const inputMessage = document.querySelector('#msg');
+const renameNick = document.querySelector('.btn-nickname');
+const user = document.querySelector('#user');
+const username = document.querySelector('#username');
+
+renameNick.addEventListener('click', (event) => {
+  event.preventDefault();
+  user.innerText = username.value;
+});
 
 form.addEventListener('submit', (event) => {
   const nickname = document.querySelector('#user').innerText;
@@ -13,7 +21,6 @@ form.addEventListener('submit', (event) => {
 });
 
 const onlineUser = (nickname) => {
-  const user = document.querySelector('#user');
   user.setAttribute('data-testid', 'online-user');
   user.innerText = nickname;
 }; 

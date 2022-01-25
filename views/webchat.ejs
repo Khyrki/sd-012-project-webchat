@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trybe Chat</title>
+</head>
+<body>
+  <script src="/socket.io/socket.io.js"></script>
+  <h1>Hello World</h1>
+  <form>
+    <input/>
+    <button id="sendMessage">Enviar</button>
+  </form>
+  <ul id="chat"></ul>
+  <script>
+  const socket = io('http://localhost:3000')
+  let nickname;
+  socket.on('connect', () => {
+    nickname = socket.id
+  })
+  const sendButton = document.getElementById('sendMessage');
+  const chat = document.getElementById('chat');
+  const input = document.querySelector('input');
+  const sendMessage = (event) => {
+    event.preventDefault();    
+    socket.emit('message', {
+      chatMessage: input.value,
+      nickname,
+    });
+  }  
+  sendButton.addEventListener('click', sendMessage);
+  const createMessage = (message) => {
+    const li = document.createElement('li');
+    li.className = 'chatMessages'
+    li.innerText = message;
+    chat.appendChild(li);
+  };
+  socket.on('message', createMessage );
+  </script>
+  <style>
+    .chatMessages {
+      list-style: none;
+    }
+  </style>
+</body>
+</html> 

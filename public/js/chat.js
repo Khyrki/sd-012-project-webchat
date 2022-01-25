@@ -9,7 +9,7 @@ const inputNickName = document.querySelector('#nickname-box');
 const nickLists = document.querySelector('#nicksList');
 const ul = document.querySelector('#messages');
 
-const generateNickName = (nick) => nick.slice(0, 16);
+const generateNickName = (nick) => nick.slice(4);
 
 const createMessage = (message) => {
   const li = document.createElement('li');
@@ -31,10 +31,10 @@ const createNickName = (user) => {
 // https://www.codegrepper.com/code-examples/javascript/change+position+of+item+in+array+javascript
 // https://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another
 
-const moveNickName = (arr, from, to) => {
+function moveNickName(arr, from, to) {
   arr.splice(to, 0, arr.splice(from, 1)[0]);
   return arr;
-};
+}
 
 // https://qastack.com.br/programming/3955229/remove-all-child-elements-of-a-dom-node-in-javascript
 const clearNicks = () => {
@@ -61,7 +61,7 @@ buttonNickName.addEventListener('click', (e) => {
   
   sessionStorage.setItem('nickname', newNick);
   
-    socket.emit('updateNick', newNick, old);
+  socket.emit('updateNick', newNick, old);
 
   inputNickName.value = '';
   });
@@ -73,6 +73,7 @@ socket.on('connect', () => {
 });
 
 socket.on('usersList', (nicks) => {
+  console.log(nicks);
   clearNicks();
   const nickname = sessionStorage.getItem('nickname');
   const index = nicks.findIndex((nick) => nick === nickname);
@@ -83,6 +84,7 @@ socket.on('usersList', (nicks) => {
 socket.on('message', (msg) => createMessage(msg));
 
 window.onbeforeunload = () => {
+  clearNicks();
   const nickname = sessionStorage.getItem('nickname');
   socket.emit('disconnect', nickname);
   socket.disconnect();

@@ -9,10 +9,9 @@ module.exports = (io) => io.on('connection', (socket) => {
 }); socket.on('message', ({ chatMessage, nickname }) => {
     const date = new Date().toLocaleString().replace('/', '-');
     addHistory({ timeStamp: date.replace('/', '-'), nickname, chatMessage });
-    io.emit('message', `${date.replace('/', '-')} ${nickname}: ${chatMessage}`);
-  });
-
-  socket.on('updateNick', (newNick, old) => {
+    const result = `${date.replace('/', '-')} ${nickname}: ${chatMessage}`;
+    io.emit('message', result);
+  }); socket.on('updateNick', (newNick, old) => {
    const index = nicks.findIndex((nick) => nick === old);
    nicks[index] = newNick;
    io.emit('usersList', nicks);

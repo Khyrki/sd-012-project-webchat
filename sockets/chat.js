@@ -5,7 +5,7 @@ module.exports = (io) => io.on('connection', async (socket) => {
   
   socket.on('message', ({ chatMessage, nickname }) => {
     const timestamp = format(new Date(), 'dd-MM-yyyy HH:mm:ss');
-    console.log(`Mensagem ${chatMessage}`);
+    console.log(`Mensagen - ${nickname}: ${chatMessage}`);
     const message = `${timestamp} - ${nickname}: ${chatMessage}`;
     io.emit('message', message);
   });

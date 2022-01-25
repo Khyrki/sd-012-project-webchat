@@ -1,16 +1,18 @@
-const util = require('../util/helper');
-const { getAll, create } = require('../models/Message');
+const SessionStoreMemory = require('./sessionStoreMomory');
+const changeNickname = require('./changeNickname');
+const handleMessage = require('./handleMessage');
+const handleUser = require('./handleUser');
 
-module.exports = (io) => io.on('connection', async (socket) => {
-  socket.on('message', async ({ nickname, chatMessage }) => {
-    const message = `${util.getTimeNow()} - ${nickname}: ${chatMessage}`;
-    await create({ message: chatMessage, nickname, timestamp: util.getTimeNow() });
-    io.emit('message', message);
-  });
-  
-  socket.emit('history', await getAll());
+const sessionStore = new SessionStoreMemory();
 
-  socket.on('disconnect', () => {
-    // socket.broadcast.emit('serverMessage', `${nickname} acabou de se desconectar!`);
+const server = (io) => {
+  io.use((socket, next) => {
+    handleUser(socket, sessionStore, next);
   });
-});
+  io.on('connection', async (socket) => {
+    handleMessage(io, socket, sessionStore);
+    changeNickname(io, socket, sessionStore);
+  });
+};
+
+module.exports = server;

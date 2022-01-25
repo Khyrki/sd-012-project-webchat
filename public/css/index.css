@@ -46,10 +46,33 @@ form button {
   width: 9%;
 }
 
+.chat-main-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.online-side-bar {
+  background-color: #eee;
+  display: flex;
+  flex-direction: column;
+  justify-content: initial;
+  width: 18%;
+}
+
+.users {
+  font-size: 1.4em;
+}
+
+.users li {
+  padding: 5px 10px;
+}
+
 .messages {
   list-style-type: none;
   margin: 0;
   padding: 0;
+  width: 82%;
 }
 
 .messages li {

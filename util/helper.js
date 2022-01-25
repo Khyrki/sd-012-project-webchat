@@ -5,4 +5,10 @@ const getTimeNow = () => {
   return `${date} ${time}`;
 };
 
-module.exports = { getTimeNow };
+const generateId = () => {
+  let generatedId = Math.random().toString(36).substring(2, 10);
+  generatedId = `${generatedId}${Math.random().toString(36).substring(2, 10)}`;
+  return generatedId;
+};
+
+module.exports = { getTimeNow, generateId };

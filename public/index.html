@@ -8,20 +8,29 @@
     <link rel="stylesheet" href="./css/index.css">
   </head>
   <body>
-    <div class="chat-container">
-      <div class="chat-header-container">
-        <h2 id="online-user" data-testid="online-user"></h2>
+    <section class="chat-container">
+      <section class="chat-header-container">
         <form class="change-nickname-form" action="">
-          <input id="nickname-box" data-testid="nickname-box"/>
-          <button id="nickname-button" data-testid="nickname-button">Change nickname</button>
+          <input id="nickname-box" placeholder="Insira seu nickname" data-testid="nickname-box"/>
+          <button id="nickname-button" data-testid="nickname-button">Salvar</button>
         </form>
-      </div>
-      <ul class="messages"></ul>
+      </section>
+      <section class="chat-main-container">
+        <aside class="online-side-bar">
+          <ul class="main-user-container users">
+            <li id="main-user" data-testid="online-user"></li>
+          </ul>
+          <ul class="online-users users">
+            <li id="online-user" data-testid="online-user"></li>
+          </ul>
+        </aside>
+        <ul class="messages"></ul>
+      </section>
       <form class="send-message-form" action="">
-        <input id="message-box" autocomplete="off" data-testid="message-box"/>
-        <button id="send-button" data-testid="send-button">Send message</button>
+        <input id="message-box" autocomplete="off" placeholder="Digite uma nova mensagem aqui" data-testid="message-box"/>
+        <button id="send-button" data-testid="send-button">Enviar</button>
       </form>
-    </div>
+    </section>
     <script src="/socket.io/socket.io.js"></script>
     <script src="./js/index.js"></script>
   </body>

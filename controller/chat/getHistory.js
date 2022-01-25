@@ -1,9 +1,11 @@
 const getHistory = require('../../models/chat');
 
-module.exports = async (req, res, next) => {
+module.exports = async (_req, res, next) => {
   try {
     const history = await getHistory.history();
-    return res.status(200).render('chat', history);
+    const { _id, ...data } = history;
+    console.log(data);
+    return res.status(200).render('chat', data);
   } catch (err) {
     next(err);
   }

@@ -7,21 +7,40 @@
 </head>
 <body>
   <script src="/socket.io/socket.io.js"></script>
-  <h1>Hello World</h1>
+  <div>
+    <h2>Online Users</h2>
+    <ul id='users'></ul>
+  </div>
   <form>
-    <input/>
-    <button id="sendMessage">Enviar</button>
+    <input placeholder="Change your username" data-testid="nickname-box"/>
+    <button data-testid="nickname-button" id="changeNickname">Save</button>
+  </form>
+  <form>
+    <input data-testid="message-box"/>
+    <button data-testid="send-button" id="sendMessage">Send</button>
   </form>
   <ul id="chat"></ul>
   <script>
+
   const socket = io('http://localhost:3000')
   let nickname;
   socket.on('connect', () => {
-    nickname = socket.id
-  })
+    nickname = socket.id.slice(0,16);
+  });
+
+  const changeButton = document.getElementById('changeNickname');
+  const changeInput = document.querySelectorAll('input')[0];
+  const changeNickname = (event) => {
+    event.preventDefault();    
+    nickname = changeInput.value;
+    changeInput.value = '';
+    socket.emit('changeNickname', nickname);
+  } 
+  changeButton.addEventListener('click', changeNickname);
+
   const sendButton = document.getElementById('sendMessage');
   const chat = document.getElementById('chat');
-  const input = document.querySelector('input');
+  const input = document.querySelectorAll('input')[1];
   const sendMessage = (event) => {
     event.preventDefault();    
     socket.emit('message', {
@@ -30,18 +49,35 @@
     });
   }  
   sendButton.addEventListener('click', sendMessage);
+
   const createMessage = (message) => {
     const li = document.createElement('li');
     li.className = 'chatMessages'
     li.innerText = message;
+    li.dataset.testid = 'message';
     chat.appendChild(li);
   };
-  socket.on('message', createMessage );
-  </script>
+
+   socket.on('message', createMessage );
+   socket.on('users', (users) => {
+    const ul = document.getElementById('users');
+    ul.innerHTML = '';
+    users.map(({id, nickname}) => {
+      const li = document.createElement('li');
+      if (nickname) {
+        li.innerText = nickname;
+      } else {
+        li.innerText = id.slice(0, 16);
+      }
+      li.dataset.testid = "online-user";
+      ul.appendChild(li);
+    });
+  });
+ </script>
   <style>
     .chatMessages {
       list-style: none;
     }
   </style>
 </body>
-</html> 
+</html>

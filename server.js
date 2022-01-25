@@ -1,26 +1,30 @@
-// Faça seu código aqui
-require('dotenv').config();
 const express = require('express');
 
+const cors = require('cors');
+
 const app = express();
+const http = require('http').createServer(app);
 
-const httpServer = require('http').createServer(app);
-
-const PORT = process.env.PORT || 3000;
-
-const io = require('socket.io')(httpServer, {
+const io = require('socket.io')(http, {
   cors: {
     origin: 'http://localhost:3000',
     methods: ['GET', 'POST'],
-  },
-});
+  } });
 
 app.set('view engine', 'ejs');
 
+app.set('views', './views');
+
 app.use(express.static(`${__dirname}/public`));
+
+app.use(cors());
+
+app.get('/', (_request, response) => {
+  response.render('chat');
+});
 
 require('./sockets/chat')(io);
 
-httpServer.listen(PORT, () => {
-  console.log(`Ouvindo a porta ${PORT}`);
-});
+  const PORT = process.env.PORT || 3000;
+
+  http.listen(PORT, () => console.log(`Listen on PORT ${PORT}`));

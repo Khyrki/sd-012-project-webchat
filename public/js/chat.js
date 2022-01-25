@@ -4,26 +4,28 @@ const messageform = document.querySelector('#message-form');
 const inputMessage = document.querySelector('#message-box');
 const userform = document.querySelector('#user-form');
 const nicknameInput = document.querySelector('#nickname-box');
-const usersBox = document.querySelector('#users');
+// const usersBox = document.querySelector('#users');
+const onlineUser = document.querySelector('#online-user');
 
 const DATA_TEST_ID = 'data-testid';
 let user;
 
 const createUser = () => {
-  const li = document.createElement('li');
+  // const li = document.createElement('li');
   const randomNickname = socket.id.substring(0, 16);
-  li.innerText = randomNickname;
-  li.setAttribute(DATA_TEST_ID, 'online-user');
-  li.setAttribute('id', randomNickname);
-  user = randomNickname;
-  usersBox.appendChild(li);
+  // li.innerText = randomNickname;
+  // li.setAttribute(DATA_TEST_ID, 'online-user');
+  // li.setAttribute('id', randomNickname);
+  // user = randomNickname;
+  onlineUser.innerText = randomNickname;
+  // usersBox.appendChild(li);
 };
 
 socket.on('newUser', () => createUser());
 
 messageform.addEventListener('submit', (e) => {
   e.preventDefault();
-  socket.emit('message', { chatMessage: inputMessage.value, nickname: user });
+  socket.emit('message', { chatMessage: inputMessage.value, nickname: onlineUser.innerText });
   inputMessage.value = '';
   return false;
 });
@@ -46,14 +48,15 @@ socket.on('message', (message) => createMessage(message));
 
 userform.addEventListener('submit', (e) => {
   e.preventDefault();
-  const oldNick = document.querySelector(`#${user}`);
-  oldNick.remove();
-  const li = document.createElement('li');
-  li.innerText = nicknameInput.value;
-  li.setAttribute(DATA_TEST_ID, 'online-user');
-  li.setAttribute('id', nicknameInput.value);
-  user = nicknameInput.value;
-  usersBox.appendChild(li);
+  onlineUser.innerText = nicknameInput.value;
+  // const oldNick = document.querySelector(`#${user}`);
+  // oldNick.remove();
+  // const li = document.createElement('li');
+  // li.innerText = nicknameInput.value;
+  // li.setAttribute(DATA_TEST_ID, 'online-user');
+  // li.setAttribute('id', nicknameInput.value);
+  // user = nicknameInput.value;
+  // usersBox.appendChild(li);
   nicknameInput.value = '';
   return false;
 });

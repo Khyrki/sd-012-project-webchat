@@ -29,12 +29,15 @@
     </section>
     <section>
       Mensagens
+      <ul id="message-list">
+      </ul>
     </section>
   </main>
-  <form>
+  <form id="message-form">
     <input
       type="text"
       placeholder="Digite uma nova mensagem aqui"
+      id="message-box"
       data-testid="message-box"
     />
     <button
@@ -45,9 +48,6 @@
     </button>
   </form>
   <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
-
-  </script>
+  <script src="./js/chat.js"></script>
 </body>
 </html>

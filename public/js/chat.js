@@ -4,11 +4,14 @@ const form = document.querySelector('#chat-form');
 const inputMessage = document.querySelector('#msg');
 const renameNick = document.querySelector('.btn-nickname');
 const user = document.querySelector('#user');
+const ulUsers = document.querySelector('#users');
 const username = document.querySelector('#username');
+const data = 'data-testid';
 
 renameNick.addEventListener('click', (event) => {
   event.preventDefault();
   user.innerText = username.value;
+  socket.emit('rename', user.innerText);
 });
 
 form.addEventListener('submit', (event) => {
@@ -21,9 +24,24 @@ form.addEventListener('submit', (event) => {
 });
 
 const onlineUser = (nickname) => {
-  user.setAttribute('data-testid', 'online-user');
   user.innerText = nickname;
 }; 
+
+const listUsers = (item) => {
+  ulUsers.innerHTML = '';
+  const loi = document.createElement('li');
+  loi.setAttribute(data, 'online-user');
+  loi.innerText = user.innerText;
+  ulUsers.appendChild(loi);
+  
+  item.forEach(({ nickname }) => {
+    if (nickname === user.innerText) return;
+    const li = document.createElement('li');
+    li.setAttribute(data, 'online-user');
+    li.innerText = nickname;
+    ulUsers.appendChild(li);
+  });
+};
 
 const createMessage = (chatMessage) => {
   console.log(chatMessage);
@@ -52,7 +70,7 @@ const createMessage = (chatMessage) => {
 
   const pText = document.createElement('p');
   pText.innerText = chatMessage;
-  pText.setAttribute('data-testid', 'message');
+  pText.setAttribute(data, 'message');
     messagesUl.appendChild(pText);
 };
 
@@ -62,6 +80,7 @@ const getAllMessages = (arrMessages) => {
   });
 };
 
+socket.on('list', (item) => listUsers(item));
 socket.on('getMessages', (arrMessages) => getAllMessages(arrMessages));
 socket.on('message', (chatMessage) => createMessage(chatMessage));
 socket.on('nickname', (nickname) => onlineUser(nickname));

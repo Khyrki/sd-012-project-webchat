@@ -3,13 +3,14 @@ const socket = window.io();
 const messageForm = document.querySelector('#message-form');
 const messageBox = document.querySelector('#message-box');
 
+let nickname = '';
+
 messageForm.addEventListener('submit', (e) => {
   e.preventDefault();
-
 //   console.log('get the message?'); shows the message in front - console
-
   socket.emit('message', {
     chatMessage: messageBox.value,
+    nickname,
   });
   messageBox.value = '';
 });
@@ -25,4 +26,9 @@ const addMessageToList = (msgContent) => {
 socket.on('message', (msg) => { 
   console.log(msg);
   addMessageToList(msg);
+});
+// connection that allows getting the nickname
+socket.on('nickname', (nicknoun) => {
+  console.log(nicknoun);
+  nickname = nicknoun;
 });

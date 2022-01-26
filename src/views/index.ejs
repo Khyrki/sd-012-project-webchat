@@ -5,11 +5,15 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Web chat</title>
-  <link rel="stylesheet" href="./styles.css">
-  <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
   <aside>
+
+      <h3>Usuários online: </h3>
+      <ul id="user-list">
+      </ul>
+    </section>
+
     <form id="user-form">
       <fieldset>
         <label for="name">
@@ -26,17 +30,7 @@
       </fieldset>
     </form>
 
-    <section>
-      <h2>usuários</h2>
-      <strong>Nickname:</strong>
-      <strong
-        id="user-nickname"
-      ></strong>
 
-      <h3>Usuários online</h3>
-      <ul id="user-list">
-      </ul>
-    </section>
   </aside>
 
 
@@ -56,16 +50,14 @@
       <button type="submit" data-testid="send-button">Enviar</button>
     </form>
   </main>
-
+  <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
 
     let nickname = '';
-    const userNickname = document.getElementById('user-nickname')
 
     socket.on('nickname', (client) => {
       nickname = client.nickname;
-      userNickname.innerText = nickname;
     })
 
     socket.on('connection', (onlineUsers) => {
@@ -76,8 +68,8 @@
       onlineUsers.forEach((user, index) => {
         const li = document.createElement('li');
         li.innerText = user.nickname;
+        li.setAttribute('data-testid', 'online-user')
         if (user.id === socket.id) {
-          li.setAttribute('data-testid', 'online-user')
           return userList.prepend(li);
         }
         userList.appendChild(li);

@@ -21,9 +21,8 @@ const listUser = [];
 
 const timestamp = format(new Date(), 'dd-MM-yyy HH:mm:ss');
 
-const messages = getAllMessages();
-
 io.on('connection', async (socket) => {
+  const messages = await getAllMessages();
   socket.emit('historyMessages', messages);
 
   socket.on('newUser', (nickname) => {
@@ -32,8 +31,8 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('message', async ({ chatMessage, nickname = geraStringAleatoria(16) }) => {
-    await insertMessage({ chatMessage, nickname, timestamp });
     io.emit('message', `${timestamp} - ${nickname} - ${chatMessage}`);
+    await insertMessage({ chatMessage, nickname, timestamp });
   });
 
   socket.on('disconnect', async () => {
@@ -43,7 +42,7 @@ io.on('connection', async (socket) => {
   });
 });
 
-io.on('connection', async (socket) => {
+io.on('connection', (socket) => {
   socket.on('changeNick', (nickname) => {
     listUser.forEach((user) => {
       const userToEdit = user;

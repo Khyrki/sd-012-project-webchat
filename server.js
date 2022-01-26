@@ -12,9 +12,7 @@ const io = require('socket.io')(http, {
     },
 });
 
-io.on('connection', (socket) => {
-    console.log(`Usuário conectado. ID: ${socket.id} `);
-});
+require('./sockets/chat')(io);
 
 app.use(express.static(`${__dirname}/public`));
 

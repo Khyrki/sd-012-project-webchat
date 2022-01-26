@@ -21,8 +21,9 @@ const listUser = [];
 
 const timestamp = format(new Date(), 'dd-MM-yyy HH:mm:ss');
 
+const messages = getAllMessages();
+
 io.on('connection', async (socket) => {
-  const messages = await getAllMessages();
   socket.emit('historyMessages', messages);
 
   socket.on('newUser', (nickname) => {

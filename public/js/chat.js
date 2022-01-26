@@ -29,6 +29,11 @@ socket.on('message', (msg) => {
 });
 // connection that allows getting the nickname
 socket.on('nickname', (nicknoun) => {
-  console.log(nicknoun);
-  nickname = nicknoun;
+  const nicknameFromStorage = sessionStorage.getItem('nick@webchat');
+  if (!nicknameFromStorage) {
+    sessionStorage.setItem('nick@webchat', nicknoun);
+    nickname = nicknoun;
+    return;
+  }
+  nickname = nicknameFromStorage;
 });

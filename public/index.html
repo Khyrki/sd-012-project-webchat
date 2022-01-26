@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Webchat Project</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.js" integrity="sha512-nYuHvSAhY5lFZ4ixSViOwsEKFvlxHMU2NHts1ILuJgOS6ptUmAGt/0i5czIgMOahKZ6JN84YFDA+mCdky7dD8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> 
+</head>
+<body>
+  <main>
+    <ul id="online-user"></ul>
+
+    <div>
+      <form id="nickname-form">
+        <input type="text" data-testid="nickname-box" name="nickname" placeholder="Troque aqui o seu nickname">
+        <button type="submit" data-testid="nickname-button">Salvar</button>
+      </form>
+    </div>
+    
+    <div>
+      <form id="message-form">
+        <input type="text" data-testid="message-box" name="message" placeholder="Digite aqui sua mensagem">
+        <button type="submit" data-testid="send-button">Enviar</button>
+      </form>
+    </div>
+
+    <div class="render-message">
+      <div></div>
+    </div>
+  </main>
+  <script type="text/javascript">
+    var socket = io('http://localhost:3000');
+
+    var nicknameInfo;
+
+    socket.on('connectedUser', function(userId){
+      nicknameInfo = userId;
+      socket.emit('saveNickname', nicknameInfo);
+    });
+
+    socket.on('allLogged', function(onlineUser){
+      $('#online-user').html('');
+      
+      // semelhante ao exemplo da documentação do MDN em: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+      const idComparision = onlineUser.sort(function(a, b) {
+        if (a.id === socket.id) return -1;
+        if (b.id === socket.id) return 1;
+        return 0;
+      });
+
+      idComparision.forEach(({ nicknameId }) => {
+        $('#online-user').append('<li data-testid="online-user">' + nicknameId + '<li>');
+      });
+    });
+
+    $('#nickname-form').submit((event) => {
+      event.preventDefault();
+      nicknameInfo = $('input[name="nickname"]').val();
+      socket.emit('saveNickname', nicknameInfo);
+    });
+
+    $('#message-form').submit(function(event){
+      event.preventDefault();
+      var bodyMessage = $('input[name="message"]').val();
+      console.log(bodyMessage);
+
+      socket.emit('message', { nickname: nicknameInfo, chatMessage: bodyMessage });
+    });
+
+    socket.on('message', function(info){
+      $('.render-message').append('<p data-testid="message">' + info + '</p>');
+    });
+
+    socket.on('messageHistory', function(response) {
+      response.forEach(({ message, nickname, timestamp }) => {
+        $('.render-message').append(`<p data-testid="message">${timestamp} - ${nickname}: ${message}</p>`);
+      })
+    })
+
+  </script>
+</body>
+</html>

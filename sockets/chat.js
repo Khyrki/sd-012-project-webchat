@@ -1,14 +1,21 @@
-const users = [];
+const allUsers = [];
 
+/* funçoes no socket para criação de usuario e mensagem */
 module.exports = (io) => io.on('connection', (socket) => {
   socket.on('newUser', (nickName) => {
-    users.push(nickName);
-    io.emit('updateUsersList', users);
+    allUsers.push(nickName);
+    io.emit('updateAllUsers', allUsers);
   });
 
   socket.on('message', async ({ chatMessage, nickname }) => {
     const time = new Date().toLocaleString().replace('/', '-');
+    const response = `${time.replace('/', '-')} ${nickname}: ${chatMessage}`;
+    io.emit('message', response);
+  });
 
-    io.emit('message', `${time.replace('/', '-')} ${nickname}: ${chatMessage}`);
+  socket.on('attUserName', (newUser, oldUser) => {
+    const arrIndex = allUsers.findIndex((user) => user === oldUser);
+    allUsers[arrIndex] = newUser;
+    io.emit('updateAllUsers', allUsers);
   });
 });

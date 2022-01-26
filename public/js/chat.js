@@ -1,33 +1,58 @@
 const socket = window.io();
 
-const formMensage = document.querySelector('#formMensage');
-const mensageInput = document.querySelector('#mensageInput');
 const messages = document.querySelector('#messages');
+const usersList = document.querySelector('#nicksList');
+const btnMessage = document.querySelector('#send-button');
+const messageBox = document.querySelector('#message-box');
+const nickNameChange = document.querySelector('#nickname-box');
+const sendNickname = document.querySelector('#nickname-button');
 
-const generateNick = (value) => value.splice(0, 16);
+const testId = 'data-testid';
 
-const buildMensage = (value, attribute) => {
-  const msg = document.createElement('li');
-  if (attribute) {
-    msg.setAttribute(`${attribute[0]}, ${attribute[1]}`);
-  }
-  msg.innerHTML = value;
-  messages.appendChild(msg);
+const createMensage = (value) => {
+  const li = document.createElement('li');
+  li.setAttribute(testId, 'message');
+  li.innerHTML = value;
+  messages.appendChild(li);
 };
 
-formMensage.addEventListener('submit', (e) => {
+const generateUserName = (value) => value.slice(4);
+
+btnMessage.addEventListener('click', (e) => {
   e.preventDefault();
   const nickname = sessionStorage.getItem('nickname');
-  if (mensageInput.value) {
-    socket.emit('message', { chatMessage: mensageInput.value, nickname });
+  if (messageBox.value) {
+    socket.emit('message', { chatMessage: messageBox.value, nickname });
   }
-  mensageInput.value = '';
+  messageBox.value = '';
 });
 
 socket.on('connect', () => {
-  const nick = generateNick(socket.id);
-  sessionStorage.setItem('nickname', nick);
-  socket.emit('newUser', nick);
+  const nickName = generateUserName(socket.id);
+  sessionStorage.setItem('nickname', nickName);
+  socket.emit('newUser', nickName);
 });
 
-socket.on('message', (msg) => buildMensage(msg, ['testid', 'message']));
+sendNickname.addEventListener('click', (e) => {
+  e.preventDefault();
+  const oldUser = sessionStorage.getItem('nickname');
+  const newUser = nickNameChange.value;
+  sessionStorage.setItem('nickname', newUser);
+  if (newUser) {
+    socket.emit('attUserName', newUser, oldUser);
+  }
+  messageBox.value = '';
+});
+
+const createUser = (value) => {
+  const li = document.createElement('li');
+  li.innerHTML = value;
+  li.setAttribute(testId, 'online-user');
+  usersList.appendChild(li);
+};
+
+socket.on('updateAllUsers', (users) => {
+  users.forEach((user) => createUser(user));
+});
+
+socket.on('message', (msg) => createMensage(msg));

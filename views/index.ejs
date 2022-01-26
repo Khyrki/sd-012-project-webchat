@@ -1,0 +1,35 @@
+
+
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src='http://localhost:3000/socket.io/socket.io.js'></script>
+  <title>CHATCHAT LINE</title>
+</head>
+<body>
+  <h1>CHATCHAT LINE</h1>
+  <form>
+    <div>
+      <label for="box-nick">Nickname:</label>
+      <input type="text" id="box-nick" data-testid="nickname-box" />
+      <button type="button" id="btn-nick" data-testid="nickname-button">Salvar</button>
+    </div>
+    <div>
+      <br><label for="listaUsuarios">Users Name:</label><br>
+      <ul id="usuariosOnline"></ul>
+    </div>
+    <div>
+      <br><label for="mensagensUsuarios">Message:</label><br>
+      <ul id="mensagensUsuarios"></ul>
+    </div>
+    <div>
+      <label for="box-msg">Message:</label>
+      <input type="text" id="box-msg" data-testid="message-box" />
+      <button type="button" id="btn-msg" data-testid="send-button">Enviar</button>
+    </div>
+   </form>
+  <script src="./script.js"></script>
+</body>
+</html>

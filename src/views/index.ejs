@@ -16,14 +16,24 @@
           Insira seu nickname
         </label>
 
-        <input id="user-input" type="text" placeholder="starlord">
-        <button type="submit">salvar</button>
+        <input
+          id="user-input"
+          type="text"
+          placeholder="Seu nickname"
+          data-testid="nickname-box"  
+        >
+        <button type="submit" data-testid="nickname-button">salvar</button>
       </fieldset>
     </form>
 
     <section>
-      <strong>usuários</strong>
+      <h2>usuários</h2>
+      <strong>Nickname:</strong>
+      <strong
+        id="user-nickname"
+      ></strong>
 
+      <h3>Usuários online</h3>
       <ul id="user-list">
       </ul>
     </section>
@@ -31,37 +41,77 @@
 
 
   <main>
-    <section>
-      <ul id="messages"></ul>
-    </section>
-    <form id="submitMessage">
-      <input type="text" id="messageInput">
-      <button type="submit">Enviar</button>
+    <ul id="message-list">
+      <% messages && messages.forEach((message) => { %>
+        <li data-testid="message" ><%= message %></li>
+      <% }) %>
+    </ul>
+    <form id="message-form">
+      <input
+        type="text"
+        name="message"
+        id="message-input"
+        data-testid="message-box"
+      >
+      <button type="submit" data-testid="send-button">Enviar</button>
     </form>
   </main>
 
   <script>
     const socket = io();
 
+    let nickname = '';
+    const userNickname = document.getElementById('user-nickname')
+
+    socket.on('nickname', (client) => {
+      nickname = client.nickname;
+      userNickname.innerText = nickname;
+    })
+
     socket.on('connection', (onlineUsers) => {
       const userList = document.getElementById('user-list');
 
       userList.innerHTML = '';
       
-      onlineUsers.forEach((user) => {
+      onlineUsers.forEach((user, index) => {
         const li = document.createElement('li');
         li.innerText = user.nickname;
-      
+        if (user.id === socket.id) {
+          li.setAttribute('data-testid', 'online-user')
+          return userList.prepend(li);
+        }
         userList.appendChild(li);
       });
     });
-
+      
     const userForm = document.querySelector('#user-form');
     userForm.addEventListener('submit', (event) => {
       event.preventDefault();
-      const userInput = document.querySelector('#user-input').value;
-      socket.emit('nickname', userInput);
+      const nickname = document.querySelector('#user-input').value;
+      socket.emit('nickname', nickname);
+      document.getElementById('user-input').value = ''; 
     });
+
+    const messageForm = document.querySelector('#message-form');
+    messageForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const chatMessage = document.querySelector('#message-input').value;
+
+      socket.emit('message', {chatMessage, nickname});
+      document.getElementById('message-input').value = ''; 
+    });
+    
+    socket.on('message', (newMessage) => {
+      const messageList = document.querySelector('#message-list');
+      const li = document.createElement('li');
+      li.innerText = newMessage;
+      
+      li.setAttribute('data-testid', 'message');
+      messageList.appendChild(li);
+    });
+      
+    
   </script>
 </body>
 </html>

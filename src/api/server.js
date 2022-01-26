@@ -16,6 +16,7 @@ require('./socket')(io);
 
 const router = require('./routes');
 
+app.set('view engine', 'ejs');
 app.use(router);
 
 http.listen(3000, () => {

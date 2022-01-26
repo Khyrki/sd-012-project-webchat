@@ -3,7 +3,18 @@ const socket = window.io();
 const messageForm = document.querySelector('#message-form');
 const messageBox = document.querySelector('#message-box');
 
+const nicknameForm = document.querySelector('#nickname-form');
+const nicknameBox = document.querySelector('#nickname-box');
+
+const usersList = document.querySelector('#users-list');
+
 let nickname = '';
+
+const saveNickNameInStorage = (nicknoun) => {
+  sessionStorage.setItem('nickname@webchat', nicknoun);
+};
+
+const getNicknameFromStorage = () => sessionStorage.getItem('nickname@webchat');
 
 messageForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -15,11 +26,40 @@ messageForm.addEventListener('submit', (e) => {
   messageBox.value = '';
 });
 
+nicknameForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  nickname = nicknameBox.value;
+  saveNickNameInStorage(nicknameBox.value);
+  console.log('nickame saved', getNicknameFromStorage());
+  socket.emit('updateNickname', nickname);
+});
+
 const addMessageToList = (msgContent) => {
   const messageList = document.querySelector('#message-list');
   const newMsg = document.createElement('li');
   newMsg.innerHTML = msgContent;
+  newMsg.setAttribute('data-testid', 'message');
   messageList.appendChild(newMsg);
+};
+
+const addUserToList = (nicknoun, testid) => {
+  const userElement = document.createElement('li');
+  userElement.innerText = nicknoun;
+  userElement.setAttribute('data-testid', testid);
+
+  usersList.appendChild(userElement);
+};
+
+const updateUsersList = (users) => {
+  usersList.innerHTML = '';
+
+  const currentUser = users[socket.id];
+  addUserToList(currentUser, 'online-user');
+
+  const otherUsers = Object.keys(users).filter((userId) => userId !== socket.id);
+  otherUsers.forEach((userId) => {
+    addUserToList(users[userId], 'other-user');
+  });
 };
 
 // connection that allows getting a message from server and add it to the list
@@ -28,12 +68,18 @@ socket.on('message', (msg) => {
   addMessageToList(msg);
 });
 // connection that allows getting the nickname
-socket.on('nickname', (nicknoun) => {
-  const nicknameFromStorage = sessionStorage.getItem('nick@webchat');
+socket.on('getNickname', (nicknoun) => {
+  const nicknameFromStorage = getNicknameFromStorage();
   if (!nicknameFromStorage) {
-    sessionStorage.setItem('nick@webchat', nicknoun);
+    saveNickNameInStorage(nicknoun);
     nickname = nicknoun;
-    return;
   }
-  nickname = nicknameFromStorage;
+    nickname = nicknameFromStorage;
+    console.log('getting nickname from storage ahead');
+    socket.emit('updateNickname', nicknoun);
+});
+
+socket.on('updateUsers', (users) => {
+  console.log('updatedUsers aqui');
+  updateUsersList(users);
 });

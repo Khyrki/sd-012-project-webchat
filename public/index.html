@@ -10,10 +10,11 @@
 <body>
   <main>
     <section class="user-section">
-      <form>
+      <form id="nickname-form">
         <input
           type="text"
           placeholder="insira seu nickname"
+          id="nickname-box"
           data-testid="nickname-box"
         />
         <button
@@ -25,12 +26,12 @@
       </form>
       <div>
         Lista de usuários
+        <ul id="users-list"></ul>
       </div>
     </section>
     <section>
       Mensagens
-      <ul id="message-list">
-      </ul>
+      <ul id="message-list"></ul>
     </section>
   </main>
   <form id="message-form">

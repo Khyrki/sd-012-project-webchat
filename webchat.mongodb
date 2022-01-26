@@ -1,0 +1,12 @@
+
+use('webchat');
+db.messages.insertMany([
+  { 'message': '2', 'nickname': 'jkl', 'timestamp': new Date('2014-03-01T09:00:00Z') },
+  { 'message': '1', 'nickname': 'abc', 'timestamp': new Date('2014-03-01T08:00:00Z') },
+  { 'message': '3', 'nickname': 'xyz', 'timestamp': new Date('2014-03-15T09:00:00Z') },
+  { 'message': '4', 'nickname': 'xyz', 'timestamp': new Date('2014-04-04T11:21:39.736Z') },
+  { 'message': '5', 'nickname': 'abc', 'timestamp': new Date('2014-04-04T21:23:13.331Z') },
+  { 'message': '6', 'nickname': 'def', 'timestamp': new Date('2015-06-04T05:08:13Z') },
+  { 'message': '7', 'nickname': 'def', 'timestamp': new Date('2015-09-10T08:43:00Z') },
+  { 'message': '8', 'nickname': 'abc', 'timestamp': new Date('2016-02-06T20:20:13Z') },
+]);

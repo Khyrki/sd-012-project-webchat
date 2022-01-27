@@ -1,14 +1,18 @@
 const randomstring = require('randomstring');
 
 const currentTimeStamp = require('../helpers/currentTimeStamp');
+const { saveMessage, getAllMessages } = require('../models/message');
 
 const users = {};
 
-const onConnection = (io, socket) => {
+const onConnection = async (io, socket) => {
   console.log('onConnection');
   const randomNickname = randomstring.generate(16);
-  // users[socket.id] = randomNickname;
   socket.emit('getNickname', randomNickname);
+
+  // get messages from db
+  const allMessages = await getAllMessages();
+  socket.emit('refreshMessages', allMessages);
 };
 
 module.exports = (io) => {
@@ -17,9 +21,13 @@ module.exports = (io) => {
     // console.log(socket);
     onConnection(io, socket);
 
-    socket.on('message', (msg) => {
-    // gets message from client and send it to all in right format
+    socket.on('message', async (msg) => {
+      // gets message from client and send it to all in right format
+      const { chatMessage: message, nickname } = msg;
       const timestamp = currentTimeStamp();
+
+      await saveMessage({ message, nickname, timestamp });
+
       const clientMessage = `${timestamp} - ${msg.nickname}: ${msg.chatMessage}`;
       io.emit('message', clientMessage);
     });

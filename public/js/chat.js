@@ -2,6 +2,7 @@ const socket = window.io();
 
 const messageForm = document.querySelector('#message-form');
 const messageBox = document.querySelector('#message-box');
+const messageList = document.querySelector('#message-list'); 
 
 const nicknameForm = document.querySelector('#nickname-form');
 const nicknameBox = document.querySelector('#nickname-box');
@@ -9,6 +10,7 @@ const nicknameBox = document.querySelector('#nickname-box');
 const usersList = document.querySelector('#users-list');
 
 let nickname = '';
+const testId = 'data-testid';
 
 const saveNickNameInStorage = (nicknoun) => {
   sessionStorage.setItem('nickname@webchat', nicknoun);
@@ -35,22 +37,21 @@ nicknameForm.addEventListener('submit', (e) => {
 });
 
 const addMessageToList = (msgContent) => {
-  const messageList = document.querySelector('#message-list');
   const newMsg = document.createElement('li');
   newMsg.innerHTML = msgContent;
-  newMsg.setAttribute('data-testid', 'message');
+  newMsg.setAttribute(testId, 'message');
   messageList.appendChild(newMsg);
 };
 
 const addUserToList = (nicknoun, testid) => {
   const userElement = document.createElement('li');
   userElement.innerText = nicknoun;
-  userElement.setAttribute('data-testid', testid);
+  userElement.setAttribute(testId, testid);
 
   usersList.appendChild(userElement);
 };
 
-const updateUsersList = (users) => {
+const renderUsersList = (users) => {
   usersList.innerHTML = '';
 
   const currentUser = users[socket.id];
@@ -59,6 +60,17 @@ const updateUsersList = (users) => {
   const otherUsers = Object.keys(users).filter((userId) => userId !== socket.id);
   otherUsers.forEach((userId) => {
     addUserToList(users[userId], 'other-user');
+  });
+};
+
+const renderMessages = (msgs) => {
+  msgs.forEach((msg) => {
+    const { message, nickname: nicknoun, timestamp } = msg;
+    const newMsg = document.createElement('li');
+    newMsg.innerText = `${timestamp} - ${nicknoun}: ${message}`;
+    newMsg.setAttribute(testId, 'message');
+
+    messageList.appendChild(newMsg);
   });
 };
 
@@ -81,5 +93,9 @@ socket.on('getNickname', (nicknoun) => {
 
 socket.on('updateUsers', (users) => {
   console.log('updatedUsers aqui');
-  updateUsersList(users);
+  renderUsersList(users);
+});
+
+socket.on('refreshMessages', (msgs) => {
+  renderMessages(msgs);
 });

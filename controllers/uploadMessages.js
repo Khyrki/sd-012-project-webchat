@@ -17,6 +17,6 @@ module.exports = async (_req, res) => {
     //* envia para página ejs webchat o objeto messages      
     return res.render('webchat', { messages });
   } catch (error) {
-    res.status(500).send({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };

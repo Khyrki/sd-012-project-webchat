@@ -1,5 +1,3 @@
-stylelint-disable selector-max-specificity
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -39,7 +37,7 @@ form button {
   width: 9%;
 }
 
-#userForm {
+.userNickname {
   bottom: 90%;
   position: absolute;
 }

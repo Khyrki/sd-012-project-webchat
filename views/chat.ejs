@@ -28,7 +28,13 @@
       <ul id="nicksList"></ul>
     </div>
     <div>
-      <ul id="messages"></ul>
+      <ul id="messages">
+        <% allMessages.forEach((hist) => { %>
+        <li data-testid="message">
+          <%= `${hist.timeStamp} - ${hist.nickname}: ${hist.chatMessage}`%>
+        </li>
+        <% }) %>
+      </ul>
     </div>
 
     <section>

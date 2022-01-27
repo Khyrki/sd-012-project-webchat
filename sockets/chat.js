@@ -1,6 +1,7 @@
+const { newMessage } = require('../controllers/chat');
+
 const allUsers = [];
 
-/* funçoes no socket para criação de usuario e mensagem */
 module.exports = (io) => io.on('connection', (socket) => {
   socket.on('newUser', (nickName) => {
     allUsers.push(nickName);
@@ -10,6 +11,7 @@ module.exports = (io) => io.on('connection', (socket) => {
   socket.on('message', async ({ chatMessage, nickname }) => {
     const time = new Date().toLocaleString().replace('/', '-');
     const response = `${time.replace('/', '-')} ${nickname}: ${chatMessage}`;
+    newMessage({ timeStamp: time.replace('/', '-'), nickname, chatMessage });
     io.emit('message', response);
   });
 

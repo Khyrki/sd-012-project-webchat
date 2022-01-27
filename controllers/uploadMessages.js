@@ -14,7 +14,7 @@ module.exports = async (_req, res) => {
     //* console.log(uploadMessages);
     const messages = uploadMessages.map(({ message, nickname, timestamp }) => {
       return `${timestamp} - ${nickname} ${message}`;
-    };
+    }
     //* envia para página ejs webchat o objeto messages                               
     return res.render('webchat', { messages });
   } catch (error) {

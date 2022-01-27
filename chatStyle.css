@@ -23,7 +23,7 @@ form input {
   border-radius: 30px;
   margin-right: 0.5%;
   padding: 20px;
-  width: 90%;
+  width: 30%;
 }
 
 form button {
@@ -35,4 +35,9 @@ form button {
   cursor: pointer;
   padding: 10px;
   width: 9%;
+}
+
+#userForm {
+  bottom: 90%;
+  position: absolute;
 }

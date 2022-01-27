@@ -59,7 +59,7 @@ const renderUsersList = (users) => {
 
   const otherUsers = Object.keys(users).filter((userId) => userId !== socket.id);
   otherUsers.forEach((userId) => {
-    addUserToList(users[userId], 'other-user');
+    addUserToList(users[userId], 'online-user');
   });
 };
 

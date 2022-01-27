@@ -15,6 +15,12 @@ const onConnection = async (io, socket) => {
   socket.emit('refreshMessages', allMessages);
 };
 
+const onDisconnet = (io, socket) => {
+  console.log('onDisconnet');
+  delete users[socket.id];
+  io.emit('updateUsers', users);
+};
+
 module.exports = (io) => {
   io.on('connection', (socket) => {
     // console.log('conectado'); shows that we have connection - users are connected!
@@ -39,5 +45,6 @@ module.exports = (io) => {
         // sends updated nickname to all
         io.emit('updateUsers', users);
       });
+    socket.on('disconnect', () => { onDisconnet(io, socket); });
   });
 };

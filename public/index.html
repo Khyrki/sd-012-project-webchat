@@ -1,18 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Webchat - Socket.IO</title>
+  <title>Webchat - Socket.io</title>
 </head>
+
 <body>
   <h1>Webchat</h1>
+  <span data-testid="online-user"></span>
+  <form id="nickname-form">
+    <input type="text" data-testid="nickname-box" />
+    <button type="submit" data-testid="nickname-button">Salvar nickname</button>
+  </form>
   <ul id="messages"></ul>
-  <form action="">
-    <input id="input" type="text" /><button>Enviar</button>
+  <form id="messages-form">
+    <input data-testid="message-box" type="text" />
+    <button data-testid="send-button">Enviar</button>
   </form>
 </body>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="./js/chat.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="./js/chat.js"></script>
+
 </html>

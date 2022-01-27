@@ -1,3 +1,5 @@
+stylelint-disable selector-max-specificity
+
 * {
   box-sizing: border-box;
   margin: 0;

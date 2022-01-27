@@ -5,7 +5,7 @@ const input = document.querySelector('#input');
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
-  socket.emit('client', input.value);
+  socket.emit('message', input.value);
   input.value = '';
   return false;
 });
@@ -17,4 +17,4 @@ const createMessage = (message) => {
   ul.appendChild(li);
 };
 
-socket.on('server', (message) => createMessage(message));
+socket.on('message', (message) => createMessage(message));

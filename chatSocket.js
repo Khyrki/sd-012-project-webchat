@@ -16,7 +16,7 @@ module.exports = (io) => io.on('connection', (socket) => {
   });
 
   socket.on('connect', (id) => {
-    console.log(`Nickname ranodm: ${socket.id}`);
+    console.log(`Nickname random: ${socket.id}`);
     io.emit('connect', id);
   });
 

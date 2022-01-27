@@ -1,7 +1,7 @@
 const socket = window.io();
 
 const messagesForm = document.querySelector('#messages-form');
-const messagesInput = document.querySelector('#messages-input');
+const messagesInput = document.querySelector('#message-box');
 
 const nicknameForm = document.querySelector('#nickname-form');
 const nicknameInput = document.querySelector('#nickname-box');
@@ -30,7 +30,9 @@ nicknameForm.addEventListener('submit', (e) => {
 
 messagesForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  socket.emit('message', messagesInput.value);
+  const chatMessage = messagesInput.value;
+  const nickname = showNickname.innerText;
+  socket.emit('message', { nickname, chatMessage });
   messagesInput.value = '';
   return false;
 });

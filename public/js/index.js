@@ -1,5 +1,7 @@
 const socket = window.io();
 
+const ONLINE_USER = 'online-user';
+
 let nickname = '';
 
 const addToStageNewLi = (text, testId, fatherId, id) => {
@@ -8,14 +10,15 @@ const addToStageNewLi = (text, testId, fatherId, id) => {
   const li = document.createElement('li');
   const liText = document.createTextNode(text);
 
-  if (id) {
-    li.setAttribute('id', id);
-  }
+  if (id) { li.setAttribute('id', id); }
 
   li.setAttribute('data-testid', testId);
 
-  li.appendChild(liText);
-  listElement.appendChild(li);
+  li.append(liText);
+
+  if (id === socket.id) { return listElement.prepend(li); }
+
+  listElement.append(li);
 };
 
 const formSendMessage = document.querySelector('.form-send-message');
@@ -43,20 +46,17 @@ formChangeNickname.addEventListener('submit', (event) => {
   nicknameInput.value = '';
 });
 
-socket.on('userConnect', ({ id, nickname: nickText }) => {
-  if (id === socket.id) { nickname = nickText; }
-  addToStageNewLi(nickText, 'online-user', 'users', id);
-});
+const updateOnlineUsers = (onlineUsers) => {
+  const users = document.querySelector('#users');
+  users.innerHTML = '';
 
-socket.on('userDisconnect', (id) => {
-  const userToDelete = document.getElementById(id);
-  if (userToDelete) { userToDelete.remove(); }
-});
+  onlineUsers.forEach(({ id, nickname: nickText }) => {
+    addToStageNewLi(nickText, ONLINE_USER, 'users', id);
+  });
+};
 
-socket.on('setNickname', ({ id, nickname: nickText }) => {
-  const nicknameLi = document.getElementById(id);
-  nicknameLi.innerText = nickText;
-  nickname = nickText;
+socket.on('setOnlineUsers', (onlineUsers) => {
+  updateOnlineUsers(onlineUsers);
 });
 
 socket.on('message', (message) => {

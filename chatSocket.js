@@ -15,6 +15,11 @@ module.exports = (io) => io.on('connection', (socket) => {
     io.emit('serverNick', nickname);
   });
 
+  socket.on('connect', (id) => {
+    console.log(`Nickname ranodm: ${socket.id}`);
+    io.emit('connect', id);
+  });
+
   socket.on('disconnect', () => {
     // socket.broadcast.emit('serverMessage', `Xiii! ${socket.id} acabou de se desconectar! :(`);
     console.log(`Usuário ${socket.id} acabou de se desconectar`);

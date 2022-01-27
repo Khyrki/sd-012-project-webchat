@@ -6,24 +6,15 @@
 }
 
 body {
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: Arial;
   font-size: 13px;
 }
 
-form {
-  background: black;
-  bottom: 0;
-  padding: 3px;
-  position: fixed;
-  width: 100%;
-}
-
 form input {
-  border: none;
+  border: b;
   border-radius: 30px;
   margin-right: 0.5%;
   padding: 20px;
-  width: 30%;
 }
 
 form button {
@@ -34,10 +25,8 @@ form button {
   color: white;
   cursor: pointer;
   padding: 10px;
-  width: 9%;
 }
 
-.userNickname {
-  bottom: 90%;
-  position: absolute;
+.teste {
+  color: black;
 }

@@ -19,9 +19,10 @@ const io = require('socket.io')(http, {
 });
 
 require('./sockets/messageSocket')(io);
+require('./sockets/userSocket')(io);
 
 const rootRouter = require('./routes');
 
 app.use(rootRouter);
 
-http.listen(PORT, () => console.log(`App runnign on port: ${PORT}`));
+http.listen(PORT, () => console.log(`App running on port: ${PORT}`));

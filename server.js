@@ -21,8 +21,8 @@ const chatHistory = async () => {
 };
 
 io.on('connection', async (socket) => {
-  io.emit('setDefaultNickname');
   io.emit('chatHistory', await chatHistory());
+  io.emit('setDefaultNickname');
 
   socket.on('newNickname', (nickname) => {
     newNickname(io, socket, nickname, onlineUsers);

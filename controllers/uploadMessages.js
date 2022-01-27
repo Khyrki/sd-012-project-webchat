@@ -11,9 +11,10 @@ const chatModels = require('../models/chatModels');
 module.exports = async (_req, res) => {
   try {
     const uploadMessages = await chatModels.findAll();
-    // console.log(uploadMessages);
-    const messages = uploadMessages.map(({ message, nickname, timestamp }) =>
-      `${timestamp} - ${nickname} ${message}`);
+    //* console.log(uploadMessages);
+    const messages = uploadMessages.map(({ timestamp, nickname, message }) =>
+    `${timestamp} - ${nickname} ${message}`);
+    //* envia para página ejs webchat o objeto messages      
     return res.render('webchat', { messages });
   } catch (error) {
     res.status(500).send({ message: error.message });

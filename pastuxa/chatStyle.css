@@ -19,9 +19,8 @@ form {
 }
 
 form input {
-  border-radius: 30px;
-  border: 0;
   border: none;
+  border-radius: 30px;
   margin-right: 0.5%;
   padding: 20px;
   width: 90%;

@@ -11,15 +11,6 @@ module.exports = (io) => {
     //* Emite para clientes a lista de usuários
     io.emit('onlineUsers', onlineUsers);
 
-    //* servidor escutando se evento 'message' chega
-    socket.on('message', async ({ chatMessage, nickname }) => {
-      const date = moment().format('DD-MM-YYYY LTS');
-      //* coloca no banco de dados a mensagem
-      await chatModels.insertNewUser({ message: chatMessage, nickname, timestamp: date });
-      //* emit para todos o evento 'message'
-      io.emit('message', `${date} - ${nickname}: ${chatMessage}`);
-    });
-
     //* Servidor escuta evento 'onlineUsers'
     //* Muda nome da lista
     socket.on('onlineUsers', (newNickname) => {
@@ -27,6 +18,15 @@ module.exports = (io) => {
       onlineUsers[index] = newNickname;
       //* Emite para clientes para renovar na lista
       io.emit('onlineUsers', onlineUsers);
+    });
+
+    //* servidor escutando se evento 'message' chega
+    socket.on('message', async ({ chatMessage, nickname }) => {
+      const date = moment().format('DD-MM-YYYY LTS');
+      //* coloca no banco de dados a mensagem
+      await chatModels.insertNewUser({ message: chatMessage, nickname, timestamp: date });
+      //* emit para todos o evento 'message'
+      io.emit('message', `${date} - ${nickname}: ${chatMessage}`);
     });
 
     //* Limpa lista deixando somente usuários online

@@ -1,32 +1,21 @@
 const socket = window.io();
 
-sessionStorage.removeItem('user');
+let nickname = '';
 
-const setUser = (user) => sessionStorage.setItem('user', JSON.stringify(user));
-const getUser = () => JSON.parse(sessionStorage.getItem('user'));
-
-const user = getUser() || { id: '', nickname: '' };
-
-const createNewLi = ({ id, text, testId, fatherId }) => {
+const addToStageNewLi = (text, testId, fatherId, id) => {
   const listElement = document.getElementById(fatherId);
 
   const li = document.createElement('li');
   const liText = document.createTextNode(text);
 
-  li.setAttribute('id', id);
+  if (id) {
+    li.setAttribute('id', id);
+  }
+
   li.setAttribute('data-testid', testId);
-  
+
   li.appendChild(liText);
   listElement.appendChild(li);
-};
-
-const changeNickname = ({ id, nickname }) => {
-  const nicknameLi = document.getElementById(id);
-  nicknameLi.innerText = nickname;
-};
-
-const userLogout = (id) => {
-  document.getElementById(id).remove();
 };
 
 const formSendMessage = document.querySelector('.form-send-message');
@@ -35,7 +24,6 @@ formSendMessage.addEventListener('submit', (event) => {
   
   const messageInput = event.target.firstElementChild;
   const chatMessage = messageInput.value;
-  const nickname = user.nickname || getUser().nickname;
 
   socket.emit('message', { chatMessage, nickname });
 
@@ -45,30 +33,32 @@ formSendMessage.addEventListener('submit', (event) => {
 const formChangeNickname = document.querySelector('.form-change-nickname');
 formChangeNickname.addEventListener('submit', (event) => {
   event.preventDefault();
-  
+
   const nicknameInput = event.target.firstElementChild;
-  const nickname = nicknameInput.value;
 
-  user.nickname = nickname;
-  changeNickname(user);
+  nickname = nicknameInput.value;
 
-  socket.emit('changeNickname', user);
+  socket.emit('setNickname', { id: socket.id, nickname });
 
   nicknameInput.value = '';
 });
 
-socket.on('userDisconnect', userLogout);
-
-socket.on('userConnect', (id) => {
-  user.id = id;
-  user.nickname = id;
-
-  setUser({ id, nickname: id });
-  createNewLi({ id, text: id, testId: 'online-user', fatherId: 'users' });
+socket.on('userConnect', ({ id, nickname: nickText }) => {
+  if (id === socket.id) { nickname = nickText; }
+  addToStageNewLi(nickText, 'online-user', 'users', id);
 });
 
-socket.on('changeNickname', changeNickname);
+socket.on('userDisconnect', (id) => {
+  const userToDelete = document.getElementById(id);
+  if (userToDelete) { userToDelete.remove(); }
+});
+
+socket.on('setNickname', ({ id, nickname: nickText }) => {
+  const nicknameLi = document.getElementById(id);
+  nicknameLi.innerText = nickText;
+  nickname = nickText;
+});
 
 socket.on('message', (message) => {
-  createNewLi({ id: user.id, text: message, testId: 'message', fatherId: 'messages' });
+  addToStageNewLi(message, 'message', 'messages');
 });

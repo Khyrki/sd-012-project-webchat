@@ -13,7 +13,7 @@ module.exports = async (_req, res) => {
     const uploadMessages = await chatModels.findAll();
     //* console.log(uploadMessages);
     const messages = uploadMessages.map(({ message, nickname, timestamp }) => {
-      return `${timestamp} - ${nickname} ${message}`)
+      return `${timestamp} - ${nickname} ${message}`
     };
     //* envia para página ejs webchat o objeto messages                               
     return res.render('webchat', { messages });

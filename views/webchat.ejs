@@ -80,6 +80,16 @@
       });
     }
 
+    const renderChatHistory = (history) => {
+      const messageUl = document.getElementById("messages");
+      history.forEach((message) => {
+        const messageLi = document.createElement('li');
+        messageLi.setAttribute('data-testId', 'message');
+        messageLi.innerText = `${message.timestamp} - ${message.nickname}: ${message.message}`;
+        messageUl.appendChild(messageLi);
+      });
+    }
+
     socket.on('setDefaultNickname', () => {
       if (!socket.nickname) {
         const defaultNickname = socket.id.slice(0, 16);
@@ -90,7 +100,13 @@
     socket.on('message', (message) => appendMessageToUl(message));
     socket.on('onlineUsers', (onlineUsers) => {
       renderOnlineUsers(onlineUsers);
-      console.log(onlineUsers);
+    });
+    socket.on('chatHistory', (chatHistory) => {
+      console.log(chatHistory);
+      if (!socket.chatHistory) {
+        socket.chatHistory = chatHistory;
+        renderChatHistory(chatHistory);
+      }
     });
   </script>
 </body>

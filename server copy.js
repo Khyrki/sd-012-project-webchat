@@ -19,19 +19,19 @@ app.use(cors());
 
 const listUser = [];
 
-let messages = [];
+// let messages = [];
 
-const func1 = async () => {
-   messages = await getAllMessages();
-  //  console.log(messages);
-};
+// const func1 = async () => {
+//    messages = await getAllMessages();
+//   //  console.log(messages);
+// };
 
-func1();
+// func1();
 
 const timestamp = format(new Date(), 'dd-MM-yyy HH:mm:ss');
 
 io.on('connection', async (socket) => {
-  // const messages = await getAllMessages();
+  const messages = await getAllMessages();
   // console.log(messages);
   socket.emit('historyMessages', messages);
 
@@ -41,7 +41,6 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('message', async ({ chatMessage, nickname = geraStringAleatoria(16) }) => {
-    messages.push({ chatMessage, nickname, timestamp });
     io.emit('message', `${timestamp} - ${nickname} - ${chatMessage}`);
     await insertMessage({ chatMessage, nickname, timestamp });
   });

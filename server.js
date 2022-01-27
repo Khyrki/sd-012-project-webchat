@@ -19,10 +19,19 @@ app.use(cors());
 
 const listUser = [];
 
+let messages = [];
+
+const func1 = async () => {
+   messages = await getAllMessages();
+   console.log(messages);
+};
+
+func1();
+
 const timestamp = format(new Date(), 'dd-MM-yyy HH:mm:ss');
 
 io.on('connection', async (socket) => {
-  const messages = await getAllMessages();
+  // const messages = await getAllMessages();
   socket.emit('historyMessages', messages);
 
   socket.on('newUser', (nickname) => {

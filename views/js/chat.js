@@ -3,6 +3,7 @@ const chatUl = document.querySelector('#chatUl');
 const formChat = document.querySelector('#formMessage');
 const messageInput = document.querySelector('#messageInput');
 const formNickname = document.querySelector('#nickname');
+const ulNickname = document.querySelector('#ulNickname');
 const nicknameInput = document.querySelector('#nicknameInput');
 
 const tokenName = (length) => {
@@ -16,18 +17,30 @@ const tokenName = (length) => {
 
 sessionStorage.setItem('nameToken', tokenName(16));
 
-const displayName = document.createElement('h2');
+const displayName = document.createElement('li');
 displayName.dataset.testid = 'online-user';
-formNickname.appendChild(displayName);
+ulNickname.appendChild(displayName);
 displayName.innerText = sessionStorage.getItem('nameToken');
 
 formNickname.addEventListener('submit', (event) => {
   event.preventDefault();
   sessionStorage.setItem('nameToken', nicknameInput.value);
   displayName.innerText = nicknameInput.value;
+  
+  socket.emit('onlineUsers', nicknameInput.value);
   nicknameInput.value = '';
   return false;
 });
+
+const onlineUser = (users) => {
+  console.log(users);
+  users.forEach((user) => { 
+  const nickname = document.createElement('li');
+  nickname.dataset.testid = 'online-user';
+  nickname.innerText = user;
+  ulNickname.appendChild(nickname);
+  });
+};  
 
 formChat.addEventListener('submit', (event) => {
   event.preventDefault();
@@ -46,11 +59,12 @@ const createMessage = (message) => {
   chatUl.appendChild(li);
 };
 
-const createSpan = (message) => {
-  const span = document.createElement('span');
-  span.innerText = message;
-  formChat.appendChild(span);
+const welcome = (message) => {
+  const p = document.createElement('p');
+  p.innerText = message;
+  formChat.appendChild(p);
 };
 
-socket.on('welcome', (message) => createSpan(message));
+socket.on('welcome', (message) => welcome(message));
 socket.on('message', (message) => createMessage(message));
+socket.on('onlineUsers', (users) => onlineUser(users));

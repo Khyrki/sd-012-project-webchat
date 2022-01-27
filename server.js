@@ -16,7 +16,7 @@ const io = require('socket.io')(server, {
 
 app.use(express.static(path.join(__dirname, '/public')));
 
-require('./sockets/chat')(io);
+require('./pastuxa/chatSocket')(io);
 
 app.get('/', (_req, res) => {
   res.sendFile(path.join(__dirname, '/index.html'));

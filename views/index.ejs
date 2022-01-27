@@ -1,0 +1,35 @@
+<!-- CONTRUÍDO ATRAVEZ DO LINK -> http://socket.io/get-started/chat -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO - WebChat</title>
+  </head>
+  <body>
+    <div>
+      <div>
+        <form id="users-form" action="">
+          <input id="user-input" data-testid="nickname-box" autocomplete="off" />
+          <button data-testid="nickname-button">Salvar</button>
+        </form>
+        <ul id=users>
+          <% users.forEach(user => { %>
+            <li data-testid="online-user"><%=user%></li>
+          <%})%>
+        </ul>
+      </div>
+      <div>
+        <ul id="messages">
+          <% messages.forEach(message => { %>
+            <li data-testid="message"><%=message%></li>
+          <%})%>
+        </ul>
+      </div>
+    </div>
+    <form id="message-form" action="">
+      <input id="message-input" data-testid="message-box" autocomplete="off" />
+      <button data-testid="send-button">Send</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/index.js"></script>
+  </body>
+</html> 

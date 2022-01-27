@@ -1,4 +1,4 @@
-const socket = window.io(); // na aula 30.3 o renato explica o pq disso
+const socket = window.io(); 
 
 const usersList = document.querySelector('#users'); 
 const messagesList = document.querySelector('#messages'); 

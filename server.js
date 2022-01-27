@@ -21,6 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(`${__dirname}/public`)); 
 
 const date = moment().format('DD-MM-yyyy HH:mm:ss A');
+const users = {};
 
 io.on('connection', async (socket) => {
   // req 1 - exibindo a mensagem do jeito que o requisito pede
@@ -28,6 +29,17 @@ io.on('connection', async (socket) => {
     io.emit('message', `${date} - ${mensagem.nickname}: ${mensagem.chatMessage}`);
     // req 3 - mandar a data e a mensagem para o BD
     await controller.create(date, mensagem);
+  });
+
+  socket.on('newUser', (nickname) => {
+    users[socket.id] = nickname; io.emit('loadUsers', Object.values(users));
+  });
+  socket.on('nickname', (nickname) => {
+    users[socket.id] = nickname; io.emit('loadUsers', Object.values(users)); 
+  });
+
+  socket.on('disconnect', () => {
+    delete users[socket.id]; io.emit('loadUsers', Object.values(users)); 
   });
 
   // req 3 - exibe todas as mensagens do BD

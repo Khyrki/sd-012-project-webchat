@@ -1,0 +1,33 @@
+<html>
+
+<head>
+    <script src='http://localhost:3000/socket.io/socket.io.js'></script>
+    <title>Webchat</title>
+</head>
+
+<body>
+    <h1>WebChat da Trybe</h1>
+    <form>
+        <div>
+            <label for="nicknameInput">Novo nickname:</label>
+            <input type="text" id="nicknameInput" data-testid="nickname-box" />
+            <button type="button" id="nicknameButton" data-testid="nickname-button">Confirmar</button>
+        </div>
+        <div>
+            <br><label for="conUsers">Usuários Online:</label><br>
+            <ul id="conUsers"></ul>
+        </div>
+        <div>
+            <br><label for="userMsgs">Todas mensagens:</label><br>
+            <ul id="userMsgs"></ul>
+        </div>
+        <div>
+            <label for="msgInput">Digite aqui:</label>
+            <input type="text" id="msgInput" data-testid="message-box" />
+            <button type="button" id="msgButton" data-testid="send-button">Enviar</button>
+        </div>
+    </form>
+    <script src="./chat.js"></script>
+</body>
+
+</html> 

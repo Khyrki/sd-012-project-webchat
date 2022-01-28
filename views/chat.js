@@ -44,6 +44,18 @@ const nameList = (onUser) => {
     });
 };
 
+const DbMsg = (userMsgs) => {
+    userMsgs.forEach(({ time, nickname, chatMessage }) => {
+      const messageL = document.getElementById('userMsgs');
+      const li = document.createElement('li');
+      li.innerText = `${time} - ${nickname} : ${chatMessage}`;
+      li.setAttribute(aliasTeste, 'message');
+      messageL.appendChild(li);
+    });
+  };
+  
+  socket.on('chatModel', (userMsgs) => DbMsg(userMsgs));
+
 socket.on('message', (chatMessage) => msgUser(chatMessage));
 
 socket.on('names', (onUser) => nameList(onUser)); 

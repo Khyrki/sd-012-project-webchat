@@ -16,7 +16,8 @@ const io = require('socket.io')(server, {
 
 app.use('/logicalChat', express.static('./logicalChat'));
 
-require('./chatSocket')(io);
+require('./sockets/chatSocket')(io);
+require('./sockets/userSocket')(io);
 
 app.get('/', (_req, res) => {
   res.sendFile(path.join(__dirname, '/index.html'));

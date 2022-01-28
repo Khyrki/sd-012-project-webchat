@@ -14,7 +14,7 @@ const io = require('socket.io')(server, {
   },
 });
 
-app.use(express.static(path.join(__dirname, '/public')));
+app.use('/logicalChat', express.static('./logicalChat'));
 
 require('./chatSocket')(io);
 

@@ -21,10 +21,24 @@ app.get('/', (req, res) => {
 
 const PORT = 3000;
 
-const users = [];
+let users = [];
 
 io.on('connection', (socket) => {
   console.log(`User ${socket.id} connected`);
+
+  socket.on('updateNickname', (nickname) => {
+    console.log({ nickname });
+    users = users.filter((usr) => usr.id !== socket.id); 
+    users.push({ nickname, id: socket.id });
+    io.emit('online', users);
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`User ${socket.id} disconnected`);
+    users = users.filter((usr) => usr.id !== socket.id); 
+    io.emit('online', users);
+  });
+});
 
   io.on('connection', async (socket) => {
     const messages = await chatModel.getHistory();
@@ -35,6 +49,5 @@ io.on('connection', (socket) => {
       io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
     });
   });
-});
 
 http.listen(PORT, () => console.log(`Servidor ouvindo na porta ${PORT}`)); 

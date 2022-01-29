@@ -79,10 +79,6 @@ const loadMessages = (messages) => {
   }
 };
 
-window.addEventListener('load', () => {
-  newUser();
-});
-
 const renderUsers = (users) => {
   usersList.innerHTML = '';
 
@@ -100,3 +96,7 @@ const renderUsers = (users) => {
 socket.on('message', (msg) => renderMessage(msg));
 socket.on('loadMessages', (message) => loadMessages(message));
 socket.on('user', (user) => renderUsers(user));
+
+window.addEventListener('load', () => {
+  newUser();
+});

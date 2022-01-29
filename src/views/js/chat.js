@@ -1,5 +1,6 @@
 const socket = window.io();
 
+const nicknameShow = document.querySelector('#nicknameShow');
 const nicknameForm = document.querySelector('#nicknameForm');
 const nicknameInput = document.querySelector('#nicknameInput');
 const messageForm = document.querySelector('#messageForm');
@@ -22,6 +23,7 @@ const generateString = (length) => {
 if (!sessionStorage.getItem('nickname')) {
   const nickname = generateString(16);
   sessionStorage.setItem('nickname', nickname);
+  nicknameShow.innerText = nickname;
 }
 
 messageForm.addEventListener('submit', (e) => {
@@ -35,14 +37,17 @@ messageForm.addEventListener('submit', (e) => {
 
 nicknameForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  sessionStorage.setItem('nickname', nicknameInput.value);
-  nicknameInput.name = '';
+  const nickname = nicknameInput.value;
+  sessionStorage.setItem('nickname', nickname);
+  nicknameShow.innerText = nickname;
+  nicknameInput.value = '';
   return false;
 });
 
 const createMessage = (message) => {
   const li = document.createElement('li');
   li.innerText = message;
+  li.setAttribute('data-testid', 'message');
   messages.appendChild(li);
 };
 

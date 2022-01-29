@@ -5,14 +5,15 @@
     <title>Document</title>
   </head>
   <body>
+    <p data-testid="online-user" id="nicknameShow"></p>
     <form id="nicknameForm">
-      <input id="nicknameInput" />
-      <button id="saveNicknameButton" >Save</button>
+      <input data-testid="nickname-box" id="nicknameInput" />
+      <button data-testid="nickname-button" id="saveNicknameButton" >Save</button>
     </form>
     <ul id="messages"></ul>
     <form id="messageForm">
-      <input id="messageInput" />
-      <button id="sendMessageButton">Send</button>
+      <input data-testid="message-box" id="messageInput" />
+      <button data-testid="send-button" id="sendMessageButton">Send</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/chat.js"></script>

@@ -5,10 +5,14 @@
     <title>Document</title>
   </head>
   <body>
+    <form id="nicknameForm">
+      <input id="nicknameInput" />
+      <button id="saveNicknameButton" >Save</button>
+    </form>
     <ul id="messages"></ul>
-    <form action="">
+    <form id="messageForm">
       <input id="messageInput" />
-      <button id="sendButton">Send</button>
+      <button id="sendMessageButton">Send</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/chat.js"></script>

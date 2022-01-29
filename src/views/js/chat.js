@@ -1,14 +1,24 @@
 const socket = window.io();
 
-const form = document.querySelector('form');
-// const button = document.querySelector('#sendButton');
-const input = document.querySelector('#messageInput');
+const nicknameForm = document.querySelector('#nicknameForm');
+const nicknameInput = document.querySelector('#nicknameInput');
+const messageForm = document.querySelector('#messageForm');
+const messageInput = document.querySelector('#messageInput');
 const messages = document.querySelector('#messages');
 
-form.addEventListener('submit', (e) => {
+messageForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  socket.emit('sendMessage', { chatMessage: input.value, nickname: 'Bruno' });
-  input.value = '';
+  const nickname = sessionStorage.getItem('nickname');
+  const chatMessage = messageInput.value;
+  socket.emit('sendMessage', { chatMessage, nickname });
+  messageInput.value = '';
+  return false;
+});
+
+nicknameForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  sessionStorage.setItem('nickname', nicknameInput.value);
+  nicknameInput.name = '';
   return false;
 });
 

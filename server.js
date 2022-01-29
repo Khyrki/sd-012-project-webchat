@@ -18,8 +18,13 @@ const io = socketIO(httpServ, {
   },
 });
 require('./src/chat')(io);
+require('./src/user')(io);
 
 app.use(express.static(path.join(__dirname, './public')));
+
+app.get('/', (_req, res) => {
+  res.sendFile(path.resolve(__dirname, './public/index.html'));
+});
 
 const port = process.env.PORT || 3000;
 

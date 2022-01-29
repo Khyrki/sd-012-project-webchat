@@ -1,20 +1,14 @@
-const { createMsg } = require('../models');
+const { createMsg, getMsgs } = require('../models');
+const { formattedTime } = require('../helpers');
 
-module.exports = async (io) => {
-  io.on('connection', (socket) => {
+module.exports = (io) => {
+  io.on('connection', async (socket) => {
+    const loadedMessages = await getMsgs();
+    socket.emit('loadMessages', loadedMessages);
+
     socket.on('message', async (message) => {
-      const date = new Intl.DateTimeFormat(
-        'pt-BR',
-        {
-          dateStyle: 'short',
-          timeStyle: 'short',
-          hour12: true,
-        },
-        ).format(Date.now()).replace(/\//g, '-');
-      const mensagem = `${date} - ${message.nickname}: ${message.chatMessage}`;
-
-      io.emit('message', mensagem);
-      await createMsg(message.chatMessage, message.nickname, date);
+      io.emit('message', `${formattedTime()} - ${message.nickname}: ${message.chatMessage}`);
+      await createMsg(message.chatMessage, message.nickname, formattedTime());
     });
   });
 };

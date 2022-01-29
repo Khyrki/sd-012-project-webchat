@@ -19,7 +19,7 @@ app.use('/logicalChat', express.static('./logicalChat'));
 require('./sockets/chatSocket')(io);
 require('./sockets/userSocket')(io);
 
-app.get('/', (_req, res) => {
+app.get('/', async (_req, res) => {
   res.sendFile(path.join(__dirname, '/index.html'));
 });
 

@@ -18,10 +18,16 @@ msgForm.addEventListener('submit', (e) => {
   return false;
 });
 
-const createMessage = (message) => {
+const createMessage = (msg) => {
   const messagesUl = document.querySelector('#messages');
   const li = document.createElement('li');
-  li.innerText = message;
+  if (typeof msg === 'object') {
+    const { message, nickname, date } = msg;
+    li.innerText = `${date} - ${nickname}: ${message}`;
+  } else {
+    li.innerText = msg;
+  }
+
   li.setAttribute(dataTestId, 'message');
   messagesUl.appendChild(li);
 };
@@ -54,7 +60,7 @@ const usersOnline = (users) => {
   list.filter((user) => user !== list[userIndex]).forEach((nickname) => createUser(nickname));
 };
 
-const connectUser = () => {
+const connect = () => {
   const { nickname } = sessionStorage;
 
   if (nickname) {
@@ -63,15 +69,20 @@ const connectUser = () => {
   }
 };
 
-socket.on('getNick', ((nick) => {
-  userNickname = nick;
-}));
+const onlineMsg = (msgs) => {
+  msgs.forEach((msg) => {
+    const { message, nickname, date } = msg;
+    createMessage({ message, nickname, date });
+  });
+};
 
+socket.on('getNick', ((nick) => { userNickname = nick; }));
 socket.on('usersOnline', (users) => usersOnline(users));
 socket.on('message', (message) => createMessage(message));
+socket.on('loadMessages', (message) => onlineMsg(message));
 
 window.onload = () => {
-  connectUser();
+  connect();
 };
 
 window.onbeforeunload = () => {

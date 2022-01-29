@@ -66,9 +66,21 @@ const newUser = () => {
   socket.emit('user', newU);
 };
 
+const loadMessages = (messages) => {
+  if (messages) {
+    messageList.innerText = '';
+    messages.forEach((m) => {
+      const li = document.createElement('li');
+      li.setAttribute(datatest, 'message');
+      li.innerText = `${m.timestamp} - ${m.nickname}: ${m.message}`;
+      messageList.appendChild(li);
+    });
+  }
+};
+
 window.addEventListener('load', () => {
   newUser();
-  socket.emit('loadMessages');
 });
 
 socket.on('message', (msg) => renderMessage(msg));
+socket.on('loadMessages', (message) => loadMessages(message));

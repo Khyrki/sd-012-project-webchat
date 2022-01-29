@@ -52,3 +52,7 @@ const createMessage = (message) => {
 };
 
 socket.on('newMessage', (message) => createMessage(message));
+
+window.onbeforeunload = () => {
+  socket.disconnect();
+};

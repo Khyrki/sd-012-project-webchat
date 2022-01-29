@@ -7,12 +7,12 @@
   <body>
     <p data-testid="online-user" id="nicknameShow"></p>
     <form id="nicknameForm">
-      <input data-testid="nickname-box" id="nicknameInput" />
+      <input data-testid="nickname-box" id="nicknameInput" autocomplete="off" />
       <button data-testid="nickname-button" id="saveNicknameButton" >Save</button>
     </form>
     <ul id="messages"></ul>
     <form id="messageForm">
-      <input data-testid="message-box" id="messageInput" />
+      <input data-testid="message-box" id="messageInput" autocomplete="off"/>
       <button data-testid="send-button" id="sendMessageButton">Send</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>

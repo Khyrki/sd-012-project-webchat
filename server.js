@@ -30,3 +30,5 @@ app.get('/', (_req, res) => {
 });
 
 httpServer.listen(PORT, () => console.log(`Conectado na porta ${PORT}`));
+
+// obrigado katik e marcos me ajudaram bastante nesse projeto

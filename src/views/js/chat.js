@@ -30,6 +30,7 @@ const createOrUpdateUsers = () => {
     if (user !== nickname) {
       const li = document.createElement('li');
       li.innerText = user;
+      li.setAttribute(dataTestId, 'online-user');
       userList.appendChild(li);
     }
   });
@@ -51,7 +52,7 @@ messageForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const nickname = sessionStorage.getItem('nickname');
   const chatMessage = messageInput.value;
-  socket.emit('sendMessage', { chatMessage, nickname });
+  socket.emit('message', { chatMessage, nickname });
   messageInput.value = '';
   return false;
 });
@@ -92,7 +93,7 @@ const createHistory = (history) => {
 };
 
 socket.emit('newConnection', (sessionStorage.getItem('nickname')));
-socket.on('newMessage', (message) => createMessage(message));
+socket.on('message', (message) => createMessage(message));
 socket.on('sendHistory', (history) => createHistory(history));
 socket.on('userDisconnected', () => createOrUpdateUsers());
 socket.on('userConnected', () => createOrUpdateUsers());
@@ -103,6 +104,5 @@ window.onbeforeunload = () => {
   const users = JSON.parse(localStorage.getItem('users')) || [];
   const newUsers = users.filter((user) => user !== nickname);
   localStorage.setItem('users', JSON.stringify(newUsers));
-  socket.emit('disconnect');
   socket.disconnect();
 };

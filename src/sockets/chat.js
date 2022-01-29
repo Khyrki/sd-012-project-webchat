@@ -7,16 +7,17 @@ module.exports = (io) => io.on('connection', (socket) => {
       socket.emit('sendHistory', history);
       io.emit('userConnected');
     });
-    socket.on('disconnect', async () => {
+    socket.on('disconnect', () => {
       io.emit('userDisconnected');
     });
-    socket.on('change', async () => {
+    socket.on('change', () => {
       io.emit('userChanged');
     });
-    socket.on('sendMessage', async ({ nickname, chatMessage }) => {
+    socket.on('message', async (message) => {
+      const { nickname, chatMessage } = message;
       const date = getFormatedDate();
-      const message = `(${date}) ${nickname}: ${chatMessage}`;
+      const formatedMessage = `(${date}) ${nickname}: ${chatMessage}`;
       await Messages.insertOne({ message: chatMessage, nickname, timestamp: date });
-      io.emit('newMessage', message);
+      io.emit('message', formatedMessage);
     });
   });

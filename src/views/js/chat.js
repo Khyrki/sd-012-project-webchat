@@ -22,22 +22,8 @@ const generateString = (length) => {
 
 // Gerador de id - https://www.programiz.com/javascript/examples/generate-random-strings
 
-const createOrUpdateUsers = () => {
-  const nickname = sessionStorage.getItem('nickname');
-  userList.innerHTML = '';
-  const users = JSON.parse(localStorage.getItem('users')) || [];
-  users.forEach((user) => {
-    if (user !== nickname) {
-      const li = document.createElement('li');
-      li.innerText = user;
-      li.setAttribute(dataTestId, 'online-user');
-      userList.appendChild(li);
-    }
-  });
-};
-
 if (!sessionStorage.getItem('nickname')) {
-  const nickname = generateString(16);
+  const nickname = generateString(16).trim();
   sessionStorage.setItem('nickname', nickname);
   nicknameShow.innerText = nickname;
   const users = JSON.parse(localStorage.getItem('users')) || [];
@@ -76,6 +62,27 @@ nicknameForm.addEventListener('submit', (e) => {
   return false;
 });
 
+const refreshUsers = () => {
+  const nickname = sessionStorage.getItem('nickname');
+  userList.innerHTML = '';
+  const users = JSON.parse(localStorage.getItem('users')) || [];
+  users.forEach((user) => {
+    if (user !== nickname) {
+      const li = document.createElement('li');
+      li.innerText = user;
+      li.setAttribute(dataTestId, 'online-user');
+      userList.appendChild(li);
+    }
+  });
+};
+
+const createUser = () => {
+  const nickname = sessionStorage.getItem('nickname');
+  const users = JSON.parse(localStorage.getItem('users'));
+  users.push(nickname);
+  socket.emit('userAdd');
+};
+
 const createMessage = (message) => {
   const li = document.createElement('li');
   li.innerText = message;
@@ -92,17 +99,28 @@ const createHistory = (history) => {
   });
 };
 
-socket.emit('newConnection', (sessionStorage.getItem('nickname')));
+const deleteUser = () => {
+  const nickname = sessionStorage.getItem('nickname');
+  const users = JSON.parse(localStorage.getItem('users'));
+  const newUsers = users.filter((user) => {
+    if (user !== nickname) {
+      return user;
+    }
+    return false;
+  });
+  localStorage.setItem('users', JSON.stringify(newUsers));
+};
+
+socket.emit('newConnection', sessionStorage.getItem('nickname'));
 socket.on('message', (message) => createMessage(message));
 socket.on('sendHistory', (history) => createHistory(history));
-socket.on('userDisconnected', () => createOrUpdateUsers());
-socket.on('userConnected', () => createOrUpdateUsers());
-socket.on('userChanged', () => createOrUpdateUsers());
+socket.on('deleteUser', () => refreshUsers());
+socket.on('userConnected', () => createUser());
+socket.on('refresh', () => refreshUsers());
+socket.on('userChanged', () => refreshUsers());
 
 window.onbeforeunload = () => {
-  const nickname = sessionStorage.getItem('nickname');
-  const users = JSON.parse(localStorage.getItem('users')) || [];
-  const newUsers = users.filter((user) => user !== nickname);
-  localStorage.setItem('users', JSON.stringify(newUsers));
+  deleteUser();
+  socket.emit('change');
   socket.disconnect();
 };

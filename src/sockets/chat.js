@@ -7,12 +7,9 @@ module.exports = (io) => io.on('connection', (socket) => {
       socket.emit('sendHistory', history);
       io.emit('userConnected');
     });
-    socket.on('disconnect', () => {
-      io.emit('userDisconnected');
-    });
-    socket.on('change', () => {
-      io.emit('userChanged');
-    });
+    socket.on('userAdd', () => io.emit('refresh'));
+    socket.on('delete', () => io.emit('deleteUser'));
+    socket.on('change', () => io.emit('userChanged'));
     socket.on('message', async (message) => {
       const { nickname, chatMessage } = message;
       const date = getFormatedDate();

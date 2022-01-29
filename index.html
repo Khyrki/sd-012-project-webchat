@@ -11,9 +11,22 @@
   <div>
     <h1 class='title-page'>Webchat Trybe!</h1>
   </div>
-  <ul class="messages"></ul>
-  <form action="">
-    <input class="messageInput" autocomplete="off" /><button>Send</button>
+  <ul data-testid="messages" class="messages"></ul>
+  <h1 class="name"></h1>
+  <form class="form-msg" action="">
+    <div>
+      <input
+        type="text"
+        data-testid="nickname-box"
+        class="nickname-box"
+        placeholder="Nickname"
+      />
+      <button data-testid="nickname-button" id="nickname-button" onclick="nicknameFunc" class="nickname-button">Salvar</button>
+    </div>
+    <div>
+      <input data-testid="message-box" class="messageInput" autocomplete="off" />
+      <button data-testid="send-button">Send</button>
+    </div>
   </form>
   <script src="/socket.io/socket.io.js"></script>
   <script src='./js/chat.js'></script>

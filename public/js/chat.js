@@ -1,11 +1,30 @@
 const socket = window.io();
 
-const form = document.querySelector('form');
+const formMsg = document.querySelector('.form-msg');
 const inputMessage = document.querySelector('.messageInput');
+const nickText = document.querySelector('.name');
+const msg = document.querySelector('.messageInput');
+const nickname = document.querySelector('.nickname-box');
+const nicknameBtn = document.querySelector('#nickname-button');
 
-form.addEventListener('submit', (e) => {
+nicknameBtn.addEventListener('click', (e) => {
   e.preventDefault();
-  socket.emit('message', { chatMessage, nickname });
+  nickText.innerHTML = nickname.value;
+  console.log(nickname.value);
+  nickname.value = '';
+});
+
+socket.on('nickname', (name) => {
+  nickText.innerText = name;
+
+  nickText.setAttribute('data-testid', 'online-user');
+  console.log(name);
+  console.log(nickText);
+});
+
+formMsg.addEventListener('submit', (e) => {
+  e.preventDefault();
+  socket.emit('message', { chatMessage: msg.value, nickname: nickText.innerText });
   inputMessage.value = '';
   return false;
 });
@@ -14,6 +33,7 @@ const createMessage = (message) => {
   const messagesUl = document.querySelector('.messages');
   const li = document.createElement('li');
   li.innerText = message;
+  li.setAttribute('data-testid', 'message');
   messagesUl.appendChild(li);
 };
 

@@ -8,14 +8,11 @@ const OPTIONS = {
   useUnifiedTopology: true,
 };
 
-let db = null;
+const db = null;
 
 const connection = () => (db
   ? Promise.resolve(db)
   : MongoClient.connect(DB_URL, OPTIONS)
-  .then((conn) => {
-    db = conn.db(DB_NAME);
-    return db;
-}));
+  .then((conn) => conn.db(DB_NAME)));
 
 module.exports = connection;

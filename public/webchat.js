@@ -11,15 +11,15 @@ const usersList = document.getElementById('users');
 const userSpan = document.querySelector('#online-user');
 
 const randomString = () => {
-  const alphanumeric = 'abcdefghijklmnopqrstuvwxxyz0123456789';
-  const randomS = [];
-  const anSplit = alphanumeric.split('');
+  const abc = 'abcdefghijklmnopqrstuvwxxyz0123456789';
+  const randomShit = [];
+  const abcSplit = abc.split('');
 
-  for (let index = 0; randomS.length < 16; index = (Math.floor(Math.random() * 10))) {
-    randomS.push(anSplit[index]);
+  for (let index = 0; randomShit.length < 16; index = (Math.floor(Math.random() * 10))) {
+    randomShit.push(abcSplit[index]);
   }
 
-  return randomS.join('');
+  return randomShit.join('');
 };
 
 const newUser = () => {
@@ -31,7 +31,7 @@ const newUser = () => {
   socket.emit('user', newU);
 };
 
-const loadMessages = (messages) => {
+socket.on('loadMessages', (messages) => {
   if (messages) {
     messageList.innerText = '';
     messages.forEach((m) => {
@@ -41,9 +41,9 @@ const loadMessages = (messages) => {
       messageList.appendChild(li);
     });
   }
-};
+});
 
-const renderMessage = (msg) => {
+socket.on('message', (msg) => {
   if (typeof msg === 'string') {
     const li = document.createElement('li');
     li.setAttribute(datatest, 'message');
@@ -51,9 +51,9 @@ const renderMessage = (msg) => {
     messageList.appendChild(li);
     return false;
   }
-};
+});
 
-const renderUsers = (users) => {
+socket.on('user', (users) => {
   usersList.innerHTML = '';
   
   users.forEach((user) => {
@@ -65,20 +65,20 @@ const renderUsers = (users) => {
     usersList.appendChild(li);
     return false;
   });
-};
+});
 
 formNickname.addEventListener('submit', (e) => {
   e.preventDefault();
 
   if (nicknameInput.value === '') {
     sessionStorage.setItem('nickname', randomString());
-    socket.emit('userUpdate', randomString());
+    socket.emit('updateNickname', randomString());
     return false;
   }
 
   userSpan.innerHTML = nicknameInput.value;
   sessionStorage.setItem('nickname', nicknameInput.value);
-  socket.emit('userUpdate', nicknameInput.value);
+  socket.emit('updateNickname', nicknameInput.value);
 });
 
 formMessage.addEventListener('submit', (e) => {
@@ -93,10 +93,6 @@ formMessage.addEventListener('submit', (e) => {
   messageInput.value = '';
   return false;
 });
-
-socket.on('loadMessages', (message) => loadMessages(message));
-socket.on('message', (msg) => renderMessage(msg));
-socket.on('user', (user) => renderUsers(user));
 
 window.addEventListener('load', () => {
   newUser();

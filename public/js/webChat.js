@@ -58,4 +58,17 @@ formNickname.addEventListener('submit', (e) => {
   socket.emit('userUpdate', nicknameInput.value);
 });
 
+const newUser = () => {
+  const alreadyExists = sessionStorage.getItem('nickname');
+
+  const newU = alreadyExists || randomString();
+  userSpan.innerHTML = newU;
+  socket.emit('user', newU);
+};
+
+window.addEventListener('load', () => {
+  newUser();
+  socket.emit('loadMessages');
+});
+
 socket.on('message', (msg) => renderMessage(msg));

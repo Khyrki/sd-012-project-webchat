@@ -13,9 +13,9 @@ const io = require('socket.io')(http, {
 
 const { sendMsg, getAllMsgs } = require('./models/chatModel');
 
+app.use(express.static('views'));
 app.set('view engine', 'ejs');
 app.set('views', './views');
-app.use(express.static('views'));
 
 const OnlineUsers = {};
 

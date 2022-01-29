@@ -54,7 +54,7 @@ const DbMsg = (userMsgs) => {
     });
   };
   
-  socket.on('chatModel', (userMsgs) => DbMsg(userMsgs));
+  socket.on('modelMsg', (userMsgs) => DbMsg(userMsgs));
 
 socket.on('message', (chatMessage) => msgUser(chatMessage));
 

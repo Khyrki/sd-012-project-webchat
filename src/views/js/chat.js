@@ -26,13 +26,7 @@ if (!sessionStorage.getItem('nickname')) {
   const nickname = generateString(16).trim();
   sessionStorage.setItem('nickname', nickname);
   nicknameShow.innerText = nickname;
-  const users = JSON.parse(localStorage.getItem('users')) || [];
-  users.push(nickname);
-  localStorage.setItem('users', JSON.stringify(users));
-} else {
-  const nickname = sessionStorage.getItem('nickname');
-  nicknameShow.innerText = nickname;
-}
+} 
 
 messageForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -78,8 +72,13 @@ const refreshUsers = () => {
 
 const createUser = () => {
   const nickname = sessionStorage.getItem('nickname');
-  const users = JSON.parse(localStorage.getItem('users'));
+  const users = JSON.parse(localStorage.getItem('users')) || [];
+  const finded = users.find((user) => user === nickname);
+  if (finded) {
+    return;  
+  }
   users.push(nickname);
+  localStorage.setItem('users', JSON.stringify(users));
   socket.emit('userAdd');
 };
 

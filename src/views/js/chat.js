@@ -22,9 +22,9 @@ nicknameForm.addEventListener('submit', (e) => {
   return false;
 });
 
-const createMessage = ({ chatMessage, nickname }) => {
+const createMessage = ({ chatMessage, nickname, date }) => {
   const li = document.createElement('li');
-  li.innerText = `${nickname} - ${chatMessage}`;
+  li.innerText = `(${date}) ${nickname}: ${chatMessage}`;
   messages.appendChild(li);
 };
 

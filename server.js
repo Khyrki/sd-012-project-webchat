@@ -1,25 +1,25 @@
+/* eslint-disable max-lines-per-function */
 require('dotenv').config();
 
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const path = require('path');
 const moment = require('moment');
 
-const PORT = process.env.LOCALHOST;
+const { PORT = 3000 } = process.env;
 
-function generateString(size) {
-  let stringGenerated = '';
+let usersConnected = [];
 
-  const characters = 'abcdefghijklmnopqrstuvwxyz';
+function stringGenerator(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-  const lengthCharacters = characters.length;
+    let generatedString = '';
 
-  for (let i = 0; i < size; i += 1) {
-    stringGenerated += characters.substr(Math.floor((Math.random() * lengthCharacters) + 1), 1);
-  }
-
-  return stringGenerated;
+    for (let i = 0; i < length; i += 1) {
+        generatedString += characters[Math.floor(Math.random() * characters.length)];
+    }
+    return generatedString;
 }
 
 const app = express();
@@ -27,42 +27,55 @@ const app = express();
 const socketIoServer = require('http').createServer(app);
 
 const io = require('socket.io')(socketIoServer, {
-  cors: {
-    origin: `http://localhost:${PORT}`,
-    methods: ['GET', 'POST'],
-  },
+    cors: {
+        origin: `http://localhost:${PORT}`,
+        methods: ['GET', 'POST'],
+    },
 });
+const history = require('./models/history');
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(
-  cors({
-    origin: `http://localhost:${PORT}`,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Authorization'],
-  }),
+    cors({
+        origin: `http://localhost:${PORT}`,
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Authorization'],
+    }),
 );
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
-  res.render('home');
+app.get('/', async (req, res) => {
+    const historyMessage = await history.messageHistory();
+    res.render('home.ejs', { history: historyMessage });
 });
 
 io.on('connect', async (socket) => {
-  const userNameRandom = generateString(16);
-
-  socket.emit('username', userNameRandom);
-
-  socket.on('message', (data) => {
-    const { nickname, chatMessage } = data;
-    const formatedTime = moment().format('DD-MM-yyyy HH:mm:ss');
-    io.emit('message', `${formatedTime} - ${nickname}: ${chatMessage}`);
-  });
+    const usernameRandom = stringGenerator(16);
+    socket.emit('username', usernameRandom);
+    usersConnected.push({ nickname: usernameRandom, socketId: socket.id });
+    io.emit('online', usersConnected);
+    socket.on('message', async (data) => {
+        const dateFormat = moment().format('DD-MM-yyyy HH:mm:ss');
+        await history.send({ message: data.chatMessage, 
+          nickname: data.nickname,
+          timestamp: dateFormat });
+        io.emit('message', `${dateFormat} - ${data.nickname}: ${data.chatMessage}`);
+    });
+    socket.on('updateNickname', (data) => {
+        const index = usersConnected.findIndex((element) => element.socketId === socket.id);
+        usersConnected[index] = { nickname: data, socketId: socket.id };
+        io.emit('online', usersConnected);
+    });
+    socket.on('disconnect', () => {
+        usersConnected = usersConnected.filter((element) => element.socketId !== socket.id);
+        io.emit('online', usersConnected);
+    });
 });
 
 socketIoServer.listen(PORT);
 
-console.log(`Webchat ouvindo na porta ${PORT}`);
+console.log(`WebChat ouvindo na porta ${PORT}`);

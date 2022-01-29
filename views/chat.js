@@ -18,10 +18,10 @@ msgButton.addEventListener('click', (event) => {
 
 const msgUser = (message) => {
     const messge = document.getElementById('userMsgs');
-    const li = document.createElement('li');
-    li.innerText = message;
-    li.setAttribute(aliasTeste, 'message');
-    messge.appendChild(li);
+    const oneLi = document.createElement('oneLi');
+    oneLi.innerText = message;
+    oneLi.setAttribute(aliasTeste, 'message');
+    messge.appendChild(oneLi);
 };
 
 nicknameButton.addEventListener('click', (event) => {
@@ -34,23 +34,27 @@ nicknameButton.addEventListener('click', (event) => {
 });
 
 const names = (onUser) => {
+    const newUserNickname = socket.id.slice(0, 16);
     const user = document.getElementById('conUsers');
     user.innerHTML = '';
     onUser.forEach((element) => {
-        const li = document.createElement('li');
-        li.setAttribute(aliasTeste, 'online-user');
-        li.innerText = element;
-        user.appendChild(li);
+        const oneLi = document.createElement('oneLi');
+        oneLi.setAttribute(aliasTeste, 'online-user');
+        oneLi.innerText = element;
+        if (element === onUser || element === newUserNickname) {
+            return user.prepend(oneLi);
+        }
+            user.appendChild(oneLi);
     });
 };
 
 const DbMsg = (userMsgs) => {
     userMsgs.forEach(({ time, nickname, chatMessage }) => {
       const messageL = document.getElementById('userMsgs');
-      const li = document.createElement('li');
-      li.innerText = `${time} - ${nickname} : ${chatMessage}`;
-      li.setAttribute(aliasTeste, 'message');
-      messageL.appendChild(li);
+      const oneLi = document.createElement('oneLi');
+      oneLi.innerText = `${time} - ${nickname} : ${chatMessage}`;
+      oneLi.setAttribute(aliasTeste, 'message');
+      messageL.appendChild(oneLi);
     });
   };
   

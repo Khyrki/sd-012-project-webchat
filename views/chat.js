@@ -33,7 +33,7 @@ nicknameButton.addEventListener('click', (event) => {
     }
 });
 
-const nameList = (onUser) => {
+const names = (onUser) => {
     const user = document.getElementById('conUsers');
     user.innerHTML = '';
     onUser.forEach((element) => {
@@ -58,4 +58,4 @@ const DbMsg = (userMsgs) => {
 
 socket.on('message', (chatMessage) => msgUser(chatMessage));
 
-socket.on('names', (onUser) => nameList(onUser)); 
+socket.on('names', (onUser) => names(onUser)); 

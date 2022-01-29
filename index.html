@@ -4,25 +4,33 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebChat</title>
+    <link rel="stylesheet" href="/logicalChat/chatStyle.css">
+    <title class="titleWeb">WebChat</title>
   </head>
   <body>
+    <h1 class="titleWeb">Chat do Uriel</h1>
+    <div class="nick">
     <form id="userForm">
       <input id="nickname" placeholder="Insira seu nickname" data-testid="nickname-box"/>
       <button id="nickBtn" data-testid="nickname-button">Salvar</button>
     </form>
+  </div>
 
-    <div>
+    <div class="flexUsers">
       <ul id="users">
       </ul>
     </div>
-    
-    <ul id="messages"></ul>
 
+    <div class="msgBox">
+    <ul id="messages"></ul>
+  </div>
+
+    <div class="msgForm">
     <form id="messageForm">
       <input id="messageInput" placeholder="Digite uma mensagem aqui" data-testid="message-box" />
       <button data-testid="send-button">Enviar</button>
     </form>
+  </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="/logicalChat/chat.js"></script>

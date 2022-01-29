@@ -1,0 +1,61 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+
+}
+
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 13px;
+}
+
+form input {
+  border: b;
+  border-radius: 30px;
+  margin-right: 0.5% auto;
+  padding: 2px 200px;
+}
+
+form button {
+  background: hsl(166, 95%, 22%);
+  border: none;
+  border-color: #036b52 3px;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.titleWeb {
+  color: rebeccapurple;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.flexUsers {
+  align-items: flex-start;
+  border: black 15px;
+  color: green;
+  display: flex;
+  flex-direction: column;
+  margin-left: 60px;
+}
+
+.msgForm {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.nick {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.msgBox {
+  display: flex;
+  justify-content: center;
+}

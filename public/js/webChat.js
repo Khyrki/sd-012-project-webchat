@@ -8,6 +8,7 @@ const formNickname = document.getElementById('formNickname');
 const messageInput = document.getElementById('input-msg');
 const nicknameInput = document.getElementById('input-nickname');
 const userSpan = document.querySelector('#online-user');
+const usersList = document.getElementById('users');
 
 const renderMessage = (msg) => {
   if (typeof msg === 'string') {
@@ -82,5 +83,20 @@ window.addEventListener('load', () => {
   newUser();
 });
 
+const renderUsers = (users) => {
+  usersList.innerHTML = '';
+
+  users.forEach((user) => {
+    const currentUser = userSpan.innerHTML;
+    if (currentUser === user.nickname) return null;
+    const li = document.createElement('li');
+    li.setAttribute(datatest, 'online-user');
+    li.innerText = user.nickname;
+    usersList.appendChild(li);
+    return false;
+  });
+};
+
 socket.on('message', (msg) => renderMessage(msg));
 socket.on('loadMessages', (message) => loadMessages(message));
+socket.on('user', (user) => renderUsers(user));

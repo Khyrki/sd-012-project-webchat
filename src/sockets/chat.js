@@ -8,7 +8,6 @@ module.exports = (io) => io.on('connection', (socket) => {
       io.emit('userConnected');
     });
     socket.on('disconnect', () => {
-      console.log('disconnect');
       io.emit('userDisconnected');
     });
     socket.on('change', () => {

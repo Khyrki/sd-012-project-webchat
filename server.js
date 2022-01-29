@@ -11,6 +11,8 @@ const io = require('socket.io')(http, {
   }, 
 });
 
+const { sendMsg, getAllMsgs } = require('./models/chatModel');
+
 app.set('view engine', 'ejs');
 app.set('views', './views');
 app.use(express.static('views'));
@@ -27,11 +29,18 @@ io.on('connection', async (socket) => {
   socket.on('message', async ({ chatMessage, nickname }) => {
       const time = moment().format('DD-MM-yyyy HH:mm:ss');
       io.emit('message', `${time} ${nickname}: ${chatMessage}`);
+      await sendMsg({ time, nickname, chatMessage });
   });
 
   socket.on('newUser', (nickname) => {
       OnlineUsers[socket.id] = nickname; io.emit('names', Object.values(OnlineUsers));
   });
+
+  const modelMsg = async () => {
+    const messages = await getAllMsgs(); return messages;
+  };
+
+  io.emit('modelMsg', await modelMsg());
 
   io.emit('names', Object.values(OnlineUsers));
 });

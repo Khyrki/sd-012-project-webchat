@@ -220,7 +220,7 @@ describe('4 - Informe a todos os clientes quem está online no momento', () => {
     await page2.bringToFront();
     await page2.waitForTimeout(500);
     client2Nicknames = await page2.$$eval(dataTestid('online-user'), (nodes) => nodes.map((n) => n.innerText));
-    expect(client2Nicknames.length).toBe(3);
+    expect(client2Nicknames.length).toBe(2);
     expect(client2Nicknames).toEqual(
       expect.arrayContaining([
         expect.stringMatching(/^[\w'-]{16}$/),
@@ -232,7 +232,7 @@ describe('4 - Informe a todos os clientes quem está online no momento', () => {
     await page3.bringToFront();
     await page3.waitForTimeout(500);
     client2Nicknames = await page3.$$eval(dataTestid('online-user'), (nodes) => nodes.map((n) => n.innerText));
-    expect(client2Nicknames.length).toBe(3);
+    expect(client2Nicknames.length).toBe(2);
     expect(client2Nicknames).toEqual(
       expect.arrayContaining([
         expect.stringMatching(/^[\w'-]{16}$/),
@@ -247,7 +247,7 @@ describe('4 - Informe a todos os clientes quem está online no momento', () => {
     await page2.bringToFront();
     await page2.waitForTimeout(500);
     client2Nicknames = await page2.$$eval(dataTestid('online-user'), (nodes) => nodes.map((n) => n.innerText));
-    expect(client2Nicknames.length).toBe(3);
+    expect(client2Nicknames.length).toBe(1);
     expect(client2Nicknames).toEqual(
       expect.arrayContaining([
         expect.stringMatching(/^[\w'-]{16}$/),

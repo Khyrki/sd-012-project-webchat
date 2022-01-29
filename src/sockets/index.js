@@ -3,7 +3,7 @@ require('dotenv').config();
 
 module.exports = (http) => socket(http, {
   cors: {
-    origin: process.env.BASE_URL,
+    origin: 'http//localhost:3000',
     methods: ['GET', 'POST'],
   },
 });

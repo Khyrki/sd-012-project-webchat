@@ -22,10 +22,10 @@ nicknameForm.addEventListener('submit', (e) => {
   return false;
 });
 
-const createMessage = ({ chatMessage, nickname, date }) => {
+const createMessage = (message) => {
   const li = document.createElement('li');
-  li.innerText = `(${date}) ${nickname}: ${chatMessage}`;
+  li.innerText = message;
   messages.appendChild(li);
 };
 
-socket.on('newMessage', (messageObj) => createMessage(messageObj));
+socket.on('newMessage', (message) => createMessage(message));

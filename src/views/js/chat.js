@@ -51,7 +51,18 @@ const createMessage = (message) => {
   messages.appendChild(li);
 };
 
+const createHistory = (history) => {
+  history.forEach(({ message, nickname, timestamp }) => {
+    const li = document.createElement('li');
+    li.innerText = `(${timestamp}) ${nickname}: ${message}`;
+    li.setAttribute('data-testid', 'message');
+    messages.appendChild(li);
+  });
+};
+
+socket.emit('getHistory');
 socket.on('newMessage', (message) => createMessage(message));
+socket.on('sendHistory', (history) => createHistory(history));
 
 window.onbeforeunload = () => {
   socket.disconnect();

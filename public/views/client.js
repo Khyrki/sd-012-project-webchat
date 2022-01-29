@@ -24,5 +24,12 @@ const createToken = (token) => {
   tokenUser.innerText = token;
 };
 
+const getAll = (data) => {
+  data.forEach(({ nickname, message, timestamp }) => {
+    createMessage(`${timestamp} - ${nickname}: ${message}`);
+  });
+};
+
 socket.on('message', (message) => createMessage(message));
 socket.on('token', (token) => createToken(token));
+socket.on('allData', (data) => getAll(data));

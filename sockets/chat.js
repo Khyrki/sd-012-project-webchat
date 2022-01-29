@@ -1,12 +1,14 @@
 const { format } = require('date-fns');
+const create = require('../models/create');
+const getAll = require('../models/get');
 
 const createMessage = (socket, io) => {
   const { id } = socket;
   const timestamp = format(new Date(), 'dd-MM-yyyy HH:mm:ss');
-  socket.on('message', async ({ nickname, chatMessage }) => {
+  socket.on('message', async ({ chatMessage, nickname }) => {
+    await create(nickname, chatMessage, timestamp);
     io.emit('message', `${timestamp} - ${!nickname ? id : nickname}: ${chatMessage}`);
-    // await model.create({ nickname, chatMessage, timestamp });
-    });
+  });
 };
 
 const createToken = (socket) => {
@@ -16,8 +18,14 @@ const createToken = (socket) => {
   socket.emit('token', nickname);
 };
 
+const findAll = async (socket) => {
+  const allData = await getAll();
+  socket.emit('allData', allData);
+};
+
 const messages = (io) => io.on('connection', (socket) => {
   createMessage(socket, io);
   createToken(socket);
+  findAll(socket);
 });
 module.exports = messages;

@@ -20,11 +20,13 @@ const socketMessage = (socket, io) => {
 };
 
 module.exports = (io) => io.on('connection', (socket) => {
-  console.log(`Usuário conectado. ID: ${socket.id} `);
-  clients.push({ socketId: socket.id, nickname: socket.id.slice(0, 16) });
-  io.emit('userList', clients);
-  // console.log(JSON.stringify(clients));
-
+  socket.on('newUser', () => {
+    console.log(`Usuário conectado. ID: ${socket.id} `);
+    clients.push({ socketId: socket.id, nickname: socket.id.slice(0, 16) });
+    io.emit('userList', clients);
+    // console.log(JSON.stringify(clients));
+    console.log(clients.length);
+  });
   socketMessage(socket, io);
 
   socket.on('nicknameChange', ({ oldNick, newNick }) => {

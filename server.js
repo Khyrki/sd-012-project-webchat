@@ -15,12 +15,15 @@
 
 const express = require('express');
 
-const app = express();
-const http = require('http').createServer(app);
+const EXPRESS_PORT = 3001;
+const SOCKECTIO_PORT = 3000;
 
-const io = require('socket.io')(http, {
+const app = express();
+const socketIoServer = require('http').createServer(app);
+
+const io = require('socket.io')(socketIoServer, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: `http://localhost:${EXPRESS_PORT}`,
     methods: ['GET', 'POST'],
   },
 });
@@ -33,6 +36,8 @@ app.get('/', (req, res) => {
   res.sendFile(`${__dirname}/public/chat.html`);
 });
 
-http.listen(3000, () => {
-  console.log('Servidor ouvindo na porta 3000');
+app.listen(EXPRESS_PORT, () => console.log(`Express App linstening on port ${EXPRESS_PORT}`));
+
+socketIoServer.listen(SOCKECTIO_PORT, () => {
+  console.log(`Servidor Socket.IO ouvindo na porta ${SOCKECTIO_PORT}`);
 });

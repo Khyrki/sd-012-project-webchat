@@ -9,11 +9,13 @@
 
   <body>
     <ul class="messages"></ul>
-    <ul class="userList"></ul>
+    <ul class="userList">
+      <li class="onlineUser">
+      </li>
+    </ul>
     <form action="" class="nicknameForm">
       <input id="nicknameInput" autocomplete="off" data-testid="nickname-box" />
       <button data-testid="nickname-button">Change Nickname</button>
-      <p>Nickname: <span class="nickname" data-testid="online-user"></span></p>
     </form>      
     <form action="" class="messageForm">
       <input id="messageInput" autocomplete="off" data-testid="message-box" />

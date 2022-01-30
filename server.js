@@ -1,9 +1,10 @@
 const express = require('express');
+const socketIo = require('socket.io');
+const cors = require('cors');
 
 const app = express();
-const cors = require('cors');
 const http = require('http').createServer(app);
-const socketIo = require('socket.io');
+const getMsgs = require('./controllers/chatController');
 
 const PORT = process.env.PORT || 3000;
 
@@ -14,13 +15,15 @@ const io = socketIo(http, {
   },
 });
 
+app.set('view engine', 'ejs');
+app.set('views', './views');
+
+app.get('/', getMsgs);
+
 app.use(express.static(`${__dirname}/public`));
 
 require('./sockets/chat')(io);
 
 app.use(cors());
 
-app.get('/', (req, res) => {
-  res.sendFile(`${__dirname}/index.html`);
-});
 http.listen(PORT, () => console.log(`Escutando na porta ${PORT}`));

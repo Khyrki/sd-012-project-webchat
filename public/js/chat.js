@@ -10,22 +10,19 @@ const nicknameBtn = document.querySelector('#nickname-button');
 nicknameBtn.addEventListener('click', (e) => {
   e.preventDefault();
   nickText.innerHTML = nickname.value;
-  console.log(nickname.value);
   nickname.value = '';
 });
 
 socket.on('nickname', (name) => {
   nickText.innerText = name;
-
   nickText.setAttribute('data-testid', 'online-user');
-  console.log(name);
-  console.log(nickText);
 });
 
 formMsg.addEventListener('submit', (e) => {
   e.preventDefault();
   socket.emit('message', { chatMessage: msg.value, nickname: nickText.innerText });
   inputMessage.value = '';
+  console.log(inputMessage);
   return false;
 });
 

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trybe Chat</title>
+</head>
+<body>
+  <h1>Trybe Chat</h1>
+  <ul id="messages"></ul>
+    <form id="form" action="">
+      <input id="nickname" autocomplete="on" /><input id="message"/><button>Send</button>
+    </form>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    
+    const socket = io();
+    window.onload = () => {
+    const user = Math.random().toString().substring(2, 7);
+    document.getElementById('nickname').value = user;
+    }
+    
+    const form = document.getElementById('form');
+    const chatMessage = document.getElementById('input');
+    const nickname = document.getElementById('nickname');
+    
+    form.addEventListener('submit', (element) => {
+      element.preventDefault();
+      if (chatMassage.value && nickname.value) {
+        socket.emit('message', {message: chatMessage.value, nick: nickname.value}); 
+        input.value = '';
+      }
+    });
+    socket.on('message', (message) => {
+      const messages = document.getElementById('messages');
+      const li = document.createElement('li');
+      li.textContent = message;
+      messages.appendChild(li);
+    });
+  </script>
+</body>
+</html> 

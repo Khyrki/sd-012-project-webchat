@@ -81,7 +81,10 @@ socket.on('messageHistory', (history) => createHistoryMessageList(history));
 
 socket.emit('newUser');
 
-// window.onload = () => createUsersList([socket.id.slice(0, 16)]);
-// window.onload = () => createUsersList(['AAAAAAAAAAAAAAAA']);
-
-window.onbeforeunload = () => socket.disconnect();
+window.onbeforeunload = () => {
+  socket.disconnect();
+  // https://stackoverflow.com/questions/4327236/stop-browsers-asking-to-resend-form-data-on-refresh/4327270#4327270
+  // [PT-BR] Código adicionado para que quando der reload, não dê mensagem de confirmar e trave o puppeteer com o await page.reload() linha 145
+  // [EN] Code added to stop confimation message when reloading page, because it stops puppeteer - await page.reload() line 145
+  window.location.href = window.location.pathname;
+};

@@ -80,6 +80,31 @@
       }
     })
 
+    // atrela ao botao de enviar mensagem a captura do nome de quem enviou e o conteudo da mensagem, criando uma constante com o objeto de resposta e enviando aos demais usuarios pelo emit
+    buttonSendMsg.addEventListener('click', (event) => {
+      event.preventDefault();
+      console.log('message send');
+      const nickname = sessionStorage.getItem('username');
+      const message = messageInput.value;
+      const data = {
+        chatMessage: message,
+        nickname,
+      };
+
+      socket.emit('message', data);
+      messageInput.value = '';
+    });
+
+    // Adiciona a mensagem a lista de mensagens enviadas, acrescenttando test id e o texto a ser exibido, e insere na arvore do DOM como elemento da UL 
+    const createMessage = (chatMessage) => {
+      const li = document.createElement('li');
+      li.setAttribute('data-testid', 'message');
+      li.innerText = chatMessage;
+      listMsg.appendChild(li);
+    };
+
+    socket.on('message', (chatMessage) => createMessage(chatMessage));
+
   </script>
 
 </html>

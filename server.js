@@ -25,10 +25,6 @@ const io = require('socket.io')(http, {
   },
 });
 
-io.on('connection', (socket) => {
-  console.log(`Usuário conectado. ID: ${socket.id} `);
-});
-
 app.use(express.static(`${__dirname}/public`));
 
 require('./sockets/chat')(io);

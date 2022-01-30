@@ -105,6 +105,23 @@
 
     socket.on('message', (chatMessage) => createMessage(chatMessage));
 
+    // exibe usuarios onlines e acrescenta atributos + insere como elemento filho na lista de usuarios
+    socket.on('online', (users) => {
+      console.log({users})
+      usersList.innerHTML = '';
+      chatUser = users.find((user) => user.id === socket.id)
+
+      users = users.filter((user) => user.id !== socket.id);
+      users.unshift(chatUser);
+      
+      users.forEach((user) => {
+        const li = document.createElement('li');
+        li.innerText = user.nickname;
+        li.setAttribute('data-testid', 'online-user')
+        usersList.appendChild(li)
+      })
+    })
+
   </script>
 
 </html>

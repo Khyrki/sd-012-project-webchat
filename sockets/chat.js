@@ -1,3 +1,5 @@
+const models = require('../models/documents');
+
 const clients = [];
 
 // [PT-BR] Função para forçar os números ficarem com 2 casas caso eles só tenham 1. [EN] Function to force numbers have 2 char lenght if they have only 1.
@@ -11,18 +13,23 @@ const returnDate = `${twoChar(now.getDate())}-${twoChar(now.getMonth() + 1)}`
 return returnDate;
 };
 
-const socketNewUser = (socket, io) => {
-  socket.on('newUser', () => {
+const socketNewUser = async (socket, io) => {
+  socket.on('newUser', async () => {
     console.log(`Usuário conectado. ID: ${socket.id} `);
     clients.push({ socketId: socket.id, nickname: socket.id.slice(0, 16) });
     io.emit('userList', clients);
+    const history = await models.list('messages');
+    socket.emit('messageHistory', history);
   });
 };
 
-const socketMessage = (socket, io) => {
-  socket.on('message', ({ chatMessage, nickname }) => {
-    const returnMsg = `${makeDateWithTime()} - ${nickname}: ${chatMessage}`;
+const socketMessage = async (socket, io) => {
+  socket.on('message', async ({ chatMessage, nickname }) => {
+    const now = makeDateWithTime();
+    const msgDB = { message: chatMessage, nickname, timestamp: now };
+    const returnMsg = `${now} - ${nickname}: ${chatMessage}`;
     io.emit('message', returnMsg);
+    await models.create('messages', msgDB);
   });
 };
 

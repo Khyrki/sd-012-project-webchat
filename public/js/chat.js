@@ -35,6 +35,17 @@ const createMessage = (message) => {
   messagesUl.appendChild(li);
 };
 
+const createHistoryMessageList = (history) => {
+  const messagesUl = document.querySelector('.messages');
+  history.map(({ message, nickname, timestamp }) => {
+    const li = document.createElement('li');
+    li.dataset.testid = 'message';
+    li.innerText = `${timestamp} - ${nickname}: ${message}`;
+    messagesUl.appendChild(li);
+    return false;
+  });
+};
+
 const makeThisUserList = (users, thisNickname) => {
   const thisUserList = [...users];
   const arrayPos = thisUserList.findIndex((list) => list.nickname === thisNickname);
@@ -66,8 +77,11 @@ socket.on('nicknameChange', (newNickname) => changeHTMLNickName(newNickname));
 
 socket.on('userList', (users) => createUsersList(users));
 
+socket.on('messageHistory', (history) => createHistoryMessageList(history));
+
 socket.emit('newUser');
 
-window.onload = () => createUsersList([socket.id.slice(0, 16)]);
+// window.onload = () => createUsersList([socket.id.slice(0, 16)]);
+// window.onload = () => createUsersList(['AAAAAAAAAAAAAAAA']);
 
 window.onbeforeunload = () => socket.disconnect();

@@ -1,4 +1,6 @@
-* {
+
+/* Comment */
+/* * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -114,4 +116,4 @@ li:nth-child(odd) {
   to {
     opacity: 1;
   }
-}
+} */

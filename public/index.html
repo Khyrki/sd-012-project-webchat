@@ -68,9 +68,7 @@
     // recupera o nome aleatorio do sessionStorage e permite a alteração, emitindo evento aos demais usuários através do socket para exibição do novo nome 
     const setRandomName = generatingRandomName()
     sessionStorage.setItem('username', setRandomName);
-
     socket.emit('updateNickname', setRandomName);
-
     formNickname.addEventListener('click', (event) => {
       event.preventDefault();
       if (nicknameInput.value) {
@@ -83,14 +81,12 @@
     // atrela ao botao de enviar mensagem a captura do nome de quem enviou e o conteudo da mensagem, criando uma constante com o objeto de resposta e enviando aos demais usuarios pelo emit
     buttonSendMsg.addEventListener('click', (event) => {
       event.preventDefault();
-      console.log('message send');
       const nickname = sessionStorage.getItem('username');
       const message = messageInput.value;
       const data = {
         chatMessage: message,
         nickname,
       };
-
       socket.emit('message', data);
       messageInput.value = '';
     });
@@ -107,18 +103,24 @@
 
     // exibe usuarios onlines e acrescenta atributos + insere como elemento filho na lista de usuarios
     socket.on('online', (users) => {
-      console.log({users})
       usersList.innerHTML = '';
       chatUser = users.find((user) => user.id === socket.id)
 
       users = users.filter((user) => user.id !== socket.id);
       users.unshift(chatUser);
-      
+
       users.forEach((user) => {
         const li = document.createElement('li');
         li.innerText = user.nickname;
         li.setAttribute('data-testid', 'online-user')
         usersList.appendChild(li)
+      })
+    })
+
+    //  exibe historico do chat com informação de data e hora, usuario e conteudo da mensagem
+    socket.on('history', (messages) => {
+      messages.forEach(({ message: chatMessage, nickname, timestamp }) => {
+        createMessage(`${timestamp} - ${nickname}: ${chatMessage}`)
       })
     })
 

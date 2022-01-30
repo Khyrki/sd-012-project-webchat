@@ -51,3 +51,15 @@ io.on('connection', (socket) => {
   });
 
 http.listen(PORT, () => console.log(`Servidor ouvindo na porta ${PORT}`)); 
+
+/* refs:
+https://medium.com/@simogol/a-real-time-web-chat-with-socket-io-9829d2ece3e2
+https://www.codegrepper.com/code-examples/javascript/socket+io+on+disconnect
+https://www.codegrepper.com/code-examples/javascript/find+random+name+javascript
+
+repostiorios de colegas:
+-https://github.com/tryber/sd-010-b-project-webchat/pull/35
+-https://github.com/tryber/sd-010-b-project-webchat/pull/19
+-https://github.com/tryber/sd-010-a-project-webchat/pull/68
+-https://github.com/tryber/sd-012-project-webchat/pull/4
+*/

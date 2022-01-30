@@ -9,8 +9,8 @@ const messageForm = document.querySelector('.messageForm');
 const inputMessage = document.querySelector('#messageInput');
 
 nicknameForm.addEventListener('submit', (e) => {
-  const nickname = document.querySelector(nicknameClass);
   e.preventDefault();
+  const nickname = document.querySelector(nicknameClass);
   socket.emit('nicknameChange', { oldNick: nickname.innerHTML, newNick: nicknameInput.value });
   nicknameInput.value = '';
 });
@@ -21,8 +21,8 @@ const changeHTMLNickName = (newNickname) => {
 };
 
 messageForm.addEventListener('submit', (e) => {
-  const nickname = document.querySelector(nicknameClass);
   e.preventDefault();
+  const nickname = document.querySelector(nicknameClass);
   socket.emit('message', { nickname: nickname.innerHTML, chatMessage: inputMessage.value });
   inputMessage.value = '';
 });
@@ -35,38 +35,39 @@ const createMessage = (message) => {
   messagesUl.appendChild(li);
 };
 
-const createUserList = (users) => {
-  const thisNickname = document.querySelector(nicknameClass);
-  const allUsers = [...users];
-  const arrayPos = allUsers.findIndex((list) => list.nickname === thisNickname.innerHTML);
-  const thisUser = allUsers.splice(arrayPos, 1);
-  allUsers.unshift(thisUser[0]);
-  const userList = document.querySelector('.userList');
-  userList.innerHTML = '';
-  console.log(allUsers);
-  allUsers.map(({ nickname: userNick }) => {
+const makeThisUserList = (users, thisNickname) => {
+  const thisUserList = [...users];
+  const arrayPos = thisUserList.findIndex((list) => list.nickname === thisNickname);
+  const thisUser = thisUserList.splice(arrayPos, 1);
+  thisUserList.unshift(thisUser[0]);
+  return thisUserList;
+};
+
+const createUsersList = (users) => {
+  const thisNickname = (document.querySelector(nicknameClass)).innerText;
+  const userList = makeThisUserList(users, thisNickname);
+
+  const userListHTML = document.querySelector('.userList');
+  userListHTML.innerHTML = '';
+
+  userList.map(({ nickname }) => {
     const li = document.createElement('li');
     li.dataset.testid = 'online-user';
     li.className = 'onlineUser';
-    li.innerText = userNick;
-    userList.appendChild(li);
+    li.innerText = nickname;
+    userListHTML.appendChild(li);
     return false;
   });
-  console.log(document.querySelectorAll('[data-testid=online-user]'));
 };
 
 socket.on('message', (message) => createMessage(message));
 
 socket.on('nicknameChange', (newNickname) => changeHTMLNickName(newNickname));
 
-socket.on('userList', (users) => createUserList(users));
-
-window.onload = async () => {
-  await socket.on('connect', () => createUserList([socket.id.slice(0, 16)]));
-};
-
-window.onbeforeunload = () => {
-  socket.disconnect();
-};
+socket.on('userList', (users) => createUsersList(users));
 
 socket.emit('newUser');
+
+window.onload = () => createUsersList([socket.id.slice(0, 16)]);
+
+window.onbeforeunload = () => socket.disconnect();

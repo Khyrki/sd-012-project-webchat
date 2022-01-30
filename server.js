@@ -27,7 +27,8 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, './public/')));
 
-require('./src/sockets/chatMessage')(io);
+require('./src/sockets/chat/chatMessage')(io);
+require('./src/sockets/user/userConnection')(io);
 
 app.get('/', (_req, res) => {
   res.status(200).sendFile(path.join(__dirname, './public/index.html'));

@@ -6,9 +6,10 @@ const datatestid = 'data-testid';
 const formMessage = document.getElementById('form-message');
 const formNickname = document.getElementById('form-nickname');
 const inputMessage = document.getElementById('input-message');
-const nicknameInput = document.getElementById('input-nickname');
+const inputNickname = document.getElementById('input-nickname');
 const messageList = document.getElementById('message-list');
 const userSpan = document.querySelector('#online-user');
+const usersList = document.getElementById('users');
 
 const createMessage = (message) => {
   if (typeof message === 'string') {
@@ -32,7 +33,7 @@ const randomString = () => {
   return randomS.join('');
 };
 
-const user = () => {
+const newUser = () => {
   const alreadyExists = sessionStorage.getItem('nickname');
 
   const newU = alreadyExists || randomString();
@@ -43,15 +44,15 @@ const user = () => {
 formNickname.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  if (nicknameInput.value === '') {
+  if (inputNickname.value === '') {
     sessionStorage.setItem('nickname', randomString());
     socket.emit('userUpdate', randomString());
     return false;
   }
 
-  userSpan.innerHTML = nicknameInput.value;
-  sessionStorage.setItem('nickname', nicknameInput.value);
-  socket.emit('userUpdate', nicknameInput.value);
+  userSpan.innerHTML = inputNickname.value;
+  sessionStorage.setItem('nickname', inputNickname.value);
+  socket.emit('userUpdate', inputNickname.value);
 });
 
 formMessage.addEventListener('submit', (e) => {
@@ -67,10 +68,39 @@ formMessage.addEventListener('submit', (e) => {
   return false;
 });
 
+const createAllMessages = (msgList) => {
+  if (msgList) {
+    messageList.innerText = '';
+    msgList.forEach((m) => {
+      const li = document.createElement('li');
+      li.setAttribute(datatestid, 'message');
+      li.innerText = `${m.timestamp} - ${m.nickname}: ${m.message}`;
+      messageList.appendChild(li);
+    });
+  }
+};
+
+const createUsers = (users) => {
+  usersList.innerHTML = '';
+
+  users.forEach((user) => {
+    const currentUser = userSpan.innerHTML;
+    if (currentUser === user.nickname) return null;
+    const li = document.createElement('li');
+    li.setAttribute(datatestid, 'online-user');
+    li.innerText = user.nickname;
+    usersList.appendChild(li);
+    return false;
+  });
+};
+
 socket.on('message', (message) => createMessage(message));
+socket.on('findAllMessages', (allMessages) => createAllMessages(allMessages));
+socket.on('serverMessage', (serverMessage) => createMessage(serverMessage));
+socket.on('user', (users) => createUsers(users));
 
 window.addEventListener('load', () => {
-  user();
+  newUser();
 });
 
 window.onbeforeunload = () => {

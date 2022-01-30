@@ -200,6 +200,9 @@
   </div>
   <script>
     const socket = io();
+    // setTimeout(() => {
+    //   console.log(socket.id);
+    // }, 500)
     const chat = document.querySelector('.chat');
     const chatUsers = document.querySelector('.chat__online-users');
     const chatConfigForm = document.querySelector('.chat__config-form');
@@ -210,12 +213,9 @@
     const chatInput = document.querySelector('.chat__chat-input');
     const chatButton = document.querySelector('.chat__chat-button');
 
-    const generateNickname = (nickname) => {
-      const alpha = nickname.slice(0, 16);
-      if (!sessionStorage.getItem('nickname')) {
-        sessionStorage.setItem('nickname', alpha)
-      }
-    };
+    const me = '32132132132';
+
+    socket.emit('usersAlreadyConnected', { me });
 
     chatForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -244,28 +244,25 @@
       chatBox.appendChild(li);
     };
 
-    const insertOnlineUser = (user) => {
-      const li = document.createElement('li');
-      li.setAttribute('data-testid', 'online-user');
-      li.innerText = sessionStorage.getItem('nickname');
-      chatUsers.appendChild(li);
-    }
-
-     const refreshOnlineUsersList = (users) => {
-      if (!users.length) return;
-      chatUsers.innerHTML = '';
-      for (const user of users) {
-        const alpha = user.replace(/[-_]/g, '').slice(0, 16);
-        chatUsers.innerHTML += `<li data-testid="online-user">${alpha}</li>`
-      }
-    }
-
     const userChangedNickname = ({ oldNick, newNick }) => {
       const onlineUsers = [...document.querySelectorAll('.chat__online-users li')];
       const findUser = onlineUsers.find((user) => user.innerText === oldNick);
       findUser.innerText = newNick;
-      findUser.id = newNick;
     };
+
+    const refreshOnlineUsersList = (users) => {
+      chatUsers.innerHTML = '';
+      const me = sessionStorage.getItem('nickname');
+
+      users.forEach((user) => {
+        const alpha = user.slice(0, 16);
+        if (alpha !== me) {
+          chatUsers.innerHTML += `<li data-testid="online-user">${alpha}</li>`;
+        }
+      });
+      
+      chatUsers.innerHTML = `<li data-testid="online-user">${me}</li>` + chatUsers.innerHTML;
+     };
 
     const renderMessages = (messages) => {
       messages.forEach(({ message, nickname, timestamp }) => {
@@ -274,12 +271,16 @@
         li.innerText = `${timestamp} - ${nickname}: ${message}`;
         chatBox.appendChild(li);
       });
+    };
+
+    const generateId = (id) => {
+      sessionStorage.setItem('nickname', id.slice(0, 16));
     }
 
-    socket.on('messagesHistory', renderMessages);
-    socket.on('userConnected', generateNickname);
-    socket.on('message', insertMessage);
     socket.on('changedNickname', userChangedNickname);
+    socket.on('messagesHistory', renderMessages);
+    socket.on('message', insertMessage);
+    socket.on('userConnected', generateId);
     socket.on('userJoined', refreshOnlineUsersList);
     socket.on('userLeft', refreshOnlineUsersList);
   </script>

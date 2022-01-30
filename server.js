@@ -10,32 +10,27 @@ const io = require('socket.io')(http, {
 const { addMessage, getMessages } = require('./src/models/chat');
 
 io.on('connection', async (socket) => {
-  const history = await getMessages();
-  io.emit('messagesHistory', history);
-  // Everytime a user connects, send his id.
   io.to(socket.id).emit('userConnected', socket.id);
 
-  // Refresh user online list everytime a user connects
+  const history = await getMessages();
+  io.emit('messagesHistory', history);
+
   const allSockets = await io.allSockets();
   io.emit('userJoined', [...allSockets]);
 
-  // Refresh user online list everytime a user change its name
   socket.on('changedNickname', ({ oldNick, newNick }) => {
     io.emit('changedNickname', { oldNick, newNick });
   });
 
-  // Refresh user online list everytime a user disconnects
   socket.on('disconnect', async () => {
     const sockets = await io.allSockets();
-
     io.emit('userLeft', [...sockets]);
-    socket.disconnect();
   });
 
   socket.on('message', ({ chatMessage, nickname }) => {
     const timestamp = moment().format('DD-MM-YYYY HH:mm:ss');
     addMessage(timestamp, chatMessage, nickname);
-    io.sockets.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
+    io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
   });
 });
 

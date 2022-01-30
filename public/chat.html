@@ -9,8 +9,14 @@
 
   <body>
     <ul class="messages"></ul>
-    <form action="">
-      <input id="messageInput" autocomplete="off" /><button>Send</button>
+    <form action="" class="nicknameForm">
+      <input id="nicknameInput" autocomplete="off" data-testid="nickname-box" />
+      <button data-testid="nickname-button">Change Nickname</button>
+      <p>Nickname: <span class="nickname" data-testid="online-user"></span></p>
+    </form>      
+    <form action="" class="messageForm">
+      <input id="messageInput" autocomplete="off" data-testid="message-box" />
+      <button data-testid="send-button">Send</button>
     </form>
   </body>
 

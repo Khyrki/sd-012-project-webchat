@@ -8,7 +8,17 @@ body {
   font: 13px Helvetica, Arial, sans-serif;
 }
 
-form {
+.nicknameForm {
+  background-color: black;
+  bottom: 40px;
+  display: flex;
+  justify-content: space-evenly;
+  padding: 10px;
+  position: fixed;
+  width: 100%;
+}
+
+.messageForm {
   background: black;
   bottom: 0;
   padding: 3px;
@@ -16,14 +26,14 @@ form {
   width: 100%;
 }
 
-form input {
+.messageForm input {
   border: 0;
   margin-right: 0.5%;
   padding: 10px;
   width: 90%;
 }
 
-form button {
+.messageForm button {
   background: rgb(130, 224, 255);
   border: none;
   cursor: pointer;

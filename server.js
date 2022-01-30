@@ -14,7 +14,7 @@ const io = require('socket.io')(http, {
 });
 const root = require('./controller/root');
 
-require('./sockets/chat').chat(io);
+require('./sockets/chat')(io);
 
 app.set('view engine', 'ejs');
 app.set('views', './views');

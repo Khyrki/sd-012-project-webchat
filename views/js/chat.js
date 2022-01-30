@@ -6,7 +6,7 @@ const formNickname = document.querySelector('#nickname');
 const ulNickname = document.querySelector('#ulNickname');
 const nicknameInput = document.querySelector('#nicknameInput');
 
-const tokenName = (length) => {
+const randomName = (length) => {
   const character = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
   for (let i = 0; i < length; i += 1) {
@@ -15,37 +15,40 @@ const tokenName = (length) => {
   return result;
 };
 
-sessionStorage.setItem('nameToken', tokenName(16));
-
-const displayName = document.createElement('li');
-displayName.dataset.testid = 'online-user';
-ulNickname.appendChild(displayName);
-displayName.innerText = sessionStorage.getItem('nameToken');
+sessionStorage.setItem('randomName', randomName(16));
+const liRandomName = document.createElement('li');
+liRandomName.innerHTML = '';
+liRandomName.dataset.testid = 'online-user';
+ulNickname.appendChild(liRandomName);
+liRandomName.innerText = sessionStorage.getItem('randomName');
+socket.emit('newUser', sessionStorage.getItem('randomName'));
 
 formNickname.addEventListener('submit', (event) => {
   event.preventDefault();
-  sessionStorage.setItem('nameToken', nicknameInput.value);
-  displayName.innerText = nicknameInput.value;
+  sessionStorage.setItem('randomName', nicknameInput.value);
+  liRandomName.innerText = nicknameInput.value;
   
-  socket.emit('onlineUsers', nicknameInput.value);
+  socket.emit('newNickname', nicknameInput.value);
   nicknameInput.value = '';
   return false;
 });
 
 const onlineUser = (users) => {
-  console.log(users);
-  users.forEach((user) => { 
-  const nickname = document.createElement('li');
-  nickname.dataset.testid = 'online-user';
-  nickname.innerText = user;
-  ulNickname.appendChild(nickname);
+  ulNickname.innerText = '';
+  users.forEach(({ nickname }) => {
+    const currentName = nickname.innerHTML;
+    if (currentName === nickname) return '';
+    const liNickname = document.createElement('li');
+    liNickname.innerText = nickname;
+    liNickname.dataset.testid = 'online-user';
+    ulNickname.appendChild(liNickname);
   });
 };  
 
 formChat.addEventListener('submit', (event) => {
   event.preventDefault();
   socket.emit('message', {
-    nickname: displayName.textContent,
+    nickname: liRandomName.textContent,
     chatMessage: messageInput.value,
   }); 
   messageInput.value = '';
@@ -68,3 +71,6 @@ const welcome = (message) => {
 socket.on('welcome', (message) => welcome(message));
 socket.on('message', (message) => createMessage(message));
 socket.on('onlineUsers', (users) => onlineUser(users));
+window.onbeforeunload = () => {
+  socket.disconnect();
+};

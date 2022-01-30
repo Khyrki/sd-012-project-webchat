@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  
+
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,8 +15,7 @@
     </div>
 
     <div>
-      <ul id="usersList">
-      </ul>
+      <ul id="usersList"></ul>
     </div>
 
     <form id="formNickname" action="">
@@ -26,7 +25,7 @@
     </form>
 
     <form id="formMessages" action="">
-      <label for="lname">Message:</label>
+      <label for="labelname">Message:</label>
       <input type="text" id="messageInput" placeholder="message" data-testid="message-box">
       <button type="button" id="sendButton" data-testid="send-button">Enviar</button> 
      </form>
@@ -34,4 +33,31 @@
     <ul id="messages"></ul>
 
   </body>
+  
+  <script src="/socket.io/socket.io.js"></script>
+
+  <script>
+    const socket = io();
+
+    //seletor lista de usuario
+    const usersList = document.querySelector('#usersList');
+
+    //seletores relacionados ao nickname
+    const formNickname = document.querySelector('#formNickname');
+    const nicknameInput = document.querySelector('#nicknameInput');
+    const buttonSaveNick = document.querySelector('#nicknameButton');
+
+    // seletores relacionados as mensagens
+    const formMessages = document.querySelector('#formMessages');
+    const messageInput = document.querySelector('#messageInput');
+    const buttonSendMsg = document.querySelector('#sendButton');
+    
+    //seletor relacionado a lista de mensagem
+    const listMsg = document.querySelector('#messages');
+   
+
+    
+
+  </script>
+
 </html>

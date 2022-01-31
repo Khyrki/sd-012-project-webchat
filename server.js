@@ -3,7 +3,7 @@ const http = require('http').createServer(app);
 const moment = require('moment');
 const cors = require('cors');
 const io = require('socket.io')(http, {
-  cors: { origin: '*', method: ['GET', 'POST'] } });
+  cors: { origin: 'https://devdinho-webchat.herokuapp.com', method: ['GET', 'POST'] } });
 // const { addMessage, getMessages } = require('./src/models/chat');
 const rootRouter = require('./src/routes');
 

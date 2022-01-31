@@ -6,6 +6,7 @@ const io = require('socket.io')(http, {
   cors: { origin: 'http://localhost:3000', method: ['GET', 'POST'] } });
 const { addMessage, getMessages } = require('./src/models/chat');
 const rootRouter = require('./src/routes');
+const express = require('express');
 
 const PORT = 3000;
 const connectedUsers = {};

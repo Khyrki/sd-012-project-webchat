@@ -19,8 +19,8 @@ app.use(cors());
 
 const io = socketIo(httpServer, {
   cors: {
-      origin: `http://localhost:${PORT}`,
-      method: ['GET', 'POST'],
+    origin: `http://localhost:${PORT}`,
+    method: ['GET', 'POST'],
   },
 });
 

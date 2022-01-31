@@ -1,10 +1,10 @@
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-html, body {
+body {
   min-height: 100vh;
 }
 
@@ -13,16 +13,16 @@ body {
 }
 
 div {
-  background:gold;
+  background: gold;
 }
 
 .chat {
-  margin: auto;
-  width: 600px;
-  height: 450px;
   border: 1px solid #ccc;
+  margin: auto;
+  height: 450px;
+  width: 600px;
 }
 
 .chat__ul {
   background-color: gold;
-} 
+}

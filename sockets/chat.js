@@ -1,4 +1,5 @@
 const moment = require('moment');
+const { send } = require('../models');
 
 const online = [];
 
@@ -25,19 +26,28 @@ const offlineUser = (socket, io) => {
   });
 };
 
+const messageData = (socket, io) => {
+  socket.on('message', async (message) => {
+    const date = moment(new Date()).format('DD-MM-YYYY HH:MM:SS A'); //  https://momentjs.com/docs/#/use-it/node-js/
+            
+    const text = `${date}  - ${message.nickname}: ${message.chatMessage}`;
+
+    await send({ 
+      nickname: message.nickname,
+      message: message.chatMessage,
+      timestamp: date,
+    });
+
+    io.emit('message', text);
+  });
+};
+
 const chat = (io) => {
     io.on('connection', (socket) => {  
         newUser(socket, io);
         editUser(socket, io);
         offlineUser(socket, io);
-        
-        socket.on('message', (message) => {
-            const date = moment(new Date()).format('DD-MM-YYYY HH:MM:SS A'); //  https://momentjs.com/docs/#/use-it/node-js/
-            
-            const text = `${date}  - ${message.nickname}: ${message.chatMessage}`;
-            
-            io.emit('message', text); 
-        });
+        messageData(socket, io);
     });
   };
   

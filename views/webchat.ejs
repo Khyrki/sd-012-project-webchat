@@ -30,24 +30,22 @@
     <script>
       const socket = io('http://localhost:3000');
 
-      const createNewUser = (user) => {
-        const usersList = document.getElementById('usersList');
-        const newUser = document.createElement('li');
-        newUser.innerText = nickname;
-        newUser.setAttribute('data-testid', 'online-user');
-        usersList.appendChild(newUser)
-      };
-
       socket.on('users', (users) => {
         const usersList = document.getElementById('usersList');
         const thisUser = users.find((user) => user.id === socket.id)
         usersList.innerHTML = '';
-        createNewUser(thisUser);
-        usersList.firstChild.id = 'client'
+        const newUser = document.createElement('li');
+        newUser.innerText = thisUser.nickname;
+        newUser.setAttribute('data-testid', 'online-user');
+        newUser.id = 'client';
+        usersList.appendChild(newUser);
 
         users.forEach(({ id, nickname }) => {
           if (socket.id !== id) {
-            
+            const newUser = document.createElement('li');
+            newUser.innerText = nickname;
+            newUser.setAttribute('data-testid', 'online-user');
+            usersList.appendChild(newUser);
           }
         });
       });

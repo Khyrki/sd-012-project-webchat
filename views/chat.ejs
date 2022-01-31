@@ -8,35 +8,76 @@
 </head>
 <body>
   <h1>Trybe Chat</h1>
-  <ul id="messages"></ul>
-    <form id="form" action="">
-      <input id="nickname" autocomplete="on" /><input id="message"/><button>Send</button>
-    </form>
+  <div>
+    <h3>Online</h3>
+    <ul id="online-user" data-testid="online-user"></ul>
+  </div>
+  <div>
+    <h3>Mensagens</h3>
+    <ul id="messages"></ul>
+  </div>
+  <form id="container">
+    <input id="nickname-box" autocomplete="off" data-testid="nickname-box"/>
+    <button data-testid="nickname-button">Alterar nickname</button>
+  </form>
+    <form id="message-form" action="">
+      <input id="message-box" autocomplete="off" data-testid="message-box"/>
+      <button data-testid="send-button">Enviar</button>
   <script src="/socket.io/socket.io.js"></script>
   <script>
     
     const socket = io();
+    let user = '';
     window.onload = () => {
-    const user = Math.random().toString().substring(2, 7);
-    document.getElementById('nickname').value = user;
+    user = Array.from(Array(16), 
+  () => Math.floor(Math.random() * 36).toString(36)).join(''); // https://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
+    document.getElementById('nickname-box').value = user;
+    socket.emit('new-user', user);
     }
     
     const form = document.getElementById('form');
-    const chatMessage = document.getElementById('input');
-    const nickname = document.getElementById('nickname');
+    const message = document.getElementById('message-box');
+    const nickname = document.getElementById('nickname-box');
+    const chatBox = document.getElementById('message-form');
     
-    form.addEventListener('submit', (element) => {
+    
+    const button = document.getElementById('nickname-button');
+    const container = document.getElementById('container');
+    
+    container.addEventListener('submit', (element) => {
       element.preventDefault();
-      if (chatMassage.value && nickname.value) {
-        socket.emit('message', {message: chatMessage.value, nick: nickname.value}); 
+      socket.emit('edit-user', nickname.value);
+    });
+
+    nickname.addEventListener('click', (element) => {
+        nickname.value = '';
+    });
+    
+    chatBox.addEventListener('submit', (element) => {
+      element.preventDefault();
+      if (message.value && nickname.value) {
+        socket.emit('message', {chatMessage: message.value, nickname: nickname.value});
         input.value = '';
       }
     });
+
     socket.on('message', (message) => {
       const messages = document.getElementById('messages');
       const li = document.createElement('li');
+      li.setAttribute('data-testid', 'message');
       li.textContent = message;
       messages.appendChild(li);
+    });
+
+    socket.on('online', (online) => {
+      const ul = document.getElementById('online-user');
+      ul.innerHTML= '';
+      online.forEach((user) => {
+        const li = document.createElement('li');
+        li.setAttribute('data-testid', 'online-user');
+        li.textContent = user.nickname;
+        ul.appendChild(li);
+      })
     });
   </script>
 </body>

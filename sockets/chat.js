@@ -1,7 +1,36 @@
 const moment = require('moment');
 
+const online = [];
+
+const newUser = (socket, io) => {
+  socket.on('new-user', (user) => {
+    online.push({ id: socket.id, nickname: user });
+    io.emit('online', online);
+  });
+};
+
+const editUser = (socket, io) => {
+  socket.on('edit-user', (user) => {
+    const index = online.findIndex((item) => item.id === socket.id);
+    online[index].nickname = user;
+    io.emit('online', online);
+  });
+};
+
+const offlineUser = (socket, io) => {
+  socket.on('disconnect', () => {
+    const index = online.findIndex((item) => item.id === socket.id);
+    online.splice(index, 1);
+    io.emit('online', online);
+  });
+};
+
 const chat = (io) => {
     io.on('connection', (socket) => {  
+        newUser(socket, io);
+        editUser(socket, io);
+        offlineUser(socket, io);
+        
         socket.on('message', (message) => {
             const date = moment(new Date()).format('DD-MM-YYYY HH:MM:SS A'); //  https://momentjs.com/docs/#/use-it/node-js/
             

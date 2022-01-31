@@ -60,8 +60,8 @@
       const sendMessageBtn = document.getElementById('send-button');
       sendMessageBtn.addEventListener('click', () => {
         const messageInput = document.getElementById('message-box');
-        const client = document.getElementById('client').innerText;
-        const nickname = client;
+        const client = document.getElementById('client');
+        const nickname = client.innerText;
         const chatMessage = messageInput.value;
         
         socket.emit('message', { chatMessage, nickname });

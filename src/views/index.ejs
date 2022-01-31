@@ -42,6 +42,7 @@
       overflow: auto;
       background-color: mintcream;
       transition: 500ms cubic-bezier(0.75,-1,0,1.75);
+      perspective: 5000px;
     }
     .chat__box.close {
       height: 0;
@@ -80,14 +81,42 @@
     li:nth-child(odd) {
       background-color: #eee;
     }
-    li:first-of-type {
-      animation: appear 500ms 800ms forwards;
-      opacity: 0;
+    l.chat__config {
+      display: flex;
+      position: absolute;
+      width: 300px;
+      background-color: gold;
+      transform: translateX(-101%);
+      height: 100%;
+      border-radius: inherit;
     }
+    .chat__server-msg {
+      background-color: lightskyblue !important;
+      position: absolute;
+      transform-origin: top center;
+      transform: rotateX(90deg);
+      width: 100%;
+      transform-style: preserve-3d;
+      animation: showUp 1s infinite;
+    }
+    @keyframes showUp {
+      100% {
+        transform: rotateY(0);
+      }
+    } 
   </style>
 </head>
 <body>
   <div class="chat">
+    <div class="chat__config">
+      <ul class="chat__online-users">
+        <span>Online users:</span>
+      </ul>
+    </div>
+    <form class="chat__config-form" action="">
+      <input data-testid="message-box" class="chat__chat-input" type="text">
+      <button data-testid="send-button" class="chat__chat-button">Enviar</button>
+    </form>
     <h3 class="chat__welcome">Bem vindo!</h3>
     <ul class=chat__box></ul>
     <form class="chat__form" action="">
@@ -99,6 +128,10 @@
     const socket = io();
     const chat = document.querySelector('.chat');
     const welcome = document.querySelector('.chat__welcome');
+    const chatUsers = document.querySelector('.chat__online-users');
+    const chatConfigForm = document.querySelector('.chat__config-form');
+    const chatNicknameInput = document.querySelector('.chat__nickname-input');
+    const chatNicknameButton = document.querySelector('.chat__nickname-button');
     const chatBox = document.querySelector('.chat__box');
     const chatForm = document.querySelector('.chat__form');
     const chatInput = document.querySelector('.chat__chat-input');
@@ -116,9 +149,8 @@
     };
 
     sessionStorage.setItem('nickname', randomUserName());
-    welcome.addEventListener('click', () => {
-      chatBox.classList.toggle('close');
-    });
+
+    welcome.addEventListener('click', () => chatBox.classList.toggle('close'));
 
     chatForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -129,14 +161,50 @@
         chatInput.value = '';
       }
     });
+
+    chatConfigForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const oldNick = sessionStorage.getItem('nickname');
+      const newNick = chatNicknameInput.value;
+      chatNicknameInput.value = '';
+      // if (oldNick !== newNick)
+      sessionStorage.setItem('nickname', newNick);
+      // socket.emit('changedNickname', { oldNick, newNick });
+    })
     
     const insertMessage = (userMessage) => {
       const li = document.createElement('li');
+      li.setAttribute('data-testid', 'message');
       li.innerText = userMessage;
       chatBox.appendChild(li);
     };
-    
+
+    const insertOnlineUser = (user) => {
+      const li = document.createElement('li');
+      li.setAttribute('data-testid', 'online-user');
+      li.innerText = user;
+      chatUsers.appendChild(li);
+    }
+    const serverMessage = (message) => {
+      const li = document.createElement('li');
+      li.className = 'chat__server-msg';
+      li.innerText = message;
+      chatBox.appendChild(li);
+      setTimeout(() => {
+        chatBox.removeChild(li);
+      }, 3000)
+    };
+    const refreshOnlineUsersList = (users) => {
+      if (!users.length) return;
+      chatUsers.innerHTML = '';
+      for (let user of users) {
+        chatUsers.innerHTML += `<li data-testid="online-user">${sessionStorage.getItem('nickname')}</li>`
+      }
+    };
+
     socket.on('message', insertMessage);
+    socket.on('userJoined', refreshOnlineUsersList);
+    socket.on('userLeft', refreshOnlineUsersList);
   </script>
 </body>
 </html>

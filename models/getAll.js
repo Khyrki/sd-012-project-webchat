@@ -1,8 +1,8 @@
 const connection = require('./connection');
 
-module.exports = async () => {
+module.exports = async (collection) => {
     try {
-        const rows = (await connection()).collection('webchat').find().toArray();
+        const rows = (await connection()).collection(collection).find().toArray();
         return rows;
     } catch (err) {
         return (err);

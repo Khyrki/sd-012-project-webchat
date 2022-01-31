@@ -1,5 +1,5 @@
 require('dotenv').config();
-
+/* eslint-disable */
 const { PORT } = process.env;
 const app = require('express')();
 const http = require('http').createServer(app);
@@ -9,22 +9,24 @@ const io = require('socket.io')(http, {
   cors: { origin: 'http://localhost:3000', method: ['GET', 'POST'] } });
 const { addMessage, getMessages } = require('./src/models/chat');
 
+const connectedUsers = {};
+
 io.on('connection', async (socket) => {
+  Object.assign(connectedUsers, { [socket.id]: socket.id });
   io.to(socket.id).emit('userConnected', socket.id);
+  io.emit('connectedUsers', connectedUsers);
 
   const history = await getMessages();
   io.emit('messagesHistory', history);
 
-  const allSockets = await io.allSockets();
-  io.emit('userJoined', [...allSockets]);
-
-  socket.on('changedNickname', ({ oldNick, newNick }) => {
-    io.emit('changedNickname', { oldNick, newNick });
+  socket.on('changedNickname', ({ userId, newNick }) => {
+    connectedUsers[userId] = newNick;
+    io.emit('changedNickname', connectedUsers);
   });
 
   socket.on('disconnect', async () => {
-    const sockets = await io.allSockets();
-    io.emit('userLeft', [...sockets]);
+    delete connectedUsers[socket.id];
+    io.emit('userLeft', connectedUsers);
   });
 
   socket.on('message', ({ chatMessage, nickname }) => {

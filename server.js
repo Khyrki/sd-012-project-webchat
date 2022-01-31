@@ -11,8 +11,23 @@ const io = require('socket.io')(http, { // servidor ao qual iremos nos comunicar
 });
 
 io.on('connection', (socket) => {
-  socket.emit('entered', 'Bem vindo');
-  console.log('Alguém se conectou!');
+  const date = new Date();
+  const { day, month, year, hour, minutes } = {
+    day: date.getDate(),
+    month: date.getMonth() + 1,
+    year: date.getFullYear(),
+    hour: date.getHours(),
+    minutes: date.getMinutes(),
+  };
+
+  const nickname = socket.id;
+
+  socket.emit('entered', `Olá, ${socket.id}!`);
+  socket.broadcast.emit('message', `${socket.id} se conectou!`);
+
+  socket.on('message', (msg) => {
+    io.emit('message', `${day}-${month}-${year} ${hour}:${minutes} - ${nickname}: ${msg}`);
+  });
 });
 
 const { PORT = 3000 } = process.env;

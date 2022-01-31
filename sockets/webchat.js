@@ -15,7 +15,7 @@ module.exports = (io) => {
         io.emit('message', `${date} - ${nickname} ${chatMessage}`);
     });
 
-    socket.on('changeNickname', ({ id, newNickname }) => {
+    socket.on('changeNickName', ({ id, newNickname }) => {
       const userIndex = users.findIndex((user) => user.id === id);
       users[userIndex] = { id, nickname: newNickname };
 

@@ -1,0 +1,28 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  min-height: 100vh;
+}
+
+body {
+  display: flex;
+}
+
+div {
+  background:rgb(80, 182, 29);
+}
+
+.chat {
+  border: 1px solid #ccc;
+  height: 450px;
+  margin: auto;
+  width: 600px;
+}
+
+.chat__ul {
+  background-color: rgb(80, 182, 29);
+}

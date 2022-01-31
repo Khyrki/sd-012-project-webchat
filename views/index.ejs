@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebChat</title>
+</head>
+<body>
+
+  <span>
+    <input data-testid="nickname-box" type="text" id="input_user">
+    <button data-testid="nickname-button" type="button" id="button_user">
+      Salvar
+    </button>
+  </span>
+
+  <span>
+    <input data-testid="message-box" type="text" id="input_message">
+    <button data-testid="send-button" type="button" id="button_message">
+      Enviar
+    </button>
+  </span>
+
+  <fieldset id="box_users">
+
+    <% users.forEach(({ nickname }) => { %>
+      
+      <div data-testid="online-user">
+        <%= nickname %>
+      </div>
+
+    <% }); %>
+
+  </fieldset>
+
+  <fieldset id="box_messages">
+
+    <% messages.forEach(({ chatMessage }) => { %>
+
+      <div data-testid="message">
+        <%= chatMessage %>
+      </div>
+
+    <% }); %>
+
+  </fieldset>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/views/js/index.js"></script>
+
+</body>
+</html>

@@ -7,6 +7,15 @@
   <title>Document</title>
 </head>
 <body>
+  <form id="nickname-form">
+    <input
+      id="input-nickname"
+      data-testid="nickname-box"
+      type="text"
+      placeholder="Insira seu nick para participar do chat"
+    />
+    <button type="submit" data-testid="nickname-button">Salvar</button>
+  </form>
   <form id="message-form">
     <ul id="messages-list"></ul>
     <input
@@ -22,8 +31,23 @@
     const socket = io();
 
     const messageForm = document.getElementById('message-form');
+    const nicknameForm = document.getElementById('nickname-form');
+    const nicknameInput = document.getElementById('input-nickname');
     const messagesList = document.getElementById('messages-list');
     const messageInput = document.getElementById('input-msg');
+
+    const generateRandomString = () => {
+      const alphanumeric = 'abcdefghijklmnopqrstuvwxxyz0123456789';
+      const randomS = [];
+      const anSplit = alphanumeric.split('');
+
+      // lógica feita com a ajuda do amigo Morato <3
+      for (let index = 0; randomS.length < 16; index = Math.floor(Math.random() * 10)) {
+        randomS.push(anSplit[index]);
+      }
+
+      return randomS.join('');
+    };
 
     function messageRenderer(msg) {
       const li = document.createElement('li');
@@ -36,12 +60,29 @@
     messageForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      socket.emit('message', messageInput.value);
+      const message = {
+        chatMessage: messageInput.value,
+        nickname: sessionStorage.getItem('nickname')
+      }
+
+      socket.emit('message', message);
       messageInput.value = '';
       return false;
     })
 
     socket.on('message', (msg) => messageRenderer(msg));
+
+    nicknameForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      if (nicknameInput.value === '') {
+        sessionStorage.setItem('nickname', generateRandomString());
+        return false;
+      }
+
+      sessionStorage.setItem('nickname', nicknameInput.value);
+      socket.emit('userUpdate', nicknameInput.value);
+    });
   </script>
 </body>
 </html>

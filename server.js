@@ -1,6 +1,3 @@
-require('dotenv').config();
-/* eslint-disable */
-const { PORT } = process.env;
 const app = require('express')();
 const http = require('http').createServer(app);
 const moment = require('moment');
@@ -9,6 +6,7 @@ const io = require('socket.io')(http, {
   cors: { origin: 'http://localhost:3000', method: ['GET', 'POST'] } });
 const { addMessage, getMessages } = require('./src/models/chat');
 
+const PORT = 3000;
 const connectedUsers = {};
 
 io.on('connection', async (socket) => {

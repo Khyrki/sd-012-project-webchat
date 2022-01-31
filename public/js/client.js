@@ -63,5 +63,5 @@ const getUsersOnline = (users) => {
 
 socket.on('message', createMessages);
 socket.on('newUser', userCreated);
-socket.on('allMessages', getMessages);
+socket.on('messagesAll', getMessages);
 socket.on('usuariosOnline', getUsersOnline);

@@ -37,6 +37,7 @@ io.on('connection', (socket) => {
 
   socket.on('changeName', (newName) => {
     io.emit('newName', changeName({ name: newName, id: socket.id }));
+    io.emit('allUsers', allUsers());
   });
 
   socket.on('disconnect', () => {

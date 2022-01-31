@@ -51,8 +51,32 @@ const createUser = (value) => {
   usersList.appendChild(li);
 };
 
+const clearUsers = () => {
+  while (usersList.firstChild) {
+    usersList.removeChild(usersList.lastChild);
+  }
+};
+
+/* https://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another */
+
+function arrUsersMove(arr, from, to) {
+  arr.splice(to, 0, arr.splice(from, 1)[0]);
+  return arr;
+}
+
 socket.on('updateAllUsers', (users) => {
-  users.forEach((user) => createUser(user));
+  clearUsers();
+  const nickname = sessionStorage.getItem('nickname');
+  const index = users.findIndex((nick) => nick === nickname);
+  const newIndex = arrUsersMove(users, index, 0);
+  newIndex.forEach((nick) => createUser(nick));
 });
 
 socket.on('message', (msg) => createMensage(msg));
+
+window.onbeforeunload = () => {
+  clearUsers();
+  const nickname = sessionStorage.getItem('nickname');
+  socket.emit('disconectUser', nickname);
+  socket.disconnect();
+};

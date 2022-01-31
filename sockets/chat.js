@@ -16,9 +16,9 @@ module.exports = (io) => io.on('connection', (socket) => {
     const arrIndex = allUsers.findIndex((user) => user === oldUser);
     allUsers[arrIndex] = newUser;
     io.emit('updateAllUsers', allUsers);
-  }); socket.on('disconectUser', (nickname) => {
+  }); socket.on('disconnect', (nickname) => {
     const positionInArray = allUsers.findIndex((user) => user === nickname);
-    allUsers.splice(positionInArray, positionInArray + 1);
+    allUsers.splice(positionInArray, 1);
     io.emit('updateAllUsers', allUsers);
   });
 });

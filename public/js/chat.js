@@ -41,7 +41,7 @@ sendNickname.addEventListener('click', (e) => {
   if (newUser) {
     socket.emit('attUserName', newUser, oldUser);
   }
-  messageBox.value = '';
+  nickNameChange.value = '';
 });
 
 const createUser = (value) => {
@@ -77,6 +77,6 @@ socket.on('message', (msg) => createMensage(msg));
 window.onbeforeunload = () => {
   clearUsers();
   const nickname = sessionStorage.getItem('nickname');
-  socket.emit('disconectUser', nickname);
+  socket.emit('disconnect', nickname);
   socket.disconnect();
 };

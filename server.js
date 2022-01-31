@@ -5,6 +5,7 @@ const cors = require('cors');
 const io = require('socket.io')(http, {
   cors: { origin: 'http://localhost:3000', method: ['GET', 'POST'] } });
 const { addMessage, getMessages } = require('./src/models/chat');
+const rootRouter = require('./src/routes');
 
 const PORT = 3000;
 const connectedUsers = {};
@@ -34,13 +35,11 @@ io.on('connection', async (socket) => {
   });
 });
 
-app.use(cors());
 app.set('view engine', 'ejs');
-app.set('views', `${__dirname}/views`);
+app.set('views', `${__dirname}/src/views`);
 
-app.get('/', (_req, res) => {
-  res.render(`${__dirname}/src/views/index`);
-});
+app.use(cors());
+app.use('/', rootRouter);
 
 http.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

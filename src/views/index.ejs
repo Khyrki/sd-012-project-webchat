@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500&display=swap" rel="stylesheet">
-  <!-- <link rel="stylesheet" src="index.css"> -->
+  <link rel="stylesheet" src="index.css">
   <script src="/socket.io/socket.io.js"></script>
   <style>
     * {
@@ -25,7 +25,6 @@
     body {
       display: flex;
     }
-
     
     .chat {
       display: flex;
@@ -159,23 +158,18 @@
       box-shadow: 0 0 2px limegreen;
     }
 
-    /* Scrollbar */
-    /* width */
     ::-webkit-scrollbar {
       width: 10px;
     }
 
-    /* Track */
     ::-webkit-scrollbar-track {
       background: #f1f1f1; 
     }
     
-    /* Handle */
     ::-webkit-scrollbar-thumb {
       background: #888; 
     }
 
-    /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
       background: #555; 
     }
@@ -209,6 +203,8 @@
     const chatForm = document.querySelector('.chat__form');
     const chatInput = document.querySelector('.chat__chat-input');
     const chatButton = document.querySelector('.chat__chat-button');
+
+    const generateId = (id) => sessionStorage.setItem('nickname', id.slice(0, 16));
 
     chatForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -250,7 +246,6 @@
           chatUsers.innerHTML += `<li data-testid="online-user">${alpha}</li>`;
         }
       });
-      
     };
 
     const renderMessages = (messages) => {
@@ -261,10 +256,6 @@
         chatBox.appendChild(li);
       });
     };
-
-    const generateId = (id) => {
-      sessionStorage.setItem('nickname', id.slice(0, 16));
-    }
 
     socket.on('messagesHistory', renderMessages);
     socket.on('message', insertMessage);

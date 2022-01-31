@@ -43,6 +43,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     io.emit('userExit', removeUser(socket.id));
+    io.emit('allUsers', allUsers());
   });
 });
 

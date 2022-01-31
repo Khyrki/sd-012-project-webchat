@@ -53,6 +53,7 @@ function formatMessage(nickname, message) {
 
 function onMessage(socket, { nickname, chatMessage }) {
   const formatted = formatMessage(nickname, chatMessage);
+  socket.emit('insertMessage', formatted);
   socket.broadcast.emit('insertMessage', formatted);
   Messages.create({ chatMessage: formatted }).then(() => {
     console.log(`${nickname}: ${chatMessage}`);

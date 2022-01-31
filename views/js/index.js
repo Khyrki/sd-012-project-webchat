@@ -21,16 +21,11 @@ function insert(id, value, boxElement) {
 }
 
 function insertUser(value) {
-  if (value) {
-    insert('online-user', value, boxUsers);
-  }
+  insert('online-user', value, boxUsers);
 }
 
 function insertMessage(value) {
-  if (value) {
-    insert('message', value, boxMessages);
-    inputMessage.value = '';
-  }
+  insert('message', value, boxMessages);
 }
 
 function saveUser() {
@@ -43,6 +38,7 @@ function sendMessage() {
     chatMessage: inputMessage.value,
   };
 
+  inputMessage.value = '';
   socket.send(data);
 }
 

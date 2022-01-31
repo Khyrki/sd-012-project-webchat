@@ -14,57 +14,52 @@
 		<!-- <link rel="stylesheet" src="index.css"> -->
 		<script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="main.css">
-	</head>
-	<body>
-		<div class="chat">
-			<h3 class="chat__welcome">Bem vindo!</h3>
-			<ul class="chat__box"></ul>
-			<form class="chat__form" action="">
-				<input class="chat__chat-input" type="text" />
-				<button class="chat__chat-button">Enviar</button>
-			</form>
-		</div>
-		<script>
-			const socket = io();
-			const chat = document.querySelector('.chat');
-			const welcome = document.querySelector('.chat__welcome');
-			const chatBox = document.querySelector('.chat__box');
-			const chatForm = document.querySelector('.chat__form');
-			const chatInput = document.querySelector('.chat__chat-input');
-			const chatButton = document.querySelector('.chat__chat-button');
-
-			welcome.addEventListener('click', () => {
-				chatBox.classList.toggle('close');
-			});
-
-			chatForm.addEventListener('submit', (e) => {
-				e.preventDefault();
-			});
-
-			chatInput.addEventListener('keyup', (e) => {
-				const userMessage = e.target.value;
-				if (e.code === 'Enter' && userMessage.length) {
-					socket.emit('message', userMessage);
-					e.target.value = '';
-				};
-			});
-
-      chatButton.addEventListener('click', (e) => {
-      const userMessage = chatInput.value;
-      if (userMessage.length) {
-          socket.emit('message', userMessage);
-          chatInput.value = '';
-        };
+  </head>
+  <body>
+    <div class="chat">
+      <h3 class="chat__welcome">Bem vindo!</h3>
+      <ul class=chat__box></ul>
+      <form class="chat__form" action="">
+        <input class="chat__chat-input" type="text">
+        <button class="chat__chat-button">Enviar</button>
+      </form>
+    </div>
+    <script>
+      const socket = io();
+      const chat = document.querySelector('.chat');
+      const welcome = document.querySelector('.chat__welcome');
+      const chatBox = document.querySelector('.chat__box');
+      const chatForm = document.querySelector('.chat__form');
+      const chatInput = document.querySelector('.chat__chat-input');
+      const chatButton = document.querySelector('.chat__chat-button');
+      
+      const randomUserName = () => {
+        const upper = [...Array(26).keys()]
+          .map((_, i) => String.fromCharCode(i + 65)).join('');
+        const alpha = upper.concat(upper.toLowerCase(), '0123456789');
+        let nickname = ''
+        while (nickname.length < 16) {
+          nickname += alpha[Math.floor(Math.random() * alpha.length)];
+        }
+        return nickname;
+      };
+      sessionStorage.setItem('nickname', randomUserName());
+      welcome.addEventListener('click', () => {
+        chatBox.classList.toggle('close');
       });
-
-			const insertMessage = (msg) => {
-				const li = document.createElement('li');
-				li.textContent = msg;
-				chatBox.appendChild(li);
-			};
-
-			//socket.on('entered', insertMessage);
-			socket.on('message', insertMessage);
-		</script>
+      chatForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const chatMessage = chatInput.value;
+        const nickname = sessionStorage.getItem('nickname');
+        socket.emit('message', { chatMessage, nickname });
+        chatInput.value = '';
+      });
+      const insertMessage = (userMessage) => {
+        const li = document.createElement('li');
+        li.innerText = userMessage;
+        chatBox.appendChild(li);
+      };
+      socket.on('message', insertMessage);
+    </script>
 	</body>
 </html>

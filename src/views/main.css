@@ -1,6 +1,6 @@
 * {
   box-sizing: border-box;
-  font-family: 'Nunito', sans-serif;
+  font-family: Nunito , sans-serif;
   margin: 0;
   padding: 0;
 }
@@ -55,8 +55,8 @@ body {
 }
 
 .chat__chat-button {
-  border: 1px solid black;
   background-color: rgb(37, 199, 118);
+  border: 1px solid black;
   border-radius: 2px;
   box-shadow: 0 4px 4px -2px black;
   color: white;
@@ -75,7 +75,7 @@ li {
   padding: 8px;
 }
 
-li:nth-child(odd) {
+li:nth-child( odd ) {
   background-color: rgb(184, 184, 184);
 }
 
@@ -85,6 +85,7 @@ li:first-of-type {
 }
 
 @keyframes appear {
+
   to {
     opacity: 1;
   }

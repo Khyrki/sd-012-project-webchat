@@ -244,16 +244,16 @@
       });
     };
 
-    const renderMessages = (messages) => {
-      messages.forEach(({ message, nickname, timestamp }) => {
-        const li = document.createElement('li');
-        li.setAttribute('data-testid', 'message');
-        li.innerText = `${timestamp} - ${nickname}: ${message}`;
-        chatBox.appendChild(li);
-      });
-    };
+    // const renderMessages = (messages) => {
+    //   messages.forEach(({ message, nickname, timestamp }) => {
+    //     const li = document.createElement('li');
+    //     li.setAttribute('data-testid', 'message');
+    //     li.innerText = `${timestamp} - ${nickname}: ${message}`;
+    //     chatBox.appendChild(li);
+    //   });
+    // };
 
-    socket.on('messagesHistory', renderMessages);
+    // socket.on('messagesHistory', renderMessages);
     socket.on('message', insertMessage);
     socket.on('userConnected', generateId);
     socket.on('connectedUsers', refreshOnlineUsersList);

@@ -15,8 +15,8 @@ io.on('connection', async (socket) => {
   io.to(socket.id).emit('userConnected', socket.id);
   io.emit('connectedUsers', connectedUsers);
 
-  const history = await getMessages();
-  io.emit('messagesHistory', history);
+  // const history = await getMessages();
+  // io.emit('messagesHistory', history);
 
   socket.on('changedNickname', ({ userId, newNick }) => {
     connectedUsers[userId] = newNick;

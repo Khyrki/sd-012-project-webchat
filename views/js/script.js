@@ -6,8 +6,7 @@ const chatList = document.querySelector('.chat-list');
 const divChat = document.querySelector('.div-chat');
 const userId = document.querySelector('#user-id');
 const userList = document.querySelector('.user-list');
-// eslint-disable-next-line no-undef
-const socket = io();
+const socket = window.io();
 
 btnSend.addEventListener('click', () => {
   socket.emit('newMessage', { chatMessage: inputMsg.value, nickname: userId.innerHTML });

@@ -1,26 +1,28 @@
-// Faça seu código aqui
 require('dotenv').config();
-const express = require('express');
+const app = require('express')();
+const cors = require('cors');
+const http = require('http').createServer(app); // conexão entre servidor e cliente
 
-const app = express();
-
-const http = require('http').createServer(app);
-
-const io = require('socket.io')(http, {
-    cors: {
-        origin: 'http://localhost:3000',
-        methods: ['GET', 'POST'],
-    },
+const io = require('socket.io')(http, { // servidor ao qual iremos nos comunicar e verbos de acesso
+  cors: {
+    origin: 'http://localhost:3000/',
+    method: ['GET', 'POST'],
+  },
 });
 
-require('./src/sockets/chat')(io);
-
-app.use(express.static(`${__dirname}/public`));
-
-app.get('/', (req, res) => {
-  res.sendFile(`${__dirname}/src/public/index.html`);
+io.on('connection', (socket) => {
+  socket.emit('entered', 'Bem vindo');
+  console.log('Alguém se conectou!');
 });
 
-http.listen(3000, () => {
-  console.log('server ouvindo na porta 3000');
+const { PORT = 3000 } = process.env;
+
+app.use(cors());
+app.set('view engine', 'ejs');
+app.set('views', `${__dirname}/src/views`); // aqui informamos onde as views serão procuradas
+
+app.get('/', (_req, res) => {
+  res.sendFile(`${__dirname}/src/view/index.html`);
 });
+
+http.listen(PORT, () => console.log(`App runnign on port: ${PORT}`));

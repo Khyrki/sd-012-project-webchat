@@ -3,8 +3,8 @@ const http = require('http').createServer(app);
 const moment = require('moment');
 const cors = require('cors');
 const io = require('socket.io')(http, {
-  cors: { origin: 'http://localhost:3000', method: ['GET', 'POST'] } });
-const { addMessage, getMessages } = require('./src/models/chat');
+  cors: { origin: '*', method: ['GET', 'POST'] } });
+// const { addMessage, getMessages } = require('./src/models/chat');
 const rootRouter = require('./src/routes');
 
 const PORT = 3000;
@@ -30,7 +30,7 @@ io.on('connection', async (socket) => {
 
   socket.on('message', ({ chatMessage, nickname }) => {
     const timestamp = moment().format('DD-MM-YYYY HH:mm:ss');
-    addMessage(timestamp, chatMessage, nickname);
+    // addMessage(timestamp, chatMessage, nickname);
     io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
   });
 });

@@ -24,14 +24,15 @@ const chatController = require('./controllers/chat');
 const { formatMsg } = require('./views/js/formatMsg');
 const { newUser, removeUser, changeName, allUsers } = require('./views/js/userService');
 
-app.get('/', chatController.getAll, chatController.getAllUser);
+app.get('/', chatController.getAll);
 
 io.on('connection', (socket) => {
   // On connect
   socket.emit('newUser', newUser(socket.id, socket.id.slice(0, 16)));
   io.emit('allUsers', allUsers());
 
-  socket.on('newMessage', ({ chatMessage, nickname }) => {
+  socket.on('message', ({ chatMessage, nickname }) => {
+    chatController.createMsg(formatMsg(chatMessage, nickname));
     io.emit('message', formatMsg(chatMessage, nickname));
   });
 

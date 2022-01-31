@@ -22,12 +22,11 @@
       </div>
       <div class="div-chat">
         <div class="chat-list">
-          <% allMsg.forEach(({ username, text, time }) => {%>
-          <div class='msg'>
-           <p class="msg-header"><%=username %> <span><%=time%></span></p>
-           <p class="msg-text"><%=text%></p> 
-          </div>
-          <%})%>
+          <% allMsg.forEach(({ message })=> {%>
+            <div class='msg' data-testid="message">
+              <%=message%>
+            </div>
+            <%})%>
         </div>
       </div>
     </main>

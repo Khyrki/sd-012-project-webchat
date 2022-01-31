@@ -9,7 +9,7 @@ const userList = document.querySelector('.user-list');
 const socket = window.io();
 
 btnSend.addEventListener('click', () => {
-  socket.emit('newMessage', { chatMessage: inputMsg.value, nickname: userId.innerHTML });
+  socket.emit('message', { chatMessage: inputMsg.value, nickname: userId.innerHTML });
   inputMsg.value = '';
 });
 
@@ -18,11 +18,11 @@ btnSave.addEventListener('click', () => {
   inputName.value = '';
 });
 
-const createNewMessage = (username, text, time) => {
+const createNewMessage = (data) => {
   const divMsg = document.createElement('div');
   divMsg.className = 'msg';
   divMsg.setAttribute('data-testid', 'message');
-  divMsg.innerHTML = `${username} - ${time} - ${text}`;
+  divMsg.innerHTML = data;
   chatList.appendChild(divMsg);
 };
 
@@ -52,8 +52,8 @@ socket.on('newUser', ({ id, userName }) => {
   newUser(id, userName);
 });
 
-socket.on('message', ({ username, text, time }) => {
-  createNewMessage(username, text, time);
+socket.on('message', (data) => {
+  createNewMessage(data);
   divChat.scrollTop = divChat.scrollHeight;
 });
 

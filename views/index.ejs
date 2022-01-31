@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="css/style.css">
+  <title>WebChat</title>
+</head>
+
+<body>
+  <div class="div-main">
+    <main class="chat-main">
+      <div class="div-user">
+        <span class="span-nickname">NickName
+          <span id="user-id" data-testid="online-user"></span>
+        </span>
+        <container class="container-user">
+          <input type="text" class="input-name" data-testid="nickname-box">
+          <button class="btn btn-save" data-testid="nickname-button">Salvar</button>
+        </container>
+        <ul class="user-list">
+        </ul>
+      </div>
+      <div class="div-chat">
+        <div class="chat-list">
+          <% allMsg.forEach(({ username, text, time }) => {%>
+          <div class='msg'>
+           <p class="msg-header"><%=username %> <span><%=time%></span></p>
+           <p class="msg-text"><%=text%></p> 
+          </div>
+          <%})%>
+        </div>
+      </div>
+    </main>
+    <div class="div-msg">
+      <input type="text" class="input-msg" data-testid="message-box">
+      <button class="btn btn-send" data-testid="send-button">Enviar</button>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/script.js"></script>
+</body>
+
+</html>

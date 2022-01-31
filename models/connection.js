@@ -1,5 +1,5 @@
-const { MongoClient } = require('mongodb');
 require('dotenv').config();
+const { MongoClient } = require('mongodb');
 
 let schema = null;
 
@@ -14,7 +14,7 @@ async function connection() {
     .then((dbSchema) => {
       schema = dbSchema;
       return schema;
-    })
+    });
 }
 
 module.exports = connection;

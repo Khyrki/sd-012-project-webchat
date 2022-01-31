@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@300&display=swap');
+:root {
+	--dark-color-a: #000000;
+	--dark-color-b: #14213d;
+	--light-color: #fca311;
+	--success-color: #5cb85c;
+	--error-color: #d9534f;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Dongle', sans-serif;
+  font-size: 26px;
+  background-color: var(--dark-color-a);
+  margin: 20px;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+.btn {
+  cursor: pointer;
+  padding: 2px 15px;
+  background-color: var(--light-color);
+  color: var(--dark-color-a);
+  border: 0;
+  font-size: 17px;
+}
+
+.div-main {
+  background-color: var(--dark-color-b);
+  padding: 15px 20px;
+  max-width: 1080px;
+  top: 0;
+  margin: auto;
+  margin-top: 0;
+}
+
+.chat-main {
+  display: grid;
+  min-height: 560px;
+  max-height: 560px;
+  grid-template-columns: 1fr 3fr;
+}
+
+.div-user {
+  background-color: var(--dark-color-b);
+  max-height: 520px;
+  width: 120%;
+  color: #e5e5e5;
+  padding: 20px 20px 60px;
+}
+
+.div-chat {
+  padding: 20px;
+  min-width: 100%;
+  max-width: 720px;
+  max-height: 520px;
+  background: var(--light-color);
+  margin: 30px auto;
+  overflow-y: auto;
+}
+
+.msg {
+  overflow-wrap: break-word;
+}
+
+.user-list {
+  padding: 30px;
+  max-height: 560px;
+  overflow-y: auto;
+}
+
+.div-msg {
+  padding: 20px 30px;
+  background-color: var(--dark-color-a);
+  display: flex;
+}
+
+.input-msg {
+  font-size: 16px;
+  padding: 5px;
+  height: 40px;
+  flex: 1;
+}
+
+@media (max-width: 700px) {
+  .div-main {
+    display: block;
+  }
+}

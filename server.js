@@ -17,6 +17,8 @@ io.on('connection', () => {
   console.log('Alguém entrou');
 });
 
+require('./sockets/chatMessage')(io);
+
 app.get('/', (_req, res) => {
   res.sendFile(path.resolve(__dirname, './public/index.html'));
 });

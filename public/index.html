@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,9 +7,41 @@
   <title>Document</title>
 </head>
 <body>
+  <form id="message-form">
+    <ul id="messages-list"></ul>
+    <input
+      id="input-msg"
+      data-testid="message-box"
+      type="text"
+      placeholder="Mande uma mensagem no chat!"
+    />
+    <button id="submit-btn" type="submit" data-testid="send-button">Enviar</button>
+  </form>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
   <script>
     const socket = io();
+
+    const messageForm = document.getElementById('message-form');
+    const messagesList = document.getElementById('messages-list');
+    const messageInput = document.getElementById('input-msg');
+
+    function messageRenderer(msg) {
+      const li = document.createElement('li');
+      li.setAttribute('data-testid', 'message');
+      li.innerText = msg;
+      messagesList.appendChild(li);
+      return false;
+    }
+
+    messageForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      socket.emit('message', messageInput.value);
+      messageInput.value = '';
+      return false;
+    })
+
+    socket.on('message', (msg) => messageRenderer(msg));
   </script>
 </body>
 </html>

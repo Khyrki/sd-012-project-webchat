@@ -35,15 +35,17 @@ formNickname.addEventListener('submit', (event) => {
 
 const onlineUser = (users) => {
   ulNickname.innerText = '';
-  users.forEach(({ nickname }) => {
-    const currentName = nickname.innerHTML;
-    if (currentName === nickname) return '';
+  users.forEach(({ nickname, id }) => {
     const liNickname = document.createElement('li');
     liNickname.innerText = nickname;
     liNickname.dataset.testid = 'online-user';
-    ulNickname.appendChild(liNickname);
+    if (id !== socket.id) {
+      ulNickname.appendChild(liNickname);
+    } else {
+      ulNickname.prepend(liNickname);
+    }
   });
-};  
+};
 
 formChat.addEventListener('submit', (event) => {
   event.preventDefault();

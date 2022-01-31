@@ -13,6 +13,10 @@ class MongoDB {
     return this.db.find().toArray();
   }
 
+  async find(id) {
+    return this.db.findOne({ _id: id });
+  }
+
   async create(doc) {
     return this.db.insertOne(doc);
   }
@@ -22,7 +26,7 @@ class MongoDB {
   }
 
   async update(id, doc) {
-    return this.db.updateOne({ _id: id }, { $set: doc });
+    return this.db.updateOne({ _id: id }, { $set: doc }).toArray();
   }
 }
 

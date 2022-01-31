@@ -25,7 +25,7 @@
 
     <% users.forEach(({ nickname }) => { %>
       
-      <div data-testid="online-user">
+      <div id="user" data-testid="online-user">
         <%= nickname %>
       </div>
 
@@ -37,7 +37,7 @@
 
     <% messages.forEach(({ chatMessage }) => { %>
 
-      <div data-testid="message">
+      <div id="message" data-testid="message">
         <%= chatMessage %>
       </div>
 

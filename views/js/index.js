@@ -1,5 +1,10 @@
 const socket = window.io();
 
+function getByNick(nickname) {
+  const users = document.querySelectorAll('$user');
+  return users.find((user) => user.innerText === nickname);
+}
+
 function getById(id) {
   return document.getElementById(id);
 }
@@ -54,14 +59,12 @@ socket.on('connected', (nickname) => {
   inputUser.value = nickname;
 });
 
-socket.on('changeAnotherUser', (nickname) => {
-  const user = document.querySelector(`#box_users:contains('${nickname}')`);
-  user.innerText = nickname;
+socket.on('changeAnotherUser', (oldNickname) => {
+  getByNick(oldNickname).innerText = inputUser.value;
 });
 
 socket.on('disconnected', (nickname) => {
-  const user = document.querySelector(`#box_users:contains('${nickname}')`);
-  user.remove();
+  getByNick(nickname).remove();
 });
 
 buttonUser.addEventListener('click', saveUser);

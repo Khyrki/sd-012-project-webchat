@@ -65,16 +65,19 @@ io.on('connection', (socket) => {
 
   socket.on('message', (data) => onMessage(socket, data));
   socket.on('changeUser', (nickname) => {
-    Users.update(socket.id, { nickname }).then((old) => {
+    Users.find(socket.id).then((old) => {
+      Users.update(socket.id, { nickname }).then();
+      socket.broadcast.emit('changeAnotherUser', old.nickname);
       console.log(`${old.nickname} para ${nickname}`);
     });
-
-    socket.broadcast.emit('changeAnotherUser', nickname);
   });
 
   socket.on('disconnect', () => {
-    Users.delete(socket.id).then(({ nickname }) => {
-      socket.broadcast.emit('disconnected', nickname);
+    Users.find(socket.id).then((old) => {
+      Users.delete(socket.id).then(() => {
+        socket.broadcast.emit('disconnected', old.nickname);
+        console.log(`${old.nickname} Disconnected`);
+      });
     });
   });
 });

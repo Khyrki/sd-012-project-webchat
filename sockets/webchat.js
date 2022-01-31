@@ -5,7 +5,7 @@ let users = [];
 
 module.exports = (io) => {
   io.on('connection', (socket) => {
-    users.push({ id: socket.id, nickname: `Usuário ${socket.id}` });
+    users.push({ id: socket.id, nickname: socket.id.slice(0, 16) });
     io.emit('users', users);
 
     socket.on('message', async ({ chatMessage, nickname }) => {

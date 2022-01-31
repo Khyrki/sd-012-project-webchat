@@ -8,8 +8,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500&display=swap" rel="stylesheet">
-  <!-- <link rel="stylesheet" src="index.css"> -->
-  <script src="/socket.io/socket.io.js"></script>
   <style>
     * {
       margin: 0;
@@ -31,18 +29,18 @@
       width: 600px;
       border: 1px solid black;
       border-radius: 4px;
-      overflow: hidden;
+      position: relative;
     }
     
-    .chat__welcome {
+    .chat__config-form {
       padding: 6px;
+      background-color: mediumslateblue;
     }
     .chat__box {
       height: 400px;
       overflow: auto;
       background-color: mintcream;
       transition: 500ms cubic-bezier(0.75,-1,0,1.75);
-      perspective: 5000px;
     }
     .chat__box.close {
       height: 0;
@@ -51,6 +49,7 @@
       padding: 6px;
       display: flex;
       gap: 6px;
+      background-color: mediumslateblue;
     }
     .chat__chat-input {
       flex-grow: 1;
@@ -76,82 +75,110 @@
     }
     li {
       list-style: none;
-      padding: 8px;
     }
-    li:nth-child(odd) {
+    .chat__box li {
+      padding: 4px;
+    }
+    .chat__box li:nth-child(odd) {
       background-color: #eee;
     }
-    l.chat__config {
+    .chat__config {
       display: flex;
+      flex-direction: column;
+      border: 1px solid;
       position: absolute;
-      width: 300px;
-      background-color: gold;
-      transform: translateX(-101%);
+      padding: 10px;
+      background-color: mediumslateblue;
+      transform: translateX(-102%);
       height: 100%;
       border-radius: inherit;
+      overflow: hidden;
     }
-    .chat__server-msg {
-      background-color: lightskyblue !important;
-      position: absolute;
-      transform-origin: top center;
-      transform: rotateX(90deg);
-      width: 100%;
-      transform-style: preserve-3d;
-      animation: showUp 1s infinite;
+    .chat__nickname-input {
+      flex-grow: 1;
+      padding: 4px;
+      border: none;
+      border: 1px solid silver;
+      border-radius: 2px;
+      outline: none;
     }
-    @keyframes showUp {
-      100% {
-        transform: rotateY(0);
-      }
-    } 
+    .chat__nickname-button {
+      border: 1px solid black;
+      box-shadow: 0 4px 4px -2px black;
+      border-radius: 2px;
+      background-color: royalblue;
+      padding: 0 10px;
+      font-size: 1rem;
+      color: white;
+      transition: 100ms;
+    }
+    .chat__nickname-button:active {
+      box-shadow: none;
+      transform: scale(.99);
+    }
+    .chat__online-users {
+      background-color: #fff;
+      border-radius: 4px;
+      padding: 4px;
+    }
+    .chat__online-users li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .chat__online-users li:after {
+      content: '';
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      background-color: lime;
+      border-radius: 50%;
+      border: 1px solid #00000075;
+      box-shadow: 0 0 2px limegreen;
+    }
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1; 
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #888; 
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555; 
+    }
   </style>
 </head>
 <body>
   <div class="chat">
     <div class="chat__config">
-      <ul class="chat__online-users">
-        <span>Online users:</span>
-      </ul>
+      <h4>Online users:</h4>
+      <ul class="chat__online-users"></ul>
     </div>
     <form class="chat__config-form" action="">
+      <label for="nickname"><strong>Nickname:</strong></label>
+      <input class="chat__nickname-input" id="nickname" type="text" data-testid="nickname-box">
+      <button class="chat__nickname-button" data-testid="nickname-button">Salvar</button>
+    </form>
+    <ul class=chat__box></ul>
+    <form class="chat__form" action="">
       <input data-testid="message-box" class="chat__chat-input" type="text">
       <button data-testid="send-button" class="chat__chat-button">Enviar</button>
     </form>
-    <h3 class="chat__welcome">Bem vindo!</h3>
-    <ul class=chat__box></ul>
-    <form class="chat__form" action="">
-      <input class="chat__chat-input" type="text">
-      <button class="chat__chat-button">Enviar</button>
-    </form>
   </div>
+  <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
-    const chat = document.querySelector('.chat');
-    const welcome = document.querySelector('.chat__welcome');
     const chatUsers = document.querySelector('.chat__online-users');
     const chatConfigForm = document.querySelector('.chat__config-form');
     const chatNicknameInput = document.querySelector('.chat__nickname-input');
-    const chatNicknameButton = document.querySelector('.chat__nickname-button');
     const chatBox = document.querySelector('.chat__box');
     const chatForm = document.querySelector('.chat__form');
     const chatInput = document.querySelector('.chat__chat-input');
-    const chatButton = document.querySelector('.chat__chat-button');
-    
-    const randomUserName = () => {
-      const upper = [...Array(26).keys()]
-        .map((_, i) => String.fromCharCode(i + 65)).join('');
-      const alpha = upper.concat(upper.toLowerCase(), '0123456789');
-      let nickname = ''
-      while (nickname.length < 16) {
-        nickname += alpha[Math.floor(Math.random() * alpha.length)];
-      }
-      return nickname;
-    };
-
-    sessionStorage.setItem('nickname', randomUserName());
-
-    welcome.addEventListener('click', () => chatBox.classList.toggle('close'));
-
+    const generateId = (id) => sessionStorage.setItem('nickname', id.slice(0, 16));
     chatForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const chatMessage = chatInput.value;
@@ -161,49 +188,46 @@
         chatInput.value = '';
       }
     });
-
     chatConfigForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const oldNick = sessionStorage.getItem('nickname');
+      const userId = socket.id;
       const newNick = chatNicknameInput.value;
-      chatNicknameInput.value = '';
-      // if (oldNick !== newNick)
-      sessionStorage.setItem('nickname', newNick);
-      // socket.emit('changedNickname', { oldNick, newNick });
-    })
-    
+      if (newNick.length) {
+        chatNicknameInput.value = '';
+        sessionStorage.setItem('nickname', newNick);
+        socket.emit('changedNickname', { userId, newNick });
+      }
+    });
     const insertMessage = (userMessage) => {
       const li = document.createElement('li');
       li.setAttribute('data-testid', 'message');
       li.innerText = userMessage;
       chatBox.appendChild(li);
     };
-
-    const insertOnlineUser = (user) => {
-      const li = document.createElement('li');
-      li.setAttribute('data-testid', 'online-user');
-      li.innerText = user;
-      chatUsers.appendChild(li);
-    }
-    const serverMessage = (message) => {
-      const li = document.createElement('li');
-      li.className = 'chat__server-msg';
-      li.innerText = message;
-      chatBox.appendChild(li);
-      setTimeout(() => {
-        chatBox.removeChild(li);
-      }, 3000)
+    const refreshOnlineUsersList = (connectedUsers) => {
+      const users = Object.entries(connectedUsers);
+      const me = sessionStorage.getItem('nickname');
+      chatUsers.innerHTML = `<li data-testid='online-user'>${me}</li>`;
+      users.forEach(([_userId, currentUser]) => {
+        const alpha = currentUser.slice(0, 16);
+        if (alpha !== me) {
+          chatUsers.innerHTML += `<li data-testid='online-user'>${alpha}</li>`;
+        }
+      });
     };
-    const refreshOnlineUsersList = (users) => {
-      if (!users.length) return;
-      chatUsers.innerHTML = '';
-      for (let user of users) {
-        chatUsers.innerHTML += `<li data-testid="online-user">${sessionStorage.getItem('nickname')}</li>`
-      }
+    const renderMessages = (messages) => {
+      messages.forEach(({ message, nickname, timestamp }) => {
+        const li = document.createElement('li');
+        li.setAttribute('data-testid', 'message');
+        li.innerText = `${timestamp} - ${nickname}: ${message}`;
+        chatBox.appendChild(li);
+      });
     };
-
+    socket.on('messagesHistory', renderMessages);
     socket.on('message', insertMessage);
-    socket.on('userJoined', refreshOnlineUsersList);
+    socket.on('userConnected', generateId);
+    socket.on('connectedUsers', refreshOnlineUsersList);
+    socket.on('changedNickname', refreshOnlineUsersList);
     socket.on('userLeft', refreshOnlineUsersList);
   </script>
 </body>

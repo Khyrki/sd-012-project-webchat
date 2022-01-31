@@ -1,46 +1,46 @@
-require('dotenv').config();
 const app = require('express')();
-const cors = require('cors');
 const http = require('http').createServer(app); // conexão entre servidor e cliente
 const moment = require('moment');
+const cors = require('cors');
+const io = require('socket.io')(http, {
+  cors: { origin: 'http://localhost:3000', method: ['GET', 'POST'] } });
+const { addMessage, getMessages } = require('./src/models/chat');
+const rootRouter = require('./src/routes');
 
-const io = require('socket.io')(http, { // servidor ao qual iremos nos comunicar e verbos de acesso
-  cors: {
-    origin: 'http://localhost:3000/',
-    method: ['GET', 'POST'],
-  },
-});
+const PORT = 3000;
+const connectedUsers = {};
 
 io.on('connection', async (socket) => {
-  const allSockets = await io.allSockets();
+  Object.assign(connectedUsers, { [socket.id]: socket.id });
+  io.to(socket.id).emit('userConnected', socket.id);
+  io.emit('connectedUsers', connectedUsers);
 
-  io.sockets.emit('userJoined', [...allSockets]);
+  const history = await getMessages();
+  io.to(socket.id).emit('messagesHistory', history);
 
-  socket.on('changedNickname', ({ oldNick, newNick }) => {
-    console.log(socket.id);
+  socket.on('changedNickname', ({ userId, newNick }) => {
+    connectedUsers[userId] = newNick;
+    io.emit('changedNickname', connectedUsers);
   });
 
-  socket.on('disconnect', async () => {
-    const sockets = await io.allSockets();
-
-    io.sockets.emit('userLeft', [...sockets]);
-    socket.disconnect();
+  socket.on('disconnect', () => {
+    delete connectedUsers[socket.id];
+    io.emit('userLeft', connectedUsers);
   });
 
   socket.on('message', ({ chatMessage, nickname }) => {
-    const timestamp = moment().format('DD-MM-YYYY HH:mm');
-    io.sockets.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
+    const timestamp = moment().format('DD-MM-YYYY HH:mm:ss');
+    addMessage(timestamp, chatMessage, nickname);
+    io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
   });
 });
 
-const { PORT = 3000 } = process.env;
+app.set('view engine', 'ejs');
+app.set('views', `${__dirname}/src/view`); // aqui informamos onde as views serão procuradas
 
 app.use(cors());
-app.set('view engine', 'ejs');
-app.set('views', `${__dirname}/view`); // aqui informamos onde as views serão procuradas
+app.use('/', rootRouter);
 
-app.get('/', (_req, res) => {
-  res.render(`${__dirname}/src/views/index`);
+http.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
-
-http.listen(PORT, () => console.log(`App runnign on port: ${PORT}`));

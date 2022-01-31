@@ -1,22 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@300&display=swap') ;
+
+
 :root {
-	--dark-color-a: #000000;
-	--dark-color-b: #14213d;
-	--light-color: #fca311;
-	--success-color: #5cb85c;
-	--error-color: #d9534f;
+
+  --dark-color-a: black;
+
+  --dark-color-b: #14213d;
+
+  --light-color: #fca311;
+
+  --success-color: #5cb85c;
+
+  --error-color: #d9534f;
 }
 
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 body {
-  font-family: 'Dongle', sans-serif;
-  font-size: 26px;
   background-color: var(--dark-color-a);
+  font-family: Dongle, sans-serif;
+  font-size: 26px;
   margin: 20px;
 }
 
@@ -29,46 +36,46 @@ a {
 }
 
 .btn {
-  cursor: pointer;
-  padding: 2px 15px;
   background-color: var(--light-color);
-  color: var(--dark-color-a);
   border: 0;
+  color: var(--dark-color-a);
+  cursor: pointer;
   font-size: 17px;
+  padding: 2px 15px;
 }
 
 .div-main {
   background-color: var(--dark-color-b);
-  padding: 15px 20px;
-  max-width: 1080px;
-  top: 0;
   margin: auto;
   margin-top: 0;
+  max-width: 1080px;
+  padding: 15px 20px;
+  top: 0;
 }
 
 .chat-main {
   display: grid;
-  min-height: 560px;
-  max-height: 560px;
   grid-template-columns: 1fr 3fr;
+  max-height: 560px;
+  min-height: 560px;
 }
 
 .div-user {
   background-color: var(--dark-color-b);
-  max-height: 520px;
-  width: 120%;
   color: #e5e5e5;
+  max-height: 520px;
   padding: 20px 20px 60px;
+  width: 120%;
 }
 
 .div-chat {
-  padding: 20px;
-  min-width: 100%;
-  max-width: 720px;
-  max-height: 520px;
   background: var(--light-color);
   margin: 30px auto;
+  max-height: 520px;
+  max-width: 720px;
+  min-width: 100%;
   overflow-y: auto;
+  padding: 20px;
 }
 
 .msg {
@@ -76,25 +83,26 @@ a {
 }
 
 .user-list {
-  padding: 30px;
   max-height: 560px;
   overflow-y: auto;
+  padding: 30px;
 }
 
 .div-msg {
-  padding: 20px 30px;
   background-color: var(--dark-color-a);
   display: flex;
+  padding: 20px 30px;
 }
 
 .input-msg {
-  font-size: 16px;
-  padding: 5px;
-  height: 40px;
   flex: 1;
+  font-size: 16px;
+  height: 40px;
+  padding: 5px;
 }
 
-@media (max-width: 700px) {
+@media ( max-width : 700px ) {
+
   .div-main {
     display: block;
   }

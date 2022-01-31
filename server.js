@@ -24,7 +24,7 @@ io.on('connection', async (socket) => {
     io.emit('changedNickname', connectedUsers);
   });
 
-  socket.on('disconnect', async () => {
+  socket.on('disconnect', () => {
     delete connectedUsers[socket.id];
     io.emit('userLeft', connectedUsers);
   });

@@ -1,7 +1,11 @@
-require('dotenv').config();
 const app = require('express')();
 const http = require('http').createServer(app);
+const moment = require('moment');
 const cors = require('cors');
+require('dotenv').config();
+
+const PORT = process.env.PORT || 3000;
+
 const io = require('socket.io')(http, {
   cors: {
     origin: 'http://localhost:3000',
@@ -10,18 +14,20 @@ const io = require('socket.io')(http, {
 });
 
 io.on('connection', (socket) => {
-  socket.emit('entered', 'Bem vindo');
-  console.log('Alguém se conectou!');
-});
+  // socket.broadcast.emit('message', `${socket.id} se conectou!`);
 
-const { PORT } = process.env;
+  socket.on('message', ({ chatMessage, nickname }) => {
+    const timestamp = moment().format('DD-MM-YYYY HH:mm');
+    io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
+  });
+});
 
 app.use(cors());
 app.set('view engine', 'ejs');
-app.set('views', 'src/views');
+app.set('views', `${__dirname}/views`);
 
 app.get('/', (_req, res) => {
-  res.sendFile(`${__dirname}/src/views/index.html`);
+  res.render(`${__dirname}/src/views/index`, { teste: 'hello' });
 });
 
 http.listen(PORT, () => {

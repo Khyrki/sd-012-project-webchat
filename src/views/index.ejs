@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>WebChat</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500&display=swap"
+			rel="stylesheet"
+		/>
+		<!-- <link rel="stylesheet" src="index.css"> -->
+		<script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="main.css">
+	</head>
+	<body>
+		<div class="chat">
+			<h3 class="chat__welcome">Bem vindo!</h3>
+			<ul class="chat__box"></ul>
+			<form class="chat__form" action="">
+				<input class="chat__chat-input" type="text" />
+				<button class="chat__chat-button">Enviar</button>
+			</form>
+		</div>
+		<script>
+			const socket = io();
+			const chat = document.querySelector('.chat');
+			const welcome = document.querySelector('.chat__welcome');
+			const chatBox = document.querySelector('.chat__box');
+			const chatForm = document.querySelector('.chat__form');
+			const chatInput = document.querySelector('.chat__chat-input');
+			const chatButton = document.querySelector('.chat__chat-button');
+
+			welcome.addEventListener('click', () => {
+				chatBox.classList.toggle('close');
+			});
+
+			chatForm.addEventListener('submit', (e) => {
+				e.preventDefault();
+			});
+
+			chatInput.addEventListener('keyup', (e) => {
+				const userMessage = e.target.value;
+				if (e.code === 'Enter' && userMessage.length) {
+					socket.emit('message', userMessage);
+					e.target.value = '';
+				};
+			});
+
+      chatButton.addEventListener('click', (e) => {
+      const userMessage = chatInput.value;
+      if (userMessage.length) {
+          socket.emit('message', userMessage);
+          chatInput.value = '';
+        };
+      });
+
+			const insertMessage = (msg) => {
+				const li = document.createElement('li');
+				li.textContent = msg;
+				chatBox.appendChild(li);
+			};
+
+			//socket.on('entered', insertMessage);
+			socket.on('message', insertMessage);
+		</script>
+	</body>
+</html>

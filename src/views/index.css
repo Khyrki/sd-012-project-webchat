@@ -5,11 +5,8 @@
 }
 
 body {
-  min-height: 100vh;
-}
-
-body {
   display: flex;
+  min-height: 100vh;
 }
 
 div {
@@ -18,8 +15,8 @@ div {
 
 .chat {
   border: 1px solid #ccc;
-  margin: auto;
   height: 450px;
+  margin: auto;
   width: 600px;
 }
 

@@ -31,6 +31,8 @@
       const socket = io('http://localhost:3000');
 
       socket.on('users', (users) => {
+        const usersList = document.getElementById('usersList');
+        usersList.innerHTML = '';
         users.forEach(({ id, nickname }) => {
             const newUser = document.createElement('li');
             newUser.innerText = nickname;

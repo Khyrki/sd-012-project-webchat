@@ -10,21 +10,20 @@ module.exports = (io) => {
 
     socket.on('message', async ({ chatMessage, nickname }) => {
         const date = moment(new Date()).format('DD-MM-YYYY h:mm a');
-        await create('messages', { message: chatMessage, nickname, timestamp: date });
-    
-        io.emit('message', `${date} - ${nickname} ${chatMessage}`);
+        await create({ message: chatMessage, nickname, timestamp: date }, 'messages');
+        io.emit('message', `${date} - ${nickname}: ${chatMessage}`);
     });
 
-    socket.on('changeNickName', ({ id, newNickname }) => {
+    socket.on('changeNickName', ({ id, nickname }) => {
       const userIndex = users.findIndex((user) => user.id === id);
-      users[userIndex] = { id, nickname: newNickname };
+      users[userIndex] = { id, nickname };
 
       io.emit('users', users);
     });
 
     socket.on('disconnect', () => {
       users = users.filter(({ id }) => id !== socket.id);
-      io.emit('connectedUsers', users);
+      io.emit('users', users);
     });
   });
 };

@@ -78,6 +78,14 @@
       }
     });
 
+    chatButton.addEventListener('click', (e) => {
+      const userMessage = chatInput.value;
+      if (userMessage.length) {
+        socket.emit('message', userMessage);
+        chatInput.value = '';
+      };
+    });
+
     const insertMessage = (msg) => {
       const li = document.createElement('li');
       li.textContent = msg;

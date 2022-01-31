@@ -28,6 +28,9 @@
   </form>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
   <script>
+    window.onload = () => {
+      if (!sessionStorage.getItem('nickname')) sessionStorage.setItem('nickname', generateRandomString());
+    }
     const socket = io();
 
     const messageForm = document.getElementById('message-form');
